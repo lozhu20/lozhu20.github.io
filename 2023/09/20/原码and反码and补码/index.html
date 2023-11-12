@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>原码and反码and补码 | LOZHU的博客</title>
+
+    <meta name="description" content="&lt;h1 id=&#34;原码&#34;&gt;&lt;a href=&#34;#原码&#34; class=&#34;headerlink&#34; title=&#34;原码&#34;&gt;&lt;/a&gt;原码&lt;/h1&gt;&lt;h2 id=&#34;原码表示&#34;&gt;&lt;a href=&#34;#原码表示&#34; class=&#34;headerlink&#34; title=&#34;原码表示&#34;&gt;&lt;/a&gt;原码表示&lt;/h2&gt;&lt;p&gt;原码的首位表示其符号位，整数为0，负数为1，因此表示数据的有效为 7 位，两个字节最多能表示的数据范围是：-128~128。&lt;/p&gt;
+&lt;p&gt;正数的原码是其本身。假如整数占用两个字节，5 的二进制表示为：&lt;code&gt;0000 0101&lt;/code&gt;，其原码为：&lt;code&gt;0000 0101&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;0000 0000 和 1000 0000 分别表示 +0 和 -0。&lt;/p&gt;
+&lt;p&gt;负数的原码首位为1，其余位为其原本的二进制表示。-3 的原码 &lt;code&gt;1000 0011&lt;/code&gt;。&lt;/p&gt;">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="cn" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "原码and反码and补码 | LOZHU的博客"  />
+    <meta property="og:description" content= "&lt;h1 id=&#34;原码&#34;&gt;&lt;a href=&#34;#原码&#34; class=&#34;headerlink&#34; title=&#34;原码&#34;&gt;&lt;/a&gt;原码&lt;/h1&gt;&lt;h2 id=&#34;原码表示&#34;&gt;&lt;a href=&#34;#原码表示&#34; class=&#34;headerlink&#34; title=&#34;原码表示&#34;&gt;&lt;/a&gt;原码表示&lt;/h2&gt;&lt;p&gt;原码的首位表示其符号位，整数为0，负数为1，因此表示数据的有效为 7 位，两个字节最多能表示的数据范围是：-128~128。&lt;/p&gt;
+&lt;p&gt;正数的原码是其本身。假如整数占用两个字节，5 的二进制表示为：&lt;code&gt;0000 0101&lt;/code&gt;，其原码为：&lt;code&gt;0000 0101&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;0000 0000 和 1000 0000 分别表示 +0 和 -0。&lt;/p&gt;
+&lt;p&gt;负数的原码首位为1，其余位为其原本的二进制表示。-3 的原码 &lt;code&gt;1000 0011&lt;/code&gt;。&lt;/p&gt;" />
+    <meta property="og:url" content="https://blog.kutang.icu/2023/09/20/%E5%8E%9F%E7%A0%81and%E5%8F%8D%E7%A0%81and%E8%A1%A5%E7%A0%81/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="lozhu" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="&lt;h1 id=&#34;原码&#34;&gt;&lt;a href=&#34;#原码&#34; class=&#34;headerlink&#34; title=&#34;原码&#34;&gt;&lt;/a&gt;原码&lt;/h1&gt;&lt;h2 id=&#34;原码表示&#34;&gt;&lt;a href=&#34;#原码表示&#34; class=&#34;headerlink&#34; title=&#34;原码表示&#34;&gt;&lt;/a&gt;原码表示&lt;/h2&gt;&lt;p&gt;原码的首位表示其符号位，整数为0，负数为1，因此表示数据的有效为 7 位，两个字节最多能表示的数据范围是：-128~128。&lt;/p&gt;
+&lt;p&gt;正数的原码是其本身。假如整数占用两个字节，5 的二进制表示为：&lt;code&gt;0000 0101&lt;/code&gt;，其原码为：&lt;code&gt;0000 0101&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;0000 0000 和 1000 0000 分别表示 +0 和 -0。&lt;/p&gt;
+&lt;p&gt;负数的原码首位为1，其余位为其原本的二进制表示。-3 的原码 &lt;code&gt;1000 0011&lt;/code&gt;。&lt;/p&gt;" />
+    <meta name="twitter:title" content="原码and反码and补码 | LOZHU的博客"/>
+    <meta name="twitter:description" content="&lt;h1 id=&#34;原码&#34;&gt;&lt;a href=&#34;#原码&#34; class=&#34;headerlink&#34; title=&#34;原码&#34;&gt;&lt;/a&gt;原码&lt;/h1&gt;&lt;h2 id=&#34;原码表示&#34;&gt;&lt;a href=&#34;#原码表示&#34; class=&#34;headerlink&#34; title=&#34;原码表示&#34;&gt;&lt;/a&gt;原码表示&lt;/h2&gt;&lt;p&gt;原码的首位表示其符号位，整数为0，负数为1，因此表示数据的有效为 7 位，两个字节最多能表示的数据范围是：-128~128。&lt;/p&gt;
+&lt;p&gt;正数的原码是其本身。假如整数占用两个字节，5 的二进制表示为：&lt;code&gt;0000 0101&lt;/code&gt;，其原码为：&lt;code&gt;0000 0101&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;0000 0000 和 1000 0000 分别表示 +0 和 -0。&lt;/p&gt;
+&lt;p&gt;负数的原码首位为1，其余位为其原本的二进制表示。-3 的原码 &lt;code&gt;1000 0011&lt;/code&gt;。&lt;/p&gt;"/>
+    <script type="application/ld+json">
+        {
+            "description": "&lt;h1 id=&#34;原码&#34;&gt;&lt;a href=&#34;#原码&#34; class=&#34;headerlink&#34; title=&#34;原码&#34;&gt;&lt;/a&gt;原码&lt;/h1&gt;&lt;h2 id=&#34;原码表示&#34;&gt;&lt;a href=&#34;#原码表示&#34; class=&#34;headerlink&#34; title=&#34;原码表示&#34;&gt;&lt;/a&gt;原码表示&lt;/h2&gt;&lt;p&gt;原码的首位表示其符号位，整数为0，负数为1，因此表示数据的有效为 7 位，两个字节最多能表示的数据范围是：-128~128。&lt;/p&gt;
+&lt;p&gt;正数的原码是其本身。假如整数占用两个字节，5 的二进制表示为：&lt;code&gt;0000 0101&lt;/code&gt;，其原码为：&lt;code&gt;0000 0101&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;0000 0000 和 1000 0000 分别表示 +0 和 -0。&lt;/p&gt;
+&lt;p&gt;负数的原码首位为1，其余位为其原本的二进制表示。-3 的原码 &lt;code&gt;1000 0011&lt;/code&gt;。&lt;/p&gt;",
+            "author": { "@type": "Person", "name": "lozhu" },
+            "@type": "BlogPosting",
+            "url": "https://blog.kutang.icu/2023/09/20/%E5%8E%9F%E7%A0%81and%E5%8F%8D%E7%A0%81and%E8%A1%A5%E7%A0%81/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.kutang.icunull"
+            },
+            "name": "lozhu"
+            },
+            "headline": "原码and反码and补码 | LOZHU的博客",
+            "datePublished": "2023-09-19T16:18:19.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://blog.kutang.icu/2023/09/20/%E5%8E%9F%E7%A0%81and%E5%8F%8D%E7%A0%81and%E8%A1%A5%E7%A0%81/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍬</text></svg>">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">LOZHU的博客</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">Home</a>
+                
+                <a href="/archives">Archives</a>
+                
+                <a href="/friends">Friends</a>
+                
+                <a href="/about">About</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+    <a class="social" target="_blank" href="mailto:earth.aioli0o@icloud.com">
+        <ion-icon name="mail-open-outline"></ion-icon>
+    </a>
+
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">Home</a>
+                    
+                    <a href="/archives">Archives</a>
+                    
+                    <a href="/friends">Friends</a>
+                    
+                    <a href="/about">About</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-clovif4le000ceptt7zkjf8dh" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      原码and反码and补码
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2023-09-19T16:18:19.000Z" itemprop="datePublished">2023-09-20</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a>
+            </div>
+            
+
+            <!-- 
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/" rel="tag">计算机原理</a></li></ul>
+            </div>
+             -->
+
+            
+            <div class="article-busuanzi">
+                <span id="busuanzi_value_page_pv">N</span> 人看过
+            </div>
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <h1 id="原码"><a href="#原码" class="headerlink" title="原码"></a>原码</h1><h2 id="原码表示"><a href="#原码表示" class="headerlink" title="原码表示"></a>原码表示</h2><p>原码的首位表示其符号位，整数为0，负数为1，因此表示数据的有效为 7 位，两个字节最多能表示的数据范围是：-128~128。</p>
+<p>正数的原码是其本身。假如整数占用两个字节，5 的二进制表示为：<code>0000 0101</code>，其原码为：<code>0000 0101</code>。</p>
+<p>0000 0000 和 1000 0000 分别表示 +0 和 -0。</p>
+<p>负数的原码首位为1，其余位为其原本的二进制表示。-3 的原码 <code>1000 0011</code>。</p>
+<span id="more"></span>
+
+<h2 id="原码计算"><a href="#原码计算" class="headerlink" title="原码计算"></a>原码计算</h2><p>如果基于原码进行计算会是什么结果呢？</p>
+<p>正数的情况：5 + 3</p>
+<pre><code>5 + 3
+
+  0000 0101
++ 0000 0011
+= 0000 1000 (8)
+</code></pre>
+<p>正数的情况下结果正确。</p>
+<p>加上负数的情况：5 - 3 &#x3D; 5 + (-3)</p>
+<pre><code>5 + (-3)
+
+  0000 0101
++ 1000 0011
+= 1000 1000 (-8)
+</code></pre>
+<p>5 - 3 &#x3D; -8，结果错误，原码不能对负数直接进行计算。</p>
+<h1 id="反码"><a href="#反码" class="headerlink" title="反码"></a>反码</h1><p>正数的反码是其本身。5 的反码 &#x3D; 0000 0101。</p>
+<p>负数的反码符号位不变，其余位取反。-3 的反码 &#x3D; 1111 1100。</p>
+<p>0000 0000 和 1000 0000 分别表示 +0 和 -0。</p>
+<p>负数 t 的反码 &#x3D; 1111 1111 - t（符号位不变）。</p>
+<p>使用反码进行计算：</p>
+<p>正数的情况显然结果与原码一致，结果正确。</p>
+<p>负数的情况：5 - 3</p>
+<pre><code>5 - 3 = 5 + (-3)
+
+  0000 0101
++ 1111 1100
+= 0000 0001 (1)
+</code></pre>
+<pre><code>10 - 5
+
+  0000 1010
++ 1111 1010
+= 0000 0100 (4)    
+</code></pre>
+<p>负数的场景结果与正确结果差1。</p>
+<h1 id="补码"><a href="#补码" class="headerlink" title="补码"></a>补码</h1><p>正数的补码是其本身。5 的补码 &#x3D; 0000 0101</p>
+<p>负数的补码是其反码 +1。-3 的补码 &#x3D; 1111 1101</p>
+<p>使用补码进行运算，正数的场景与之前一致，结果正确。</p>
+<pre><code>5 - 3 = 5 + (-3)
+
+  0000 0101
++ 1111 1101
+= 0000 0010 (2)
+</code></pre>
+<pre><code>10 - 5
+
+  0000 1010
++ 1111 1011
+= 0000 0101 (5) 
+</code></pre>
+<p>使用补码时刚好多减去反码计算中的差值1，所以结果是正确的。</p>
+<h1 id="负数的补码等于反码-1-的解释"><a href="#负数的补码等于反码-1-的解释" class="headerlink" title="负数的补码等于反码 +1 的解释"></a>负数的补码等于反码 +1 的解释</h1><p>看网上的解释都是从时间的计算考虑。时钟每12个小时循环一次，假设当前时间为9点，要将时针调到1点，可以将时间“往前”增加 4 个小时，也可以将时间“往后”拨 8 个小时。即：</p>
+<pre><code>9 + 4 = 9 - 8
+</code></pre>
+<p>意思就是说在这个运算中 -8 的运算等价于 +4，每一个负数都可以找到一个对应的正数，使计算结果不变。</p>
+<pre><code>10 - 5 = 10 + 7
+10 - 6 = 10 + 6
+</code></pre>
+<p>这两个等价数的绝对值和等于 12。</p>
+<p>考虑更普遍的场景，假设当前时间为 a 点，将时间往回调 t 小时，等价于将时间往前拨 12 - t 小时：</p>
+<pre><code>a - t = a + 12 - t
+</code></pre>
+<p>以公式a - b &#x3D; a + mod - b 为例，</p>
+<p>设: -b &#x3D; 10000101 (-5的二进制)，</p>
+<p>模(mod) &#x3D; 11111111</p>
+<p>a - b &#x3D; a + (-b的补数) &#x3D; a + (mod - b) &#x3D; a + (11111111 - 10000101)</p>
+<p>由于二进制的特性，11111111减去10000101得到补数11111010，实际就等于 10000101 各位取反——也就是反码，如下对应关系：</p>
+<p>11111111 #模(mod)</p>
+<p>10000101 # -5二进制</p>
+<p>11111010 #-5二进制补数（即反码）</p>
+<p>（这里要注意第一位符号位是不变的）</p>
+<p>但是在实际计算中补数（反码）还必须加1——即：</p>
+<p>11111010 +1（00000001）&#x3D; 11111011</p>
+<p>这是因为在8位二进制系统中，模&#x3D;2^8&#x3D;256，表示为二进制是100000000，是九位二进制数，在8位二进制系统中实际产生溢出位无法计算，而8位二进制系统计量范围是0<del>2^n-1，也就是0</del>257，最大值是257，也就是我们上面计算中模的取值二进制11111111，也就是说为了便于计算，我们是用257的二进制11111111，代替了模256的实际值100000000，那么在实际计算中取得补数后，必须加上这个差值1才不会出错，即：</p>
+<p>补数（反码）+1&#x3D;补码</p>
+<p>这就是为什么补码加1的原因。</p>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+    <a href="/2023/09/29/%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%A7%E5%B0%8F/" id="article-nav-newer" class="article-nav-link-wrap">
+      <div class="article-nav-caption">下一篇</div>
+      <div class="article-nav-title">
+        
+          如何确定线程池大小
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/09/14/Optional-type-in-Swift/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">Optional type in Swift</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share" style="display: none;">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=原码and反码and补码 - LOZHU的博客&url=https%3A%2F%2Fblog.kutang.icu%2F2023%2F09%2F20%2F%25E5%258E%259F%25E7%25A0%2581and%25E5%258F%258D%25E7%25A0%2581and%25E8%25A1%25A5%25E7%25A0%2581%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=原码and反码and补码 - LOZHU的博客&u=https%3A%2F%2Fblog.kutang.icu%2F2023%2F09%2F20%2F%25E5%258E%259F%25E7%25A0%2581and%25E5%258F%258D%25E7%25A0%2581and%25E8%25A1%25A5%25E7%25A0%2581%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=原码and反码and补码 - LOZHU的博客&url=https://blog.kutang.icu/2023/09/20/%E5%8E%9F%E7%A0%81and%E5%8F%8D%E7%A0%81and%E8%A1%A5%E7%A0%81/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/11/12/Memos%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/">Memos数据迁移</a>
+          </li>
+        
+          <li>
+            <a href="/2023/11/12/oh-my-zsh%E5%9B%BD%E5%86%85%E9%85%8D%E7%BD%AE/">oh-my-zsh国内配置</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/29/%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%A7%E5%B0%8F/">如何确定线程池大小</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/20/%E5%8E%9F%E7%A0%81and%E5%8F%8D%E7%A0%81and%E8%A1%A5%E7%A0%81/">原码and反码and补码</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/14/Optional-type-in-Swift/">Optional type in Swift</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            <div style="margin: 2px 0;">
+                🍬 LOZHU的博客 &copy; 2023<br>
+            </div>
+            <div style="margin: 2px 0;">
+                🌱 已运行 <span id="runningDaysDiv"></span> 天
+            </div>
+            <div style="margin: 2px 0;">
+                ♥️  Powered By Hexo · Theme By <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Aomori</a>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 计算运行天数 -->
+<script type="text/javascript">
+    var runningDays = 1;
+    var startDate = Date.parse('2023-08-31');
+
+    var currentDate = new Date();
+    var nowMonth = currentDate.getMonth() + 1;
+    var strDate = currentDate.getDate();
+
+    var seperator = "-";
+
+    if (!(nowMonth >= 10)) {
+        nowMonth = "0" + nowMonth;
+    }
+
+    if (!(strDate > 9)) {
+        strDate = "0" + strDate;
+    }
+
+    var nowDate = currentDate.getFullYear() + seperator + nowMonth + seperator + strDate;
+    var endDate = Date.parse(nowDate);
+
+    if (startDate > endDate) {
+        runningDays = 0;
+    } else if (startDate === endDate) {
+        runningDays = 1;
+    } else {
+        runningDays = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+    }
+    var runningDaysDiv = document.getElementById('runningDaysDiv')
+    console.log(runningDaysDiv)
+    console.log(runningDaysDiv)
+    if (runningDaysDiv) {
+        runningDaysDiv.innerHTML = runningDays
+    }
+</script>
+
+
+</body>
+
+</html>

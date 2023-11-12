@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>在Ubuntu22.04上安装Postgresql | LOZHU的博客</title>
+
+    <meta name="description" content="&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
+&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="cn" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "在Ubuntu22.04上安装Postgresql | LOZHU的博客"  />
+    <meta property="og:description" content= "&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
+&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;" />
+    <meta property="og:url" content="https://blog.kutang.icu/2023/09/01/%E5%9C%A8Ubuntu22-04%E4%B8%8A%E5%AE%89%E8%A3%85Postgresql/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="lozhu" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
+&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;" />
+    <meta name="twitter:title" content="在Ubuntu22.04上安装Postgresql | LOZHU的博客"/>
+    <meta name="twitter:description" content="&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
+&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;"/>
+    <script type="application/ld+json">
+        {
+            "description": "&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
+&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;",
+            "author": { "@type": "Person", "name": "lozhu" },
+            "@type": "BlogPosting",
+            "url": "https://blog.kutang.icu/2023/09/01/%E5%9C%A8Ubuntu22-04%E4%B8%8A%E5%AE%89%E8%A3%85Postgresql/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.kutang.icunull"
+            },
+            "name": "lozhu"
+            },
+            "headline": "在Ubuntu22.04上安装Postgresql | LOZHU的博客",
+            "datePublished": "2023-09-01T08:33:03.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://blog.kutang.icu/2023/09/01/%E5%9C%A8Ubuntu22-04%E4%B8%8A%E5%AE%89%E8%A3%85Postgresql/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍬</text></svg>">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">LOZHU的博客</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">Home</a>
+                
+                <a href="/archives">Archives</a>
+                
+                <a href="/friends">Friends</a>
+                
+                <a href="/about">About</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+    <a class="social" target="_blank" href="mailto:earth.aioli0o@icloud.com">
+        <ion-icon name="mail-open-outline"></ion-icon>
+    </a>
+
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">Home</a>
+                    
+                    <a href="/archives">Archives</a>
+                    
+                    <a href="/friends">Friends</a>
+                    
+                    <a href="/about">About</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-clovif4le000depttdx3x6v56" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      在Ubuntu22.04上安装Postgresql
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2023-09-01T08:33:03.000Z" itemprop="datePublished">2023-09-01</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            </div>
+            
+
+            <!-- 
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+            </div>
+             -->
+
+            
+            <div class="article-busuanzi">
+                <span id="busuanzi_value_page_pv">N</span> 人看过
+            </div>
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <h2 id="切换到清华源"><a href="#切换到清华源" class="headerlink" title="切换到清华源"></a>切换到清华源</h2><p>最初使用的是阿里云的源，apt 找不到 libllvm 包。</p>
+<p>写入 &#x2F;etc&#x2F;apt&#x2F;sources.list</p>
+<span id="more"></span>
+
+<pre><code># See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
+# newer versions of the distribution.
+deb http://cn.archive.ubuntu.com/ubuntu jammy main restricted
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy main restricted
+
+## Major bug fix updates produced after the final release of the
+## distribution.
+deb http://cn.archive.ubuntu.com/ubuntu jammy-updates main restricted
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-updates main restricted
+
+## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
+## team. Also, please note that software in universe WILL NOT receive any
+## review or updates from the Ubuntu security team.
+deb http://cn.archive.ubuntu.com/ubuntu jammy universe
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy universe
+deb http://cn.archive.ubuntu.com/ubuntu jammy-updates universe
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-updates universe
+
+## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
+## team, and may not be under a free licence. Please satisfy yourself as to
+## your rights to use the software. Also, please note that software in
+## multiverse WILL NOT receive any review or updates from the Ubuntu
+## security team.
+deb http://cn.archive.ubuntu.com/ubuntu jammy multiverse
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy multiverse
+deb http://cn.archive.ubuntu.com/ubuntu jammy-updates multiverse
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-updates multiverse
+
+## N.B. software from this repository may not have been tested as
+## extensively as that contained in the main release, although it includes
+## newer versions of some applications which may provide useful features.
+## Also, please note that software in backports WILL NOT receive any review
+## or updates from the Ubuntu security team.
+deb http://cn.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
+
+deb http://cn.archive.ubuntu.com/ubuntu jammy-security main restricted
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-security main restricted
+deb http://cn.archive.ubuntu.com/ubuntu jammy-security universe
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-security universe
+deb http://cn.archive.ubuntu.com/ubuntu jammy-security multiverse
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-security multiverse
+</code></pre>
+<h2 id="安装-libllvm14"><a href="#安装-libllvm14" class="headerlink" title="安装 libllvm14"></a>安装 libllvm14</h2><p>执行：</p>
+<pre><code class="shell">sudo apt update
+sudo apt install postgresql postgresql-contrib
+</code></pre>
+<p>提示 libllvm14 包找不到，先安装改包：</p>
+<pre><code class="shell">sudo apt install libllvm14
+</code></pre>
+<h2 id="安装-ssl-cert-snakeoil-pem"><a href="#安装-ssl-cert-snakeoil-pem" class="headerlink" title="安装 ssl-cert-snakeoil.pem"></a>安装 ssl-cert-snakeoil.pem</h2><p>再执行安装命令，成功安装，但是启动失败：</p>
+<pre><code>● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Fri 2023-03-31 15:42:45 UTC; 2s ago
+    Process: 9793 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
+   Main PID: 9793 (code=exited, status=0/SUCCESS)
+        CPU: 3ms
+
+Mar 31 15:42:45 xingzii-vm systemd[1]: Starting PostgreSQL RDBMS...
+Mar 31 15:42:45 xingzii-vm systemd[1]: Finished PostgreSQL RDBMS.
+</code></pre>
+<p>到 &#x2F;var&#x2F;log&#x2F;postgresql 查看日志，提示：</p>
+<pre><code>2023-03-31 15:37:02.316 UTC [9453] FATAL:  could not load server certificate file &quot;/etc/ssl/certs/ssl-cert-snakeoil.pem&quot;: SSL error code 2147483661
+2023-03-31 15:37:02.316 UTC [9453] LOG:  database system is shut down
+pg_ctl: could not start server
+Examine the log output.
+</code></pre>
+<p>网上看了一下，安装这个就好：</p>
+<pre><code class="shell">sudo apt install ssl-cert &amp;&amp; sudo make-ssl-cert generate-default-snakeoil
+</code></pre>
+<p>安装好记得修改一下 &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;ssl-cert-snakeoil.pem 的权限：</p>
+<pre><code class="shell">sudo chmod 755 /etc/ssl/certs/ssl-cert-snakeoil.pem
+</code></pre>
+<p>再启动 postgresql 就好了。</p>
+<p>验证：</p>
+<pre><code class="shell">sudo -u postgres psql -c &quot;SELECT version();&quot;
+</code></pre>
+<pre><code>perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+    LANGUAGE = (unset),
+    LC_ALL = (unset),
+    LC_CTYPE = &quot;UTF-8&quot;,
+    LC_TERMINAL = &quot;iTerm2&quot;,
+    LANG = &quot;en_US.UTF-8&quot;
+    are supported and installed on your system.
+perl: warning: Falling back to a fallback locale (&quot;en_US.UTF-8&quot;).
+                                                                version
+----------------------------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, 64-bit
+(1 row)
+</code></pre>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+    <a href="/2023/09/02/Docker-get-started/" id="article-nav-newer" class="article-nav-link-wrap">
+      <div class="article-nav-caption">下一篇</div>
+      <div class="article-nav-title">
+        
+          Docker get started
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+
+    <section class="share" style="display: none;">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=在Ubuntu22.04上安装Postgresql - LOZHU的博客&url=https%3A%2F%2Fblog.kutang.icu%2F2023%2F09%2F01%2F%25E5%259C%25A8Ubuntu22-04%25E4%25B8%258A%25E5%25AE%2589%25E8%25A3%2585Postgresql%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=在Ubuntu22.04上安装Postgresql - LOZHU的博客&u=https%3A%2F%2Fblog.kutang.icu%2F2023%2F09%2F01%2F%25E5%259C%25A8Ubuntu22-04%25E4%25B8%258A%25E5%25AE%2589%25E8%25A3%2585Postgresql%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=在Ubuntu22.04上安装Postgresql - LOZHU的博客&url=https://blog.kutang.icu/2023/09/01/%E5%9C%A8Ubuntu22-04%E4%B8%8A%E5%AE%89%E8%A3%85Postgresql/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/11/12/Memos%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/">Memos数据迁移</a>
+          </li>
+        
+          <li>
+            <a href="/2023/11/12/oh-my-zsh%E5%9B%BD%E5%86%85%E9%85%8D%E7%BD%AE/">oh-my-zsh国内配置</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/29/%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%A7%E5%B0%8F/">如何确定线程池大小</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/20/%E5%8E%9F%E7%A0%81and%E5%8F%8D%E7%A0%81and%E8%A1%A5%E7%A0%81/">原码and反码and补码</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/14/Optional-type-in-Swift/">Optional type in Swift</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            <div style="margin: 2px 0;">
+                🍬 LOZHU的博客 &copy; 2023<br>
+            </div>
+            <div style="margin: 2px 0;">
+                🌱 已运行 <span id="runningDaysDiv"></span> 天
+            </div>
+            <div style="margin: 2px 0;">
+                ♥️  Powered By Hexo · Theme By <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Aomori</a>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 计算运行天数 -->
+<script type="text/javascript">
+    var runningDays = 1;
+    var startDate = Date.parse('2023-08-31');
+
+    var currentDate = new Date();
+    var nowMonth = currentDate.getMonth() + 1;
+    var strDate = currentDate.getDate();
+
+    var seperator = "-";
+
+    if (!(nowMonth >= 10)) {
+        nowMonth = "0" + nowMonth;
+    }
+
+    if (!(strDate > 9)) {
+        strDate = "0" + strDate;
+    }
+
+    var nowDate = currentDate.getFullYear() + seperator + nowMonth + seperator + strDate;
+    var endDate = Date.parse(nowDate);
+
+    if (startDate > endDate) {
+        runningDays = 0;
+    } else if (startDate === endDate) {
+        runningDays = 1;
+    } else {
+        runningDays = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+    }
+    var runningDaysDiv = document.getElementById('runningDaysDiv')
+    console.log(runningDaysDiv)
+    console.log(runningDaysDiv)
+    if (runningDaysDiv) {
+        runningDaysDiv.innerHTML = runningDays
+    }
+</script>
+
+
+</body>
+
+</html>

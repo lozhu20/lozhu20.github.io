@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>LOZHU的博客</title>
+
+    <meta name="description" content="LOZHU的博客">
+    <meta name="keywords" content="">
+
+    
+
+
+
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content=""/>
+    <meta property="og:description" content=""/>
+    <meta property="og:locale" content="cn" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://blog.kutang.icu/index.html" />
+    <meta property="og:site_name" content="lozhu" />
+    <meta property="article:publisher" content="" />
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "",
+            "description": "",
+            "publisher": {
+                "@type": "Organization",
+                "name": "lozhu"
+            },
+        }
+    </script>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍬</text></svg>">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = false
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">LOZHU的博客</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">Home</a>
+                
+                <a href="/archives">Archives</a>
+                
+                <a href="/friends">Friends</a>
+                
+                <a href="/about">About</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+    <a class="social" target="_blank" href="mailto:earth.aioli0o@icloud.com">
+        <ion-icon name="mail-open-outline"></ion-icon>
+    </a>
+
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">Home</a>
+                    
+                    <a href="/archives">Archives</a>
+                    
+                    <a href="/friends">Friends</a>
+                    
+                    <a href="/about">About</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="index">
+  
+    
+      <article
+id="post-Memos数据迁移"
+class="article article-type-post"
+>
+
+
+
+<div class="article-inner">
+    
+
+    <div class="article-body">
+    <header class="article-title">
+        <a href="/2023/11/12/Memos%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/">Memos数据迁移</a>
+    </header>
+    <div class="article-entry post-inner-html">
+        
+        <p>去年年底时腾讯云轻量应用服务器做活动，2C2G配置13个月才80块钱不到，就将Memos部署在腾讯云上。公网IP随时随地都可以访问，但是服务器续费太贵，不准备续费，需要将数据迁移到本地。找了一圈，没找到现成的迁移工具。</p>
+<p>因为数据存储方式选择的是sqlite，所以想着直接将服务器上的memos_prod.db数据库文件和assets文件夹拷贝到本地，再docker中运行memos镜像时挂载这个目录就可以，但是不知道什么原因，挂上之后数据不完整，比如用户信息是可以在页面展示的，而memo以及resource在页面加载时直接出现红色报错信息。</p>
+<p>于是改了方案，先在本地将memos跑起来，再将数据用SQL复制到表中。这样做的缺点就是费时费力，并且有点坑的是，两次docker镜像的版本还不一致，表结构有变更，导致写SQL的时候还要对字段。</p>
+<p>操作步骤：</p>
+<ol>
+<li><p>从服务器上将挂载目录中的文件 memos_prod_db 和 assets 目录拷贝至本地存档</p>
+</li>
+<li><p>本地先将memos跑起来，确保能正常发布：</p>
+<pre><code class="sh"># 创建 volume
+docker volume create memosdata
+# 拉取镜像
+docker pull neosmemo/memos:latest
+# 运行镜像
+docker run -d --name memos -p 5230:5230 -v memosdata:/var/opt/memos neosmemo/memos:latest
+</code></pre>
+</li>
+<li><p>安装sqlite：</p>
+<pre><code class="sh">sudo apt install sqlite3
+</code></pre>
+</li>
+<li><p>打开两个数据库并拷贝数据：</p>
+<pre><code class="sh"># 查看 memosdata 位置
+docker volume inspect memosdata
+# 打开 sqlite3
+sqlite3
+.open memosdata/memos_prod.db
+.open bak/memos_prod.db as db1
+# 查看表
+select * from sqlite_master where type = &#39;table&#39;;
+# 查看表结构
+PRAGMA table_info(memo);
+
+# 拷贝数据，主要有 memo, resource, tag， 其中 memo 表和 tag 表直接拷贝
+insert into memo
+select * from db1.memo where 1 = 1;
+
+insert into tag
+select * from db1.tag where 1 = 1;
+
+# resource 表原本 10 个字段，更新后多了一个字段，拷贝 SQL 需要做一下表连接
+insert into resource
+select a.id,
+       a.creator_id,
+       a.created_ts,
+       a.updated_ts,
+       a.filename,
+       a.blob,
+       a.external_link,
+       a.type,
+       a.size,
+       a.internal_path,
+       b.memo_id  -- 多出来的字段
+from db1.resource as a
+    left join db1.memo_resource b
+        on a.id = b.resource_id
+where 1 = 1;
+</code></pre>
+<p> 现在刷新页面，应该是 memos 的文字正常展示。</p>
+</li>
+<li><p>最后，将 assets 目录一整个拷贝至 memosdata 目录下，再刷新页面验证即可。</p>
+</li>
+<li><p>其他的表没做处理，目前看起来应该是没用到。</p>
+</li>
+</ol>
+
+        
+    </div>
+    </div>
+
+    <div class="article-badge">
+        
+        
+    </div>
+
+</div>
+
+<footer class="article-footer">
+    <div class="article-more-info">
+    <div class="article-date">
+  <time datetime="2023-11-12T12:46:13.000Z" itemprop="datePublished">2023-11-12</time>
+</div>
+    
+        <div class="article-category">
+        <a class="article-category-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a>
+        </div>
+    
+    <!-- 
+        <div class="article-tag">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" rel="tag">常用工具</a></li></ul>
+        </div>
+     -->
+    </div>
+</footer>
+
+</article>
+
+    
+  
+    
+      <article
+id="post-oh-my-zsh国内配置"
+class="article article-type-post"
+>
+
+
+
+<div class="article-inner">
+    
+
+    <div class="article-body">
+    <header class="article-title">
+        <a href="/2023/11/12/oh-my-zsh%E5%9B%BD%E5%86%85%E9%85%8D%E7%BD%AE/">oh-my-zsh国内配置</a>
+    </header>
+    <div class="article-entry post-inner-html">
+        
+        <p>因为在国内网络环境的原因，github经常无法访问，并且速度很慢。有大佬已经仓库同步到gitee上，用gitee速度会快很多。</p>
+<p>gitee仓库地址：<a target="_blank" rel="noopener" href="https://gitee.com/unrogue007/zsh-syntax-highlighting.git">https://gitee.com/unrogue007/zsh-syntax-highlighting.git</a></p>
+        
+    </div>
+    </div>
+
+    <div class="article-badge">
+        
+        
+    </div>
+
+</div>
+
+<footer class="article-footer">
+    <div class="article-more-info">
+    <div class="article-date">
+  <time datetime="2023-11-12T10:28:56.000Z" itemprop="datePublished">2023-11-12</time>
+</div>
+    
+        <div class="article-category">
+        <a class="article-category-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a>
+        </div>
+    
+    <!-- 
+        <div class="article-tag">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" rel="tag">常用工具</a></li></ul>
+        </div>
+     -->
+    </div>
+</footer>
+
+</article>
+
+    
+  
+    
+      <article
+id="post-如何确定线程池大小"
+class="article article-type-post"
+>
+
+
+
+<div class="article-inner">
+    
+
+    <div class="article-body">
+    <header class="article-title">
+        <a href="/2023/09/29/%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%A7%E5%B0%8F/">如何确定线程池大小</a>
+    </header>
+    <div class="article-entry post-inner-html">
+        
+        <p>硬件资源、资源预算、任务类型都会影响线程池的理想大小。应用程序运行的环境会改变（机器扩容、缩容，资源使用率调整，其他可利用资源调整等），最好<strong>不要在代码中固定线程池的大小</strong>，而是动态的根据当前应用运行的环境进行调整。</p>
+<p>过大或者过小的线程池都会导致系统吞吐率降低。线程池大小设置过大，大量的线程将竞争有限的 CPU 资源，导致性能下降；如果线程池设置过小，会有许多 CPU 空闲无法参与执行任务，从而导致吞吐率降低。</p>
+        
+    </div>
+    </div>
+
+    <div class="article-badge">
+        
+        
+    </div>
+
+</div>
+
+<footer class="article-footer">
+    <div class="article-more-info">
+    <div class="article-date">
+  <time datetime="2023-09-29T04:12:24.000Z" itemprop="datePublished">2023-09-29</time>
+</div>
+    
+        <div class="article-category">
+        <a class="article-category-link" href="/categories/Java/">Java</a>
+        </div>
+    
+    <!-- 
+        <div class="article-tag">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li></ul>
+        </div>
+     -->
+    </div>
+</footer>
+
+</article>
+
+    
+  
+    
+      <article
+id="post-原码and反码and补码"
+class="article article-type-post"
+>
+
+
+
+<div class="article-inner">
+    
+
+    <div class="article-body">
+    <header class="article-title">
+        <a href="/2023/09/20/%E5%8E%9F%E7%A0%81and%E5%8F%8D%E7%A0%81and%E8%A1%A5%E7%A0%81/">原码and反码and补码</a>
+    </header>
+    <div class="article-entry post-inner-html">
+        
+        <h1 id="原码"><a href="#原码" class="headerlink" title="原码"></a>原码</h1><h2 id="原码表示"><a href="#原码表示" class="headerlink" title="原码表示"></a>原码表示</h2><p>原码的首位表示其符号位，整数为0，负数为1，因此表示数据的有效为 7 位，两个字节最多能表示的数据范围是：-128~128。</p>
+<p>正数的原码是其本身。假如整数占用两个字节，5 的二进制表示为：<code>0000 0101</code>，其原码为：<code>0000 0101</code>。</p>
+<p>0000 0000 和 1000 0000 分别表示 +0 和 -0。</p>
+<p>负数的原码首位为1，其余位为其原本的二进制表示。-3 的原码 <code>1000 0011</code>。</p>
+        
+    </div>
+    </div>
+
+    <div class="article-badge">
+        
+        
+    </div>
+
+</div>
+
+<footer class="article-footer">
+    <div class="article-more-info">
+    <div class="article-date">
+  <time datetime="2023-09-19T16:18:19.000Z" itemprop="datePublished">2023-09-20</time>
+</div>
+    
+        <div class="article-category">
+        <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a>
+        </div>
+    
+    <!-- 
+        <div class="article-tag">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/" rel="tag">计算机原理</a></li></ul>
+        </div>
+     -->
+    </div>
+</footer>
+
+</article>
+
+    
+  
+    
+      <article
+id="post-Optional-type-in-Swift"
+class="article article-type-post"
+>
+
+
+
+<div class="article-inner">
+    
+
+    <div class="article-body">
+    <header class="article-title">
+        <a href="/2023/09/14/Optional-type-in-Swift/">Optional type in Swift</a>
+    </header>
+    <div class="article-entry post-inner-html">
+        
+        <h1 id="可选类型"><a href="#可选类型" class="headerlink" title="可选类型"></a>可选类型</h1><p>在 swift 中可以使用 <strong>可选类型</strong>（Optional）来处理值不存在的情况，变量存在值时可以对其进行解析。</p>
+        
+    </div>
+    </div>
+
+    <div class="article-badge">
+        
+        
+    </div>
+
+</div>
+
+<footer class="article-footer">
+    <div class="article-more-info">
+    <div class="article-date">
+  <time datetime="2023-09-13T17:18:20.000Z" itemprop="datePublished">2023-09-14</time>
+</div>
+    
+        <div class="article-category">
+        <a class="article-category-link" href="/categories/Swift/">Swift</a>
+        </div>
+    
+    <!-- 
+        <div class="article-tag">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Swift/" rel="tag">Swift</a></li></ul>
+        </div>
+     -->
+    </div>
+</footer>
+
+</article>
+
+    
+  
+    
+      <article
+id="post-Install-kubernetes-on-debian-12"
+class="article article-type-post"
+>
+
+
+
+<div class="article-inner">
+    
+
+    <div class="article-body">
+    <header class="article-title">
+        <a href="/2023/09/02/Install-kubernetes-on-debian-12/">Install kubernetes on debian 12</a>
+    </header>
+    <div class="article-entry post-inner-html">
+        
+        <h1 id="Kubernetes-概述"><a href="#Kubernetes-概述" class="headerlink" title="Kubernetes 概述"></a>Kubernetes 概述</h1><p>Kubernetes 是一个可移植、可扩展的开源平台，用于管理容器化的工作负载和服务，可促进声明式配置和自动化。 Kubernetes 拥有一个庞大且快速增长的生态，其服务、支持和工具的使用范围相当广泛。<strong>Kubernetes</strong> 这个名字源于希腊语，意为“舵手”或“飞行员”。k8s 这个缩写是因为 k 和 s 之间有八个字符的关系。 Google 在 2014 年开源了 Kubernetes 项目。</p>
+        
+    </div>
+    </div>
+
+    <div class="article-badge">
+        
+        
+    </div>
+
+</div>
+
+<footer class="article-footer">
+    <div class="article-more-info">
+    <div class="article-date">
+  <time datetime="2023-09-02T11:03:38.000Z" itemprop="datePublished">2023-09-02</time>
+</div>
+    
+        <div class="article-category">
+        <a class="article-category-link" href="/categories/k8s/">k8s</a>
+        </div>
+    
+    <!-- 
+        <div class="article-tag">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
+        </div>
+     -->
+    </div>
+</footer>
+
+</article>
+
+    
+  
+    
+      <article
+id="post-Docker-get-started"
+class="article article-type-post"
+>
+
+
+
+<div class="article-inner">
+    
+
+    <div class="article-body">
+    <header class="article-title">
+        <a href="/2023/09/02/Docker-get-started/">Docker get started</a>
+    </header>
+    <div class="article-entry post-inner-html">
+        
+        <h1 id="Docker-get-started"><a href="#Docker-get-started" class="headerlink" title="Docker get started"></a>Docker get started</h1><p>Docker 是一个为开发、分发、运行应用程序而生的开放平台，Docker 可以让我们将基础环境和应用程序分离开来，以便可以快速交付软件。有了 Docker，我们可以在管理软件的同时管理基础环境。基于 Docker 分发、测试、部署的方法论，可以极大的降低编码与交付运行之间的延迟。</p>
+<p>使用 Docker 可以很轻松的保证程序运行环境的一致性，减少因环境不一致导致的各种问题。各个 Docker 容器之间相互隔离，可以在一个宿主机上运行多个容器，各个容器都包含了应用程序需要的所有资源，可以很轻松的保证同一个容器在每个地方运行的结果都一致。</p>
+        
+    </div>
+    </div>
+
+    <div class="article-badge">
+        
+        
+    </div>
+
+</div>
+
+<footer class="article-footer">
+    <div class="article-more-info">
+    <div class="article-date">
+  <time datetime="2023-09-02T04:14:51.000Z" itemprop="datePublished">2023-09-02</time>
+</div>
+    
+        <div class="article-category">
+        <a class="article-category-link" href="/categories/Docker/">Docker</a>
+        </div>
+    
+    <!-- 
+        <div class="article-tag">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
+        </div>
+     -->
+    </div>
+</footer>
+
+</article>
+
+    
+  
+    
+      <article
+id="post-在Ubuntu22-04上安装Postgresql"
+class="article article-type-post"
+>
+
+
+
+<div class="article-inner">
+    
+
+    <div class="article-body">
+    <header class="article-title">
+        <a href="/2023/09/01/%E5%9C%A8Ubuntu22-04%E4%B8%8A%E5%AE%89%E8%A3%85Postgresql/">在Ubuntu22.04上安装Postgresql</a>
+    </header>
+    <div class="article-entry post-inner-html">
+        
+        <h2 id="切换到清华源"><a href="#切换到清华源" class="headerlink" title="切换到清华源"></a>切换到清华源</h2><p>最初使用的是阿里云的源，apt 找不到 libllvm 包。</p>
+<p>写入 &#x2F;etc&#x2F;apt&#x2F;sources.list</p>
+        
+    </div>
+    </div>
+
+    <div class="article-badge">
+        
+        
+    </div>
+
+</div>
+
+<footer class="article-footer">
+    <div class="article-more-info">
+    <div class="article-date">
+  <time datetime="2023-09-01T08:33:03.000Z" itemprop="datePublished">2023-09-01</time>
+</div>
+    
+        <div class="article-category">
+        <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+        </div>
+    
+    <!-- 
+        <div class="article-tag">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+        </div>
+     -->
+    </div>
+</footer>
+
+</article>
+
+    
+  
+
+  
+</div>
+
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/11/12/Memos%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/">Memos数据迁移</a>
+          </li>
+        
+          <li>
+            <a href="/2023/11/12/oh-my-zsh%E5%9B%BD%E5%86%85%E9%85%8D%E7%BD%AE/">oh-my-zsh国内配置</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/29/%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%A7%E5%B0%8F/">如何确定线程池大小</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/20/%E5%8E%9F%E7%A0%81and%E5%8F%8D%E7%A0%81and%E8%A1%A5%E7%A0%81/">原码and反码and补码</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/14/Optional-type-in-Swift/">Optional type in Swift</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            <div style="margin: 2px 0;">
+                🍬 LOZHU的博客 &copy; 2023<br>
+            </div>
+            <div style="margin: 2px 0;">
+                🌱 已运行 <span id="runningDaysDiv"></span> 天
+            </div>
+            <div style="margin: 2px 0;">
+                ♥️  Powered By Hexo · Theme By <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Aomori</a>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 计算运行天数 -->
+<script type="text/javascript">
+    var runningDays = 1;
+    var startDate = Date.parse('2023-08-31');
+
+    var currentDate = new Date();
+    var nowMonth = currentDate.getMonth() + 1;
+    var strDate = currentDate.getDate();
+
+    var seperator = "-";
+
+    if (!(nowMonth >= 10)) {
+        nowMonth = "0" + nowMonth;
+    }
+
+    if (!(strDate > 9)) {
+        strDate = "0" + strDate;
+    }
+
+    var nowDate = currentDate.getFullYear() + seperator + nowMonth + seperator + strDate;
+    var endDate = Date.parse(nowDate);
+
+    if (startDate > endDate) {
+        runningDays = 0;
+    } else if (startDate === endDate) {
+        runningDays = 1;
+    } else {
+        runningDays = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+    }
+    var runningDaysDiv = document.getElementById('runningDaysDiv')
+    console.log(runningDaysDiv)
+    console.log(runningDaysDiv)
+    if (runningDaysDiv) {
+        runningDaysDiv.innerHTML = runningDays
+    }
+</script>
+
+
+</body>
+
+</html>

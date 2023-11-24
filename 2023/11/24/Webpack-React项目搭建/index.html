@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>Webpack+React项目搭建 | LOZHU的博客</title>
+
+    <meta name="description" content="&lt;blockquote&gt;
+&lt;p&gt;Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。&lt;/p&gt;
+&lt;/blockquote&gt;">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="cn" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "Webpack+React项目搭建 | LOZHU的博客"  />
+    <meta property="og:description" content= "&lt;blockquote&gt;
+&lt;p&gt;Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。&lt;/p&gt;
+&lt;/blockquote&gt;" />
+    <meta property="og:url" content="https://blog.kutang.icu/2023/11/24/Webpack-React%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="lozhu" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="&lt;blockquote&gt;
+&lt;p&gt;Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。&lt;/p&gt;
+&lt;/blockquote&gt;" />
+    <meta name="twitter:title" content="Webpack+React项目搭建 | LOZHU的博客"/>
+    <meta name="twitter:description" content="&lt;blockquote&gt;
+&lt;p&gt;Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。&lt;/p&gt;
+&lt;/blockquote&gt;"/>
+    <script type="application/ld+json">
+        {
+            "description": "&lt;blockquote&gt;
+&lt;p&gt;Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。&lt;/p&gt;
+&lt;/blockquote&gt;",
+            "author": { "@type": "Person", "name": "lozhu" },
+            "@type": "BlogPosting",
+            "url": "https://blog.kutang.icu/2023/11/24/Webpack-React%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://blog.kutang.icunull"
+            },
+            "name": "lozhu"
+            },
+            "headline": "Webpack+React项目搭建 | LOZHU的博客",
+            "datePublished": "2023-11-24T15:00:02.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://blog.kutang.icu/2023/11/24/Webpack-React%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍬</text></svg>">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">LOZHU的博客</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">Home</a>
+                
+                <a href="/archives">Archives</a>
+                
+                <a href="/friends">Friends</a>
+                
+                <a href="/about">About</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+    <a class="social" target="_blank" href="mailto:earth.aioli0o@icloud.com">
+        <ion-icon name="mail-open-outline"></ion-icon>
+    </a>
+
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">Home</a>
+                    
+                    <a href="/archives">Archives</a>
+                    
+                    <a href="/friends">Friends</a>
+                    
+                    <a href="/about">About</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-clpcv1dtn00088ntt80s70yxp" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      Webpack+React项目搭建
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2023-11-24T15:00:02.000Z" itemprop="datePublished">2023-11-24</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+            </div>
+            
+
+            <!-- 
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+            </div>
+             -->
+
+            
+            <div class="article-busuanzi">
+                <span id="busuanzi_value_page_pv">N</span> 人看过
+            </div>
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <blockquote>
+<p>Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。</p>
+</blockquote>
+<span id="more"></span>
+
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><ul>
+<li>entry: 使用哪个模块来作为构建的起始入口。</li>
+<li>output: 最终打包后的文件放在哪里，以及如何命名这些文件。</li>
+<li>loader: 是处理文件的转换器，用于对模块源码进行转换，webpack 只能识别 js、json 文件，像 css 、ts 、jsx等文件都需要通过 loader 进行转换。</li>
+<li>plugin: 是一种可扩展的机制，可以打包过程中添加额外的功能。比如打包优化，资源管理，注入环境变量等。</li>
+<li>mode: 对于不同的环境，我们往往需要不同的配置，通过设置 mode 参数来选择环境。</li>
+</ul>
+<h1 id="项目初始化"><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h1><p>略过 node.js 安装之类的前置步骤。</p>
+<pre><code class="sh">// 创建项目文件夹
+mkdir start-react
+// 初始化
+npm init
+</code></pre>
+<h1 id="typescript及React配置"><a href="#typescript及React配置" class="headerlink" title="typescript及React配置"></a>typescript及React配置</h1><p>引入 typescript及React</p>
+<pre><code class="sh">// react
+npm add -D react react-dom
+npm add -D @types/react @types/react-dom
+
+// typescript
+npm add -D typescript
+
+// 初始化 typesript 配置，生成 tsconfig.js 文件
+tsc --init
+</code></pre>
+<p>tsconfig.js 文件配置：</p>
+<pre><code class="js">&#123;
+  &quot;compilerOptions&quot;: &#123;
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    // &quot;incremental&quot;: true,                   /* Enable incremental compilation */
+    &quot;target&quot;: &quot;ESNEXT&quot;,                          /* Specify ECMAScript target version: &#39;ES3&#39; (default), &#39;ES5&#39;, &#39;ES2015&#39;, &#39;ES2016&#39;, &#39;ES2017&#39;, &#39;ES2018&#39;, &#39;ES2019&#39;, &#39;ES2020&#39;, or &#39;ESNEXT&#39;. */
+    &quot;module&quot;: &quot;ESNext&quot;,                     /* Specify module code generation: &#39;none&#39;, &#39;commonjs&#39;, &#39;amd&#39;, &#39;system&#39;, &#39;umd&#39;, &#39;es2015&#39;, &#39;es2020&#39;, or &#39;ESNext&#39;. */
+    // &quot;lib&quot;: [],                             /* Specify library files to be included in the compilation. */
+    // &quot;allowJs&quot;: true,                       /* Allow javascript files to be compiled. */
+    // &quot;checkJs&quot;: true,                       /* Report errors in .js files. */
+    &quot;jsx&quot;: &quot;preserve&quot;,                     /* Specify JSX code generation: &#39;preserve&#39;, &#39;react-native&#39;, or &#39;react&#39;. */
+    // &quot;declaration&quot;: true,                   /* Generates corresponding &#39;.d.ts&#39; file. */
+    // &quot;declarationMap&quot;: true,                /* Generates a sourcemap for each corresponding &#39;.d.ts&#39; file. */
+    &quot;sourceMap&quot;: true,                     /* Generates corresponding &#39;.map&#39; file. */
+    // &quot;outFile&quot;: &quot;./&quot;,                       /* Concatenate and emit output to single file. */
+    // &quot;outDir&quot;: &quot;./&quot;,                        /* Redirect output structure to the directory. */
+    &quot;rootDir&quot;: &quot;./src&quot;,                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+    // &quot;composite&quot;: true,                     /* Enable project compilation */
+    // &quot;tsBuildInfoFile&quot;: &quot;./&quot;,               /* Specify file to store incremental compilation information */
+    // &quot;removeComments&quot;: true,                /* Do not emit comments to output. */
+    &quot;noEmit&quot;: true,                        /* Do not emit outputs. */
+    &quot;importHelpers&quot;: true,                 /* Import emit helpers from &#39;tslib&#39;. */
+    // &quot;downlevelIteration&quot;: true,            /* Provide full support for iterables in &#39;for-of&#39;, spread, and destructuring when targeting &#39;ES5&#39; or &#39;ES3&#39;. */
+    // &quot;isolatedModules&quot;: true,               /* Transpile each file as a separate module (similar to &#39;ts.transpileModule&#39;). */
+
+    /* Strict Type-Checking Options */
+    &quot;strict&quot;: true,                           /* Enable all strict type-checking options. */
+    // &quot;noImplicitAny&quot;: true,                 /* Raise error on expressions and declarations with an implied &#39;any&#39; type. */
+    // &quot;strictNullChecks&quot;: true,              /* Enable strict null checks. */
+    // &quot;strictFunctionTypes&quot;: true,           /* Enable strict checking of function types. */
+    // &quot;strictBindCallApply&quot;: true,           /* Enable strict &#39;bind&#39;, &#39;call&#39;, and &#39;apply&#39; methods on functions. */
+    // &quot;strictPropertyInitialization&quot;: true,  /* Enable strict checking of property initialization in classes. */
+    // &quot;noImplicitThis&quot;: true,                /* Raise error on &#39;this&#39; expressions with an implied &#39;any&#39; type. */
+    // &quot;alwaysStrict&quot;: true,                  /* Parse in strict mode and emit &quot;use strict&quot; for each source file. */
+
+    /* Additional Checks */
+    &quot;noUnusedLocals&quot;: true,                /* Report errors on unused locals. */
+    &quot;noUnusedParameters&quot;: true,            /* Report errors on unused parameters. */
+    &quot;noImplicitReturns&quot;: true,             /* Report error when not all code paths in function return a value. */
+    &quot;noFallthroughCasesInSwitch&quot;: true,    /* Report errors for fallthrough cases in switch statement. */
+
+    /* Module Resolution Options */
+    &quot;moduleResolution&quot;: &quot;node&quot;,            /* Specify module resolution strategy: &#39;node&#39; (Node.js) or &#39;classic&#39; (TypeScript pre-1.6). */
+    &quot;baseUrl&quot;: &quot;./&quot;,                       /* Base directory to resolve non-absolute module names. */
+    &quot;paths&quot;: &#123;
+      &quot;common/*&quot;: [
+        &quot;src/common/*&quot;
+      ],
+      &quot;@/*&quot;: [
+        &quot;src/*&quot;
+      ]
+    &#125;,                           /* A series of entries which re-map imports to lookup locations relative to the &#39;baseUrl&#39;. */
+    // &quot;rootDirs&quot;: [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
+    // &quot;typeRoots&quot;: [],                       /* List of folders to include type definitions from. */
+    // &quot;types&quot;: [],                           /* Type declaration files to be included in compilation. */
+    // &quot;allowSyntheticDefaultImports&quot;: true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
+    &quot;esModuleInterop&quot;: true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies &#39;allowSyntheticDefaultImports&#39;. */
+    // &quot;preserveSymlinks&quot;: true,              /* Do not resolve the real path of symlinks. */
+    // &quot;allowUmdGlobalAccess&quot;: true,          /* Allow accessing UMD globals from modules. */
+
+    /* Source Map Options */
+    // &quot;sourceRoot&quot;: &quot;&quot;,                      /* Specify the location where debugger should locate TypeScript files instead of source locations. */
+    // &quot;mapRoot&quot;: &quot;&quot;,                         /* Specify the location where debugger should locate map files instead of generated locations. */
+    // &quot;inlineSourceMap&quot;: true,               /* Emit a single file with source maps instead of having a separate file. */
+    // &quot;inlineSources&quot;: true,                 /* Emit the source alongside the sourcemaps within a single file; requires &#39;--inlineSourceMap&#39; or &#39;--sourceMap&#39; to be set. */
+
+    /* Experimental Options */
+    // &quot;experimentalDecorators&quot;: true,        /* Enables experimental support for ES7 decorators. */
+    // &quot;emitDecoratorMetadata&quot;: true,         /* Enables experimental support for emitting type metadata for decorators. */
+
+    /* Advanced Options */
+    &quot;skipLibCheck&quot;: true,                     /* Skip type checking of declaration files. */
+    &quot;forceConsistentCasingInFileNames&quot;: true  /* Disallow inconsistently-cased references to the same file. */
+  &#125;,
+  &quot;include&quot;: [&quot;src&quot;]
+&#125;
+</code></pre>
+<p>创建 src 目录，在该目录下创建文件 App.tsx 及 index.tsx，文件内容如下：</p>
+<pre><code class="react">// App.tsx
+import * as React from &#39;react&#39;
+
+const App: React.FC = () =&gt; &#123;
+    return (
+        &lt;div&gt;
+            &lt;h1&gt;Hello lozhu!&lt;/h1&gt;
+        &lt;/div&gt;
+    )
+&#125;
+
+export default App
+</code></pre>
+<pre><code class="react">import * as React from &#39;react&#39;
+import * as ReactDOM from &#39;react-dom/client&#39;
+
+import App from &#39;./App&#39;
+
+const root = ReactDOM.createRoot(document.getElementById(&#39;app&#39;)!)
+root.render(&lt;App /&gt;)
+</code></pre>
+<h1 id="webpack配置"><a href="#webpack配置" class="headerlink" title="webpack配置"></a>webpack配置</h1><h2 id="引入-webpack"><a href="#引入-webpack" class="headerlink" title="引入 webpack"></a>引入 webpack</h2><pre><code class="sh">npm add -D webpack webpack-cli webpack-dev-server webpack-merge
+</code></pre>
+<h2 id="开发、生产环境配置"><a href="#开发、生产环境配置" class="headerlink" title="开发、生产环境配置"></a>开发、生产环境配置</h2><p>引入 cross-env</p>
+<pre><code class="sh">npm add -D cross-env
+</code></pre>
+<p>创建 scripts 文件夹及 webpack.base.js、webpack.dev.js、webpack.prod.js 文件</p>
+<pre><code class="js">// webpack.base.js
+const path = require(&#39;path&#39;)
+
+module.exports = &#123;
+    entry: path.resolve(__dirname, &#39;../src/index.tsx&#39;),
+    output: &#123;
+        path: path.resolve(__dirname, &#39;../dist&#39;),  // 打包后的文件存放地址
+        filename: &#39;[name].[hash:8].js&#39;  // 打包的文件名
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="js">// webpack.dev.js
+const &#123; merge &#125; = require(&#39;webpack-merge&#39;)
+const base = require(&#39;./webpack.base.js&#39;)
+
+module.exports = merge(base, &#123;
+    mode: &#39;development&#39;,
+    devServer: &#123;
+        open: true,  // 编译完自动打开浏览器
+        port: 8080
+    &#125;
+&#125;)
+</code></pre>
+<pre><code class="js">// webpack.prod.js
+const &#123; merge &#125; = require(&#39;webpack-merge&#39;)
+const base = require(&#39;./webpack.base.js&#39;)
+
+module.exports = merge(base, &#123;
+    mode: &#39;production&#39;  // 生产模式
+&#125;)
+</code></pre>
+<h2 id="修改启动脚本"><a href="#修改启动脚本" class="headerlink" title="修改启动脚本"></a>修改启动脚本</h2><p>修改 package.json</p>
+<pre><code class="json">&#123;
+  &quot;name&quot;: &quot;start-react&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;no description&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: &#123;
+    // 启动开发环境
+    &quot;dev&quot;: &quot;cross-env NODE_ENV=development webpack serve -c scripts/webpack.dev.js&quot;,
+    // 生产打包
+    &quot;build&quot;: &quot;cross-env NODE_ENV=production webpack -c scripts/webpack.prod.js&quot;
+  &#125;,
+  ...
+&#125; 
+</code></pre>
+<h1 id="Babel配置"><a href="#Babel配置" class="headerlink" title="Babel配置"></a>Babel配置</h1><p>Babel 是一个 JavaScript 编译器。主要用于将高版本的JavaScript代码转为向后兼容的JS代码，从而能让我们的代码运行在更低版本的浏览器或者其他的环境中。</p>
+<p>由于 webpack 只能识别js、json 文件， 无法识别 jsx&#x2F;tsx 文件，此时如果我们尝试启动项目肯定会报错。如何让 webpack 能识别呢？此时我们就需要使用<code>babel-loader</code> 来转换代码，babel-loader 可以让 webpack 在构建的时候借助 Babel 对JS代码进行转译。</p>
+<p>引入依赖</p>
+<pre><code class="sh">npm add -D babel-loader @babel/core @babel/preset-env @babel/preset-react @babel/preset-typescript
+</code></pre>
+<p>修改 webpack.base.js 配置</p>
+<pre><code class="js">const path = require(&#39;path&#39;)
+
+module.exports = &#123;
+    entry: path.resolve(__dirname, &#39;../src/index.tsx&#39;),
+    output: &#123;
+        path: path.resolve(__dirname, &#39;../dist&#39;),  // 打包后的文件存放地址
+        filename: &#39;[name].[hash:8].js&#39;  // 打包的文件名
+    &#125;,
+    resolve: &#123;
+        extensions: [&#39;.ts&#39;, &#39;.tsx&#39;, &#39;.mjs&#39;, &#39;.js&#39;, &#39;.json&#39;, &#39;.jsx&#39;],
+        alias: &#123;
+            &#39;@&#39;: path.resolve(__dirname, &#39;../&#39;)
+        &#125;
+    &#125;,
+    module: &#123;
+        rules: [
+            &#123;
+                test: /.(jsx?)|(tsx?)$/,
+                use: &#123;
+                    loader: &#39;babel-loader&#39;,
+                    options: &#123;
+                        presets: [
+                            [&#39;@babel/preset-env&#39;],
+                            [&#39;@babel/preset-typescript&#39;],
+                            [&#39;@babel/preset-react&#39;]
+                        ]
+                    &#125;
+                &#125;
+            &#125;
+        ]
+    &#125;
+&#125;
+</code></pre>
+<p>运行打包命令</p>
+<pre><code class="sh">npm run build
+</code></pre>
+<p>打包完成后，会生成 dist 目录，但是还需要 index.html 文件才能访问。</p>
+<h1 id="HtmlWebpackPlugin配置"><a href="#HtmlWebpackPlugin配置" class="headerlink" title="HtmlWebpackPlugin配置"></a>HtmlWebpackPlugin配置</h1><p>可以使用 HtmlWebpackPlugin 在每次打包时自动生成 index.html 入口文件。</p>
+<pre><code class="sh">npm add -D html-webpack-plugin
+</code></pre>
+<p>修改 webpack.base.js 文件内容</p>
+<pre><code class="js">const path = require(&#39;path&#39;)
+const HtmlWebpackPlugin = require(&#39;html-webpack-plugin&#39;)
+
+module.exports = &#123;
+    entry: path.resolve(__dirname, &#39;../src/index.tsx&#39;),
+    output: &#123;
+        path: path.resolve(__dirname, &#39;../dist&#39;),  // 打包后的文件存放地址
+        filename: &#39;[name].[hash:8].js&#39;  // 打包的文件名
+    &#125;,
+    resolve: &#123;
+        extensions: [&#39;.ts&#39;, &#39;.tsx&#39;, &#39;.mjs&#39;, &#39;.js&#39;, &#39;.json&#39;, &#39;.jsx&#39;],
+        alias: &#123;
+            &#39;@&#39;: path.resolve(__dirname, &#39;../&#39;)
+        &#125;
+    &#125;,
+    module: &#123;
+        rules: [
+            &#123;
+                test: /.(jsx?)|(tsx?)$/,
+                use: &#123;
+                    loader: &#39;babel-loader&#39;,
+                    options: &#123;
+                        presets: [
+                            [&#39;@babel/preset-env&#39;],
+                            [&#39;@babel/preset-typescript&#39;],
+                            [&#39;@babel/preset-react&#39;]
+                        ]
+                    &#125;
+                &#125;
+            &#125;
+        ]
+    &#125;,
+    plugins: [
+        new HtmlWebpackPlugin(&#123;
+            template: path.resolve(__dirname, &#39;../src/index.html&#39;)  // 使用自定义模板
+        &#125;)
+    ]
+&#125;
+</code></pre>
+<p>在 src 目录下创建 index.html 文件</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;hello webpack&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>再次运行打包命令后，dist 目录下产生了 index.html 文件，浏览器打开就能看到 App.tsx 中定义的内容。</p>
+<h1 id="各种loader配置"><a href="#各种loader配置" class="headerlink" title="各种loader配置"></a>各种loader配置</h1><h2 id="图片加载"><a href="#图片加载" class="headerlink" title="图片加载"></a>图片加载</h2><p>引入依赖 url-loader 及 file-loader</p>
+<pre><code class="sh">npm add -D file-loader url-loader
+</code></pre>
+<p>在根目录下创建图片文件夹 assets&#x2F;images，引入图片 img1.jpg 和 img2.jpg</p>
+<p>在 App.tsx 中引入图片</p>
+<pre><code class="tsx">import * as React from &#39;react&#39;
+import img1 from &#39;../assets/images/img1.jpg&#39;
+
+const App: React.FC = () =&gt; &#123;
+    return (
+        &lt;div&gt;
+            &lt;h1&gt;Hello lozhu!&lt;/h1&gt;
+            &lt;div&gt;
+                &lt;img src=&#123;img1&#125; /&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    )
+&#125;
+
+export default App
+</code></pre>
+<p>修改 webpack.base.js 配置</p>
+<pre><code class="js">const path = require(&#39;path&#39;)
+const HtmlWebpackPlugin = require(&#39;html-webpack-plugin&#39;)
+
+module.exports = &#123;
+    entry: path.resolve(__dirname, &#39;../src/index.tsx&#39;),
+    output: &#123;
+        path: path.resolve(__dirname, &#39;../dist&#39;),  // 打包后的文件存放地址
+        filename: &#39;[name].[hash:8].js&#39;  // 打包的文件名
+    &#125;,
+    resolve: &#123;
+        extensions: [&#39;.ts&#39;, &#39;.tsx&#39;, &#39;.mjs&#39;, &#39;.js&#39;, &#39;.json&#39;, &#39;.jsx&#39;],
+        alias: &#123;
+            &#39;@&#39;: path.resolve(__dirname, &#39;../&#39;)
+        &#125;
+    &#125;,
+    module: &#123;
+        rules: [
+            &#123;
+                test: /.(jsx?)|(tsx?)$/,
+                use: &#123;
+                    loader: &#39;babel-loader&#39;,
+                    options: &#123;
+                        presets: [
+                            [&#39;@babel/preset-env&#39;],
+                            [&#39;@babel/preset-typescript&#39;],
+                            [&#39;@babel/preset-react&#39;]
+                        ]
+                    &#125;
+                &#125;
+            &#125;,
+            &#123;
+                test: /\.(jpg|png)$/,
+                use: [
+                    &#123;
+                        loader: &#39;url-loader&#39;,
+                        options: &#123;
+                            limit: 2000
+                        &#125;
+                    &#125;
+                ]
+            &#125;
+        ]
+    &#125;,
+    plugins: [
+        new HtmlWebpackPlugin(&#123;
+            template: path.resolve(__dirname, &#39;../src/index.html&#39;)  // 使用自定义模板
+        &#125;)
+    ]
+&#125;
+</code></pre>
+<p>重新打包即可看到图片加载出来了:eyes:</p>
+<h2 id="css样式"><a href="#css样式" class="headerlink" title="css样式"></a>css样式</h2><p>css-loader 只能帮我们将 css 解析成 js，但不能挂载到元素上。style-loader 可以帮我们实现将样式挂载到元素上，它负责将 css 样式通过 style 标签插入到 DOM 中。通过 style-loader 实现样式挂载，自动添加 style 标签到 head 中。</p>
+<p>使用 postcss 处理 css</p>
+<pre><code class="sh">npm add -D style-loader css-loader postcss postcss-loader postcss-preset-env
+</code></pre>
+<p>新建 src&#x2F;assets&#x2F;style&#x2F;mystyle.css 样式文件</p>
+<pre><code class="css">// mystyle.css
+/* 标准图片样式 */
+.standard-img &#123;
+    width: 100px;
+    height: 60px;
+    border-radius: 8px;
+&#125;
+</code></pre>
+<p>修改 App.tsx 文件引入 css</p>
+<pre><code class="tsx">import * as React from &#39;react&#39;
+import img1 from &#39;./src/assets/images/img1.jpg&#39;
+import &#39;./assets/style/mystyle.css&#39;
+
+const App: React.FC = () =&gt; &#123;
+    return (
+        &lt;div&gt;
+            &lt;h1&gt;Hello lozhu!&lt;/h1&gt;
+            &lt;div&gt;
+                &lt;img src=&#123;img1&#125; className=&quot;standard-img&quot; /&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    )
+&#125;
+
+export default App
+</code></pre>
+<p>修改 webpack.base.js 文件</p>
+<pre><code class="js">const path = require(&#39;path&#39;)
+const HtmlWebpackPlugin = require(&#39;html-webpack-plugin&#39;)
+
+module.exports = &#123;
+    entry: path.resolve(__dirname, &#39;../src/index.tsx&#39;),
+    output: &#123;
+        path: path.resolve(__dirname, &#39;../dist&#39;),  // 打包后的文件存放地址
+        filename: &#39;[name].[hash:8].js&#39;  // 打包的文件名
+    &#125;,
+    resolve: &#123;
+        extensions: [&#39;.ts&#39;, &#39;.tsx&#39;, &#39;.mjs&#39;, &#39;.js&#39;, &#39;.json&#39;, &#39;.jsx&#39;],
+        alias: &#123;
+            &#39;@&#39;: path.resolve(__dirname, &#39;../&#39;)
+        &#125;
+    &#125;,
+    module: &#123;
+        rules: [
+            &#123;
+                test: /.(jsx?)|(tsx?)$/,
+                use: &#123;
+                    loader: &#39;babel-loader&#39;,
+                    options: &#123;
+                        presets: [
+                            [&#39;@babel/preset-env&#39;],
+                            [&#39;@babel/preset-typescript&#39;],
+                            [&#39;@babel/preset-react&#39;]
+                        ]
+                    &#125;
+                &#125;
+            &#125;,
+            &#123;
+                test: /\.(jpg|png)$/,
+                use: [
+                    &#123;
+                        loader: &#39;url-loader&#39;,
+                        options: &#123;
+                            limit: 2000
+                        &#125;
+                    &#125;
+                ]
+            &#125;,
+            &#123;
+                test: /\.css$/,
+                use: [
+                    &#39;style-loader&#39;,
+                    &#39;css-loader&#39;,
+                    &#123;
+                        loader: &#39;postcss-loader&#39;,
+                        options: &#123;		
+                            postcssOptions: &#123;
+                                plugins: [[&#39;postcss-preset-env&#39;, &#123;&#125;]]
+                            &#125;
+                        &#125;
+                    &#125;
+                ]
+            &#125;
+        ]
+    &#125;,
+    plugins: [
+        new HtmlWebpackPlugin(&#123;
+            template: path.resolve(__dirname, &#39;../src/index.html&#39;)  // 使用自定义模板
+        &#125;)
+    ]
+&#125;
+</code></pre>
+<p>重新打包之后可以看到图片的大小变为想要的样式了。</p>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+  
+    <a href="/2023/11/12/Memos%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">Memos数据迁移</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share" style="display: none;">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=Webpack+React项目搭建 - LOZHU的博客&url=https%3A%2F%2Fblog.kutang.icu%2F2023%2F11%2F24%2FWebpack-React%25E9%25A1%25B9%25E7%259B%25AE%25E6%2590%25AD%25E5%25BB%25BA%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=Webpack+React项目搭建 - LOZHU的博客&u=https%3A%2F%2Fblog.kutang.icu%2F2023%2F11%2F24%2FWebpack-React%25E9%25A1%25B9%25E7%259B%25AE%25E6%2590%25AD%25E5%25BB%25BA%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=Webpack+React项目搭建 - LOZHU的博客&url=https://blog.kutang.icu/2023/11/24/Webpack-React%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/11/24/Webpack-React%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/">Webpack+React项目搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2023/11/12/Memos%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/">Memos数据迁移</a>
+          </li>
+        
+          <li>
+            <a href="/2023/11/12/oh-my-zsh%E5%9B%BD%E5%86%85%E9%85%8D%E7%BD%AE/">oh-my-zsh国内配置</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/29/%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%A7%E5%B0%8F/">如何确定线程池大小</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/20/%E5%8E%9F%E7%A0%81and%E5%8F%8D%E7%A0%81and%E8%A1%A5%E7%A0%81/">原码and反码and补码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            <div style="margin: 2px 0;">
+                🍬 LOZHU的博客 &copy; 2023<br>
+            </div>
+            <div style="margin: 2px 0;">
+                🌱 已运行 <span id="runningDaysDiv"></span> 天
+            </div>
+            <div style="margin: 2px 0;">
+                ♥️  Powered By Hexo · Theme By <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Aomori</a>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 计算运行天数 -->
+<script type="text/javascript">
+    var runningDays = 1;
+    var startDate = Date.parse('2023-08-31');
+
+    var currentDate = new Date();
+    var nowMonth = currentDate.getMonth() + 1;
+    var strDate = currentDate.getDate();
+
+    var seperator = "-";
+
+    if (!(nowMonth >= 10)) {
+        nowMonth = "0" + nowMonth;
+    }
+
+    if (!(strDate > 9)) {
+        strDate = "0" + strDate;
+    }
+
+    var nowDate = currentDate.getFullYear() + seperator + nowMonth + seperator + strDate;
+    var endDate = Date.parse(nowDate);
+
+    if (startDate > endDate) {
+        runningDays = 0;
+    } else if (startDate === endDate) {
+        runningDays = 1;
+    } else {
+        runningDays = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+    }
+    var runningDaysDiv = document.getElementById('runningDaysDiv')
+    console.log(runningDaysDiv)
+    console.log(runningDaysDiv)
+    if (runningDaysDiv) {
+        runningDaysDiv.innerHTML = runningDays
+    }
+</script>
+
+
+</body>
+
+</html>

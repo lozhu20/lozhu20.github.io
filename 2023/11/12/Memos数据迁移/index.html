@@ -8,7 +8,9 @@
     
     <title>Memos数据迁移 | LOZHU的博客</title>
 
-    <meta name="description" content="LOZHU的博客">
+    <meta name="description" content="&lt;p&gt;去年年底时腾讯云轻量应用服务器做活动，2C2G配置13个月才80块钱不到，就将Memos部署在腾讯云上。公网IP随时随地都可以访问，但是服务器续费太贵，不准备续费，需要将数据迁移到本地。找了一圈，没找到现成的迁移工具。&lt;/p&gt;
+&lt;p&gt;因为数据存储方式选择的是sqlite，所以想着直接将服务器上的memos_prod.db数据库文件和assets文件夹拷贝到本地，再docker中运行memos镜像时挂载这个目录就可以，但是不知道什么原因，挂上之后数据不完整，比如用户信息是可以在页面展示的，而memo以及resource在页面加载时直接出现红色报错信息。&lt;/p&gt;
+&lt;p&gt;于是改了方案，先在本地将memos跑起来，再将数据用SQL复制到表中。这样做的缺点就是费时费力，并且有点坑的是，两次docker镜像的版本还不一致，表结构有变更，导致写SQL的时候还要对字段。&lt;/p&gt;">
     <meta name="keywords" content="">
 
     
@@ -16,17 +18,25 @@
     <meta property="og:locale" content="cn" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content= "Memos数据迁移 | LOZHU的博客"  />
-    <meta property="og:description" content= "LOZHU的博客" />
+    <meta property="og:description" content= "&lt;p&gt;去年年底时腾讯云轻量应用服务器做活动，2C2G配置13个月才80块钱不到，就将Memos部署在腾讯云上。公网IP随时随地都可以访问，但是服务器续费太贵，不准备续费，需要将数据迁移到本地。找了一圈，没找到现成的迁移工具。&lt;/p&gt;
+&lt;p&gt;因为数据存储方式选择的是sqlite，所以想着直接将服务器上的memos_prod.db数据库文件和assets文件夹拷贝到本地，再docker中运行memos镜像时挂载这个目录就可以，但是不知道什么原因，挂上之后数据不完整，比如用户信息是可以在页面展示的，而memo以及resource在页面加载时直接出现红色报错信息。&lt;/p&gt;
+&lt;p&gt;于是改了方案，先在本地将memos跑起来，再将数据用SQL复制到表中。这样做的缺点就是费时费力，并且有点坑的是，两次docker镜像的版本还不一致，表结构有变更，导致写SQL的时候还要对字段。&lt;/p&gt;" />
     <meta property="og:url" content="https://blog.kutang.icu/2023/11/12/Memos%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="lozhu" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="LOZHU的博客" />
+    <meta property="og:description" content="&lt;p&gt;去年年底时腾讯云轻量应用服务器做活动，2C2G配置13个月才80块钱不到，就将Memos部署在腾讯云上。公网IP随时随地都可以访问，但是服务器续费太贵，不准备续费，需要将数据迁移到本地。找了一圈，没找到现成的迁移工具。&lt;/p&gt;
+&lt;p&gt;因为数据存储方式选择的是sqlite，所以想着直接将服务器上的memos_prod.db数据库文件和assets文件夹拷贝到本地，再docker中运行memos镜像时挂载这个目录就可以，但是不知道什么原因，挂上之后数据不完整，比如用户信息是可以在页面展示的，而memo以及resource在页面加载时直接出现红色报错信息。&lt;/p&gt;
+&lt;p&gt;于是改了方案，先在本地将memos跑起来，再将数据用SQL复制到表中。这样做的缺点就是费时费力，并且有点坑的是，两次docker镜像的版本还不一致，表结构有变更，导致写SQL的时候还要对字段。&lt;/p&gt;" />
     <meta name="twitter:title" content="Memos数据迁移 | LOZHU的博客"/>
-    <meta name="twitter:description" content="LOZHU的博客"/>
+    <meta name="twitter:description" content="&lt;p&gt;去年年底时腾讯云轻量应用服务器做活动，2C2G配置13个月才80块钱不到，就将Memos部署在腾讯云上。公网IP随时随地都可以访问，但是服务器续费太贵，不准备续费，需要将数据迁移到本地。找了一圈，没找到现成的迁移工具。&lt;/p&gt;
+&lt;p&gt;因为数据存储方式选择的是sqlite，所以想着直接将服务器上的memos_prod.db数据库文件和assets文件夹拷贝到本地，再docker中运行memos镜像时挂载这个目录就可以，但是不知道什么原因，挂上之后数据不完整，比如用户信息是可以在页面展示的，而memo以及resource在页面加载时直接出现红色报错信息。&lt;/p&gt;
+&lt;p&gt;于是改了方案，先在本地将memos跑起来，再将数据用SQL复制到表中。这样做的缺点就是费时费力，并且有点坑的是，两次docker镜像的版本还不一致，表结构有变更，导致写SQL的时候还要对字段。&lt;/p&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "LOZHU的博客",
+            "description": "&lt;p&gt;去年年底时腾讯云轻量应用服务器做活动，2C2G配置13个月才80块钱不到，就将Memos部署在腾讯云上。公网IP随时随地都可以访问，但是服务器续费太贵，不准备续费，需要将数据迁移到本地。找了一圈，没找到现成的迁移工具。&lt;/p&gt;
+&lt;p&gt;因为数据存储方式选择的是sqlite，所以想着直接将服务器上的memos_prod.db数据库文件和assets文件夹拷贝到本地，再docker中运行memos镜像时挂载这个目录就可以，但是不知道什么原因，挂上之后数据不完整，比如用户信息是可以在页面展示的，而memo以及resource在页面加载时直接出现红色报错信息。&lt;/p&gt;
+&lt;p&gt;于是改了方案，先在本地将memos跑起来，再将数据用SQL复制到表中。这样做的缺点就是费时费力，并且有点坑的是，两次docker镜像的版本还不一致，表结构有变更，导致写SQL的时候还要对字段。&lt;/p&gt;",
             "author": { "@type": "Person", "name": "lozhu" },
             "@type": "BlogPosting",
             "url": "https://blog.kutang.icu/2023/11/12/Memos%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/index.html",
@@ -160,7 +170,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-clovif4lb0006eptt29qubort" class="article article-type-post" itemscope
+    <article id="post-clpcv1dtm00068ntt1i4v5t0o" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -213,6 +223,8 @@
             <p>去年年底时腾讯云轻量应用服务器做活动，2C2G配置13个月才80块钱不到，就将Memos部署在腾讯云上。公网IP随时随地都可以访问，但是服务器续费太贵，不准备续费，需要将数据迁移到本地。找了一圈，没找到现成的迁移工具。</p>
 <p>因为数据存储方式选择的是sqlite，所以想着直接将服务器上的memos_prod.db数据库文件和assets文件夹拷贝到本地，再docker中运行memos镜像时挂载这个目录就可以，但是不知道什么原因，挂上之后数据不完整，比如用户信息是可以在页面展示的，而memo以及resource在页面加载时直接出现红色报错信息。</p>
 <p>于是改了方案，先在本地将memos跑起来，再将数据用SQL复制到表中。这样做的缺点就是费时费力，并且有点坑的是，两次docker镜像的版本还不一致，表结构有变更，导致写SQL的时候还要对字段。</p>
+<span id="more"></span>
+
 <p>操作步骤：</p>
 <ol>
 <li><p>从服务器上将挂载目录中的文件 memos_prod_db 和 assets 目录拷贝至本地存档</p>
@@ -292,6 +304,15 @@ where 1 = 1;
     
 <nav class="article-nav">
   
+    <a href="/2023/11/24/Webpack-React%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" id="article-nav-newer" class="article-nav-link-wrap">
+      <div class="article-nav-caption">下一篇</div>
+      <div class="article-nav-title">
+        
+          Webpack+React项目搭建
+        
+      </div>
+    </a>
+  
   
     <a href="/2023/11/12/oh-my-zsh%E5%9B%BD%E5%86%85%E9%85%8D%E7%BD%AE/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-caption">上一篇</div>
@@ -359,7 +380,7 @@ where 1 = 1;
   <div class="widget-wrap widget-cate">
     <div class="widget-title"><span>Categories</span></div>
     <div class="widget-inner">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a></li></ul>
     </div>
   </div>
 
@@ -370,6 +391,10 @@ where 1 = 1;
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/2023/11/24/Webpack-React%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/">Webpack+React项目搭建</a>
+          </li>
         
           <li>
             <a href="/2023/11/12/Memos%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/">Memos数据迁移</a>
@@ -385,10 +410,6 @@ where 1 = 1;
         
           <li>
             <a href="/2023/09/20/%E5%8E%9F%E7%A0%81and%E5%8F%8D%E7%A0%81and%E8%A1%A5%E7%A0%81/">原码and反码and补码</a>
-          </li>
-        
-          <li>
-            <a href="/2023/09/14/Optional-type-in-Swift/">Optional type in Swift</a>
           </li>
         
       </ul>

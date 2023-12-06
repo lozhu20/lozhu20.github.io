@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>在 MacOS 上编译 OpenJDK | LOZHU的博客</title>
+
+    <meta name="description" content="&lt;p&gt;在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。&lt;/p&gt;">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="cn" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "在 MacOS 上编译 OpenJDK | LOZHU的博客"  />
+    <meta property="og:description" content= "&lt;p&gt;在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。&lt;/p&gt;" />
+    <meta property="og:url" content="https://lozhu20.github.io/2023/12/06/%E5%9C%A8-MacOS-%E4%B8%8A%E7%BC%96%E8%AF%91-OpenJDK/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="lozhu" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="&lt;p&gt;在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。&lt;/p&gt;" />
+    <meta name="twitter:title" content="在 MacOS 上编译 OpenJDK | LOZHU的博客"/>
+    <meta name="twitter:description" content="&lt;p&gt;在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。&lt;/p&gt;"/>
+    <script type="application/ld+json">
+        {
+            "description": "&lt;p&gt;在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。&lt;/p&gt;",
+            "author": { "@type": "Person", "name": "lozhu" },
+            "@type": "BlogPosting",
+            "url": "https://lozhu20.github.io/2023/12/06/%E5%9C%A8-MacOS-%E4%B8%8A%E7%BC%96%E8%AF%91-OpenJDK/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://lozhu20.github.ionull"
+            },
+            "name": "lozhu"
+            },
+            "headline": "在 MacOS 上编译 OpenJDK | LOZHU的博客",
+            "datePublished": "2023-12-06T14:57:36.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://lozhu20.github.io/2023/12/06/%E5%9C%A8-MacOS-%E4%B8%8A%E7%BC%96%E8%AF%91-OpenJDK/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍬</text></svg>">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">LOZHU的博客</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">Home</a>
+                
+                <a href="/archives">Archives</a>
+                
+                <a href="/friends">Friends</a>
+                
+                <a href="/about">About</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+    <a class="social" target="_blank" href="mailto:earth.aioli0o@icloud.com">
+        <ion-icon name="mail-open-outline"></ion-icon>
+    </a>
+
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">Home</a>
+                    
+                    <a href="/archives">Archives</a>
+                    
+                    <a href="/friends">Friends</a>
+                    
+                    <a href="/about">About</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-clptwqahf000oz0tt003r9iqb" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      在 MacOS 上编译 OpenJDK
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2023-12-06T14:57:36.000Z" itemprop="datePublished">2023-12-06</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/Java/">Java</a>
+            </div>
+            
+
+            <!-- 
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li></ul>
+            </div>
+             -->
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <p>在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。</p>
+<span id="more"></span>
+
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>1、Mac 上安装 Mercurial 总是报错，没找到什么原因，所以用不了 <code>hg clone <a target="_blank" rel="noopener" href="http://hg.openjdk.java.net/jdk8">http://hg.openjdk.java.net/jdk8</a></code> 这种方式。</p>
+<p>jdk8 源码地址：<a target="_blank" rel="noopener" href="http://jdk.java.net/java-se-ri/8-MR3">jdk8u41源码下载</a>  <a target="_blank" rel="noopener" href="https://download.java.net/openjdk/openjdk/jdk8/promoted/b132/openjdk-8-src-b132-03_mar_2014.zip">zip文件下载</a></p>
+<p>2、安装 freetype 和 ccache：</p>
+<p><code>brew install freetype</code></p>
+<p><code>brew install ccache</code></p>
+<br>
+
+<h1 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h1><p>运行 configure：</p>
+<pre><code class="bash">./configure --with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/
+</code></pre>
+<p><em>遇到的报错及解决方案</em></p>
+<p>1、The C compiler (located as &#x2F;usr&#x2F;bin&#x2F;gcc) does not seem to be the required GCC compiler.</p>
+<pre><code>打开文件common/autoconf/generated-configure.sh，搜索compiler is required
+注释或把报错命令改为echo即可。
+</code></pre>
+<br>
+
+<p>比较顺利，只遇到上面一个错误。</p>
+<p>成功输出：</p>
+<pre><code>....
+....
+config.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/spec.sh
+config.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/Makefile
+config.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/config.h
+
+====================================================
+A new configuration has been successfully created in
+/Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release
+using configure arguments &#39;--with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/&#39;.
+
+Configuration summary:
+* Debug level:    release
+* JDK variant:    normal
+* JVM variants:   server
+* OpenJDK target: OS: macosx, CPU architecture: x86, address length: 64
+
+Tools summary:
+* Boot JDK:       openjdk version &quot;1.8.0_292&quot; OpenJDK Runtime Environment (Zulu 8.54.0.21-CA-macosx) (build 1.8.0_292-b10) OpenJDK 64-Bit Server VM (Zulu 8.54.0.21-CA-macosx) (build 25.292-b10, mixed mode)  (at /opt/java/zulu8.54.0.21-ca-jdk8.0.292-macosx_x64)
+* C Compiler:      version  (at /usr/bin/gcc)
+* C++ Compiler:    version  (at /usr/bin/g++)
+
+Build performance summary:
+* Cores to use:   4
+* Memory limit:   16384 MB
+* ccache status:  installed, but disabled (version older than 3.1.4)
+
+Build performance tip: ccache gives a tremendous speedup for C++ recompilations.
+You have ccache installed, but it is a version prior to 3.1.4. Try upgrading.
+</code></pre>
+<br>
+
+<p>运行 <code>make all</code></p>
+<p>报错及解决：</p>
+<p>1、clang: error: include path for libstdc++ headers not found; pass ‘-stdlib&#x3D;libc++’ on the command line to use the libc++ standard library instead [-Werror,-Wstdlibcxx-not-found]</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/quantum7/article/details/108466760">MAC编译OpenJDK8：clang: error: include path for libstdc++ headers not found</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/quantum6/xcode-missing-libstdcpp.git">The missing libstdc++ headers and libraries for Xcode 10 or above.</a></p>
+<p>2、</p>
+<pre><code>l-op-parentheses]
+    if ( instr-&gt;is_ideal_branch() &amp;&amp; instr-&gt;label_position() == -1 ||
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~
+/Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/hotspot/src/share/vm/adlc/archDesc.cpp:336:35: note: place parentheses around the &#39;&amp;&amp;&#39; expression to silence this warning
+    if ( instr-&gt;is_ideal_branch() &amp;&amp; instr-&gt;label_position() == -1 ||
+                                  ^
+         (                                                        )
+</code></pre>
+<h1 id="其他可能遇到的错误"><a href="#其他可能遇到的错误" class="headerlink" title="其他可能遇到的错误"></a>其他可能遇到的错误</h1><p>.&#x2F;configure –with-freetype-include&#x3D;&#x2F;usr&#x2F;local&#x2F;include&#x2F;freetype2 –with-freetype-lib&#x3D;&#x2F;usr&#x2F;local&#x2F;lib&#x2F;</p>
+<p>报错：The C compiler (located as &#x2F;usr&#x2F;bin&#x2F;gcc) does not seem to be the required GCC compiler.<br>打开文件common&#x2F;autoconf&#x2F;generated-configure.sh，搜索compiler is required<br>注释或把报错命令改为echo即可。</p>
+<hr>
+<p>(base) ➜  jdk8 make<br>Building OpenJDK for target ‘default’ in configuration ‘macosx-x86_64-normal-server-release’</p>
+<p>Starting langtools</p>
+<p>&#x2F;bin&#x2F;sh: line 0: cd: &#x2F;Users&#x2F;chenxii&#x2F;Documents&#x2F;Java&#x2F;jdk8&#x2F;jdk8&#x2F;langtools&#x2F;make: No such file or directory<br>make: *** [langtools-only] Error 1</p>
+<p>解决方案参考：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/34703703/jdk8-build-error-langtools">https://stackoverflow.com/questions/34703703/jdk8-build-error-langtools</a></p>
+<hr>
+<p>执行：.&#x2F;get_source.sh</p>
+<p>(base) ➜  jdk8 .&#x2F;get_source.sh</p>
+<p>Repositories:  corba jaxp jaxws langtools jdk hotspot nashorn</p>
+<pre><code>            corba:   hg clone http://hg.openjdk.java.net/jdk8/jdk8/corba corba
+             jaxp:   hg clone http://hg.openjdk.java.net/jdk8/jdk8/jaxp jaxp
+            corba:   requesting all changes
+</code></pre>
+<p>Waiting 5 secs before spawning next background command.</p>
+<p>lcm.cpp:52:35: error: ordered comparison between pointer and zero (‘address’ (aka ‘unsigned char *’) and ‘int’) </p>
+<p>解决：编辑&#x2F;hotspot&#x2F;src&#x2F;share&#x2F;vm&#x2F;opto&#x2F;lcm.cpp:52 原：if (Universe::narrow_oop_base() &gt; 0) 修改后： if (Universe::narrow_oop_base()!&#x3D; NULL) { &#x2F;&#x2F; Implies UseCompressedOops.</p>
+<hr>
+<p>error: ordered comparison between pointer and zero</p>
+<p>修改openjdk&#x2F;hotspot&#x2F;src&#x2F;share&#x2F;vm&#x2F;runtime&#x2F;virtualspace.cpp<br>　　修改331行为<br>　　if (base() !&#x3D; 0) {</p>
+<hr>
+<p>fatal error: ‘JavaNativeFoundation&#x2F;JavaNativeFoundation.h’ file not found<br>#import &lt;JavaNativeFoundation&#x2F;JavaNativeFoundation.h&gt;</p>
+<p>(base) ➜  openjdk  sudo find &#x2F; -name “<em>JavaNativeFoundation.h</em>“<br>Password:<br>find: &#x2F;Library&#x2F;Application Support&#x2F;com.apple.TCC: Operation not permitted<br>&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX11.1.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaNativeFoundation.framework&#x2F;Versions&#x2F;A&#x2F;Headers&#x2F;JavaNativeFoundation.h<br>&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Versions&#x2F;A&#x2F;Frameworks&#x2F;JavaNativeFoundation.framework&#x2F;Versions&#x2F;A&#x2F;Headers&#x2F;JavaNativeFoundation.h</p>
+<p>编辑：<br>vim hotspot&#x2F;make&#x2F;bsd&#x2F;makefiles&#x2F;saproc.make 61行：<br>SALIBS &#x3D; -g -framework Foundation -F&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Frameworks -framework JavaNativeFoundation -framework Security -framework CoreFoundation</p>
+<p>105行：<br>-I&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Headers</p>
+<hr>
+<p>执行：make CONF&#x3D;macosx-x86_64-normal-server-release clean<br>make CONF&#x3D;macosx-x86_64-normal-server-release install</p>
+<p>—– Build times ——-<br>Start 2021-07-11 10:50:45<br>End   2021-07-11 10:59:52<br>00:00:16 corba<br>00:00:50 demos<br>00:01:24 docs<br>00:02:10 hotspot<br>00:01:01 images<br>00:00:09 jaxp<br>00:00:14 jaxws<br>00:02:35 jdk<br>00:00:18 langtools<br>00:00:08 nashorn</p>
+<p>00:09:07 TOTAL</p>
+<p>Finished building OpenJDK for target ‘all’</p>
+<p>WARNING: You have the following ALT_ variables set:<br>ALT_PARALLEL_COMPILE_JOBS&#x3D;2<br>ALT_ variables are deprecated and will be ignored. Please clean your environment.</p>
+<p>[1]    90140 bus error  build&#x2F;macosx-x86_64-normal-server-release&#x2F;jdk&#x2F;bin&#x2F;java -version</p>
+<p>&#x2F;Users&#x2F;chenxii&#x2F;Documents&#x2F;Java&#x2F;jdk8&#x2F;openjdk&#x2F;build&#x2F;macosx-x86_64-normal-server-release&#x2F;jdk&#x2F;bin</p>
+<p>？</p>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+  
+    <a href="/2023/12/03/2023%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BB%8EA%E5%88%B0Z/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">2023浏览器从A到Z</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share" style="display: none;">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=在 MacOS 上编译 OpenJDK - LOZHU的博客&url=https%3A%2F%2Flozhu20.github.io%2F2023%2F12%2F06%2F%25E5%259C%25A8-MacOS-%25E4%25B8%258A%25E7%25BC%2596%25E8%25AF%2591-OpenJDK%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=在 MacOS 上编译 OpenJDK - LOZHU的博客&u=https%3A%2F%2Flozhu20.github.io%2F2023%2F12%2F06%2F%25E5%259C%25A8-MacOS-%25E4%25B8%258A%25E7%25BC%2596%25E8%25AF%2591-OpenJDK%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=在 MacOS 上编译 OpenJDK - LOZHU的博客&url=https://lozhu20.github.io/2023/12/06/%E5%9C%A8-MacOS-%E4%B8%8A%E7%BC%96%E8%AF%91-OpenJDK/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2023/12/06/%E5%9C%A8-MacOS-%E4%B8%8A%E7%BC%96%E8%AF%91-OpenJDK/">在 MacOS 上编译 OpenJDK</a>
+          </li>
+        
+          <li>
+            <a href="/2023/12/03/2023%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BB%8EA%E5%88%B0Z/">2023浏览器从A到Z</a>
+          </li>
+        
+          <li>
+            <a href="/2023/11/24/Webpack-React%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/">Webpack+React项目搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2023/11/12/Memos%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/">Memos数据迁移</a>
+          </li>
+        
+          <li>
+            <a href="/2023/11/12/oh-my-zsh%E5%9B%BD%E5%86%85%E9%85%8D%E7%BD%AE/">oh-my-zsh国内配置</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            <div style="margin: 2px 0;">
+                🍬 LOZHU的博客 &copy; 2023<br>
+            </div>
+            <div style="margin: 2px 0;">
+                🌱 已运行 <span id="runningDaysDiv"></span> 天
+            </div>
+            <div style="margin: 2px 0;">
+                ♥️  Powered By Hexo · Theme By <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Aomori</a>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 计算运行天数 -->
+<script type="text/javascript">
+    var runningDays = 1;
+    var startDate = Date.parse('2023-08-31');
+
+    var currentDate = new Date();
+    var nowMonth = currentDate.getMonth() + 1;
+    var strDate = currentDate.getDate();
+
+    var seperator = "-";
+
+    if (!(nowMonth >= 10)) {
+        nowMonth = "0" + nowMonth;
+    }
+
+    if (!(strDate > 9)) {
+        strDate = "0" + strDate;
+    }
+
+    var nowDate = currentDate.getFullYear() + seperator + nowMonth + seperator + strDate;
+    var endDate = Date.parse(nowDate);
+
+    if (startDate > endDate) {
+        runningDays = 0;
+    } else if (startDate === endDate) {
+        runningDays = 1;
+    } else {
+        runningDays = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+    }
+    var runningDaysDiv = document.getElementById('runningDaysDiv')
+    console.log(runningDaysDiv)
+    console.log(runningDaysDiv)
+    if (runningDaysDiv) {
+        runningDaysDiv.innerHTML = runningDays
+    }
+</script>
+
+
+</body>
+
+</html>

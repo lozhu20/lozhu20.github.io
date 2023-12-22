@@ -6,35 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     
-    <title>在Ubuntu22.04上安装Postgresql | LOZHU的博客</title>
+    <title>Springboot3+PageHelper分页不生效问题 | LOZHU的博客</title>
 
-    <meta name="description" content="&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
-&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;">
+    <meta name="description" content="&lt;p&gt;今天在做一个小项目，引入 PageHelper 时踩了一个坑，记录一下。&lt;/p&gt;
+&lt;p&gt;解决方案参考：&lt;a href=&#34;https://blog.csdn.net/pjymyself/article/details/119203900&#34;&gt;SpringBoot+MyBatis使用pagehelper分页插件及其注意事项（含解决分页不生效问题）&lt;/a&gt;&lt;/p&gt;">
     <meta name="keywords" content="">
 
     
 
     <meta property="og:locale" content="cn" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content= "在Ubuntu22.04上安装Postgresql | LOZHU的博客"  />
-    <meta property="og:description" content= "&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
-&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;" />
-    <meta property="og:url" content="https://lozhu20.github.io/2023/09/01/%E5%9C%A8Ubuntu22-04%E4%B8%8A%E5%AE%89%E8%A3%85Postgresql/index.html" />
+    <meta property="og:title" content= "Springboot3+PageHelper分页不生效问题 | LOZHU的博客"  />
+    <meta property="og:description" content= "&lt;p&gt;今天在做一个小项目，引入 PageHelper 时踩了一个坑，记录一下。&lt;/p&gt;
+&lt;p&gt;解决方案参考：&lt;a href=&#34;https://blog.csdn.net/pjymyself/article/details/119203900&#34;&gt;SpringBoot+MyBatis使用pagehelper分页插件及其注意事项（含解决分页不生效问题）&lt;/a&gt;&lt;/p&gt;" />
+    <meta property="og:url" content="https://lozhu20.github.io/2023/12/22/Springboot3-PageHelper%E5%88%86%E9%A1%B5%E4%B8%8D%E7%94%9F%E6%95%88%E9%97%AE%E9%A2%98/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="lozhu" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
-&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;" />
-    <meta name="twitter:title" content="在Ubuntu22.04上安装Postgresql | LOZHU的博客"/>
-    <meta name="twitter:description" content="&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
-&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;"/>
+    <meta property="og:description" content="&lt;p&gt;今天在做一个小项目，引入 PageHelper 时踩了一个坑，记录一下。&lt;/p&gt;
+&lt;p&gt;解决方案参考：&lt;a href=&#34;https://blog.csdn.net/pjymyself/article/details/119203900&#34;&gt;SpringBoot+MyBatis使用pagehelper分页插件及其注意事项（含解决分页不生效问题）&lt;/a&gt;&lt;/p&gt;" />
+    <meta name="twitter:title" content="Springboot3+PageHelper分页不生效问题 | LOZHU的博客"/>
+    <meta name="twitter:description" content="&lt;p&gt;今天在做一个小项目，引入 PageHelper 时踩了一个坑，记录一下。&lt;/p&gt;
+&lt;p&gt;解决方案参考：&lt;a href=&#34;https://blog.csdn.net/pjymyself/article/details/119203900&#34;&gt;SpringBoot+MyBatis使用pagehelper分页插件及其注意事项（含解决分页不生效问题）&lt;/a&gt;&lt;/p&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
-&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;",
+            "description": "&lt;p&gt;今天在做一个小项目，引入 PageHelper 时踩了一个坑，记录一下。&lt;/p&gt;
+&lt;p&gt;解决方案参考：&lt;a href=&#34;https://blog.csdn.net/pjymyself/article/details/119203900&#34;&gt;SpringBoot+MyBatis使用pagehelper分页插件及其注意事项（含解决分页不生效问题）&lt;/a&gt;&lt;/p&gt;",
             "author": { "@type": "Person", "name": "lozhu" },
             "@type": "BlogPosting",
-            "url": "https://lozhu20.github.io/2023/09/01/%E5%9C%A8Ubuntu22-04%E4%B8%8A%E5%AE%89%E8%A3%85Postgresql/index.html",
+            "url": "https://lozhu20.github.io/2023/12/22/Springboot3-PageHelper%E5%88%86%E9%A1%B5%E4%B8%8D%E7%94%9F%E6%95%88%E9%97%AE%E9%A2%98/index.html",
             "publisher": {
             "@type": "Organization",
             "logo": {
@@ -43,11 +43,11 @@
             },
             "name": "lozhu"
             },
-            "headline": "在Ubuntu22.04上安装Postgresql | LOZHU的博客",
-            "datePublished": "2023-09-01T08:33:03.000Z",
+            "headline": "Springboot3+PageHelper分页不生效问题 | LOZHU的博客",
+            "datePublished": "2023-12-22T14:53:04.000Z",
             "mainEntityOfPage": {
                 "@type": "WebPage",
-                "@id": "https://lozhu20.github.io/2023/09/01/%E5%9C%A8Ubuntu22-04%E4%B8%8A%E5%AE%89%E8%A3%85Postgresql/index.html"
+                "@id": "https://lozhu20.github.io/2023/12/22/Springboot3-PageHelper%E5%88%86%E9%A1%B5%E4%B8%8D%E7%94%9F%E6%95%88%E9%97%AE%E9%A2%98/index.html"
             },
             "@context": "http://schema.org"
         }
@@ -165,7 +165,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-clqgrm527000ycqtt50rlavuu" class="article article-type-post" itemscope
+    <article id="post-clqgrm521000ccqtt89vm4d2h" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -181,7 +181,7 @@
             
   
     <h1 class="article-title" itemprop="name">
-      在Ubuntu22.04上安装Postgresql
+      Springboot3+PageHelper分页不生效问题
     </h1>
   
 
@@ -191,18 +191,18 @@
         <div class="article-more-info article-more-info-post hairline">
 
             <div class="article-date">
-  <time datetime="2023-09-01T08:33:03.000Z" itemprop="datePublished">2023-09-01</time>
+  <time datetime="2023-12-22T14:53:04.000Z" itemprop="datePublished">2023-12-22</time>
 </div>
 
             
             <div class="article-category">
-                <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+                <a class="article-category-link" href="/categories/Java/">Java</a>
             </div>
             
 
             <!-- 
             <div class="article-tag">
-                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li></ul>
             </div>
              -->
 
@@ -211,100 +211,49 @@
         </div>
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
-            <h2 id="切换到清华源"><a href="#切换到清华源" class="headerlink" title="切换到清华源"></a>切换到清华源</h2><p>最初使用的是阿里云的源，apt 找不到 libllvm 包。</p>
-<p>写入 &#x2F;etc&#x2F;apt&#x2F;sources.list</p>
+            <p>今天在做一个小项目，引入 PageHelper 时踩了一个坑，记录一下。</p>
+<p>解决方案参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/pjymyself/article/details/119203900">SpringBoot+MyBatis使用pagehelper分页插件及其注意事项（含解决分页不生效问题）</a></p>
 <span id="more"></span>
 
-<pre><code># See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
-# newer versions of the distribution.
-deb http://cn.archive.ubuntu.com/ubuntu jammy main restricted
-# deb-src http://cn.archive.ubuntu.com/ubuntu jammy main restricted
+<p>环境：</p>
+<ul>
+<li>SpringBoot 3.2.0</li>
+<li>JDK 17</li>
+<li>Postgresql 15</li>
+<li>PageHelper 1.2.12</li>
+</ul>
+<p>依赖</p>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.github.pagehelper&lt;/groupId&gt;
+    &lt;artifactId&gt;pagehelper-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.2.12&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>使用</p>
+<pre><code class="java">     public Response&lt;PageInfo&lt;User&gt;&gt; queryAllUser(int pageNum, int pageSize) &#123;
+        PageHelper.startPage(pageNum, pageSize);
+        List&lt;User&gt; userList = userMapper.selectAll();
+        return ResponseUtil.success(new PageInfo&lt;&gt;(userList));
+    &#125;
+</code></pre>
+<p>全部数据返回到前端，没有产生分页的效果。</p>
+<p>看了大多数不生效的情况就是以下几种：</p>
+<ol>
+<li>分页和真正的数据查询之间夹杂了其他操作</li>
+<li>先执行了查询然后再设置的分页</li>
+<li>依赖导入错误，导入的不是 <code>pagehelper-spring-boot-starter</code></li>
+</ol>
+<p>但是从自己的代码确认不是这类问题。</p>
+<p>找了好久，看到 <a target="_blank" rel="noopener" href="https://blog.csdn.net/pjymyself/article/details/119203900">SpringBoot+MyBatis使用pagehelper分页插件及其注意事项（含解决分页不生效问题）</a> 这篇博客末尾提到了使用分页拦截器，抱着试试看的心态，加了个一个配置类，确实生效了，原因未知。</p>
+<pre><code class="java">@Configuration
+public class PageHelperConfig &#123;
 
-## Major bug fix updates produced after the final release of the
-## distribution.
-deb http://cn.archive.ubuntu.com/ubuntu jammy-updates main restricted
-# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-updates main restricted
+    @Bean
+    public Interceptor[] plugins() &#123;
+        return new Interceptor[]&#123;new PageInterceptor()&#125;;
+    &#125;
 
-## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
-## team. Also, please note that software in universe WILL NOT receive any
-## review or updates from the Ubuntu security team.
-deb http://cn.archive.ubuntu.com/ubuntu jammy universe
-# deb-src http://cn.archive.ubuntu.com/ubuntu jammy universe
-deb http://cn.archive.ubuntu.com/ubuntu jammy-updates universe
-# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-updates universe
-
-## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
-## team, and may not be under a free licence. Please satisfy yourself as to
-## your rights to use the software. Also, please note that software in
-## multiverse WILL NOT receive any review or updates from the Ubuntu
-## security team.
-deb http://cn.archive.ubuntu.com/ubuntu jammy multiverse
-# deb-src http://cn.archive.ubuntu.com/ubuntu jammy multiverse
-deb http://cn.archive.ubuntu.com/ubuntu jammy-updates multiverse
-# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-updates multiverse
-
-## N.B. software from this repository may not have been tested as
-## extensively as that contained in the main release, although it includes
-## newer versions of some applications which may provide useful features.
-## Also, please note that software in backports WILL NOT receive any review
-## or updates from the Ubuntu security team.
-deb http://cn.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
-# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
-
-deb http://cn.archive.ubuntu.com/ubuntu jammy-security main restricted
-# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-security main restricted
-deb http://cn.archive.ubuntu.com/ubuntu jammy-security universe
-# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-security universe
-deb http://cn.archive.ubuntu.com/ubuntu jammy-security multiverse
-# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-security multiverse
-</code></pre>
-<h2 id="安装-libllvm14"><a href="#安装-libllvm14" class="headerlink" title="安装 libllvm14"></a>安装 libllvm14</h2><p>执行：</p>
-<pre><code class="shell">sudo apt update
-sudo apt install postgresql postgresql-contrib
-</code></pre>
-<p>提示 libllvm14 包找不到，先安装改包：</p>
-<pre><code class="shell">sudo apt install libllvm14
-</code></pre>
-<h2 id="安装-ssl-cert-snakeoil-pem"><a href="#安装-ssl-cert-snakeoil-pem" class="headerlink" title="安装 ssl-cert-snakeoil.pem"></a>安装 ssl-cert-snakeoil.pem</h2><p>再执行安装命令，成功安装，但是启动失败：</p>
-<pre><code>● postgresql.service - PostgreSQL RDBMS
-     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
-     Active: active (exited) since Fri 2023-03-31 15:42:45 UTC; 2s ago
-    Process: 9793 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
-   Main PID: 9793 (code=exited, status=0/SUCCESS)
-        CPU: 3ms
-
-Mar 31 15:42:45 xingzii-vm systemd[1]: Starting PostgreSQL RDBMS...
-Mar 31 15:42:45 xingzii-vm systemd[1]: Finished PostgreSQL RDBMS.
-</code></pre>
-<p>到 &#x2F;var&#x2F;log&#x2F;postgresql 查看日志，提示：</p>
-<pre><code>2023-03-31 15:37:02.316 UTC [9453] FATAL:  could not load server certificate file &quot;/etc/ssl/certs/ssl-cert-snakeoil.pem&quot;: SSL error code 2147483661
-2023-03-31 15:37:02.316 UTC [9453] LOG:  database system is shut down
-pg_ctl: could not start server
-Examine the log output.
-</code></pre>
-<p>网上看了一下，安装这个就好：</p>
-<pre><code class="shell">sudo apt install ssl-cert &amp;&amp; sudo make-ssl-cert generate-default-snakeoil
-</code></pre>
-<p>安装好记得修改一下 &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;ssl-cert-snakeoil.pem 的权限：</p>
-<pre><code class="shell">sudo chmod 755 /etc/ssl/certs/ssl-cert-snakeoil.pem
-</code></pre>
-<p>再启动 postgresql 就好了。</p>
-<p>验证：</p>
-<pre><code class="shell">sudo -u postgres psql -c &quot;SELECT version();&quot;
-</code></pre>
-<pre><code>perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-    LANGUAGE = (unset),
-    LC_ALL = (unset),
-    LC_CTYPE = &quot;UTF-8&quot;,
-    LC_TERMINAL = &quot;iTerm2&quot;,
-    LANG = &quot;en_US.UTF-8&quot;
-    are supported and installed on your system.
-perl: warning: Falling back to a fallback locale (&quot;en_US.UTF-8&quot;).
-                                                                version
-----------------------------------------------------------------------------------------------------------------------------------------
- PostgreSQL 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, 64-bit
-(1 row)
+&#125;
 </code></pre>
 
         </div>
@@ -324,15 +273,11 @@ perl: warning: Falling back to a fallback locale (&quot;en_US.UTF-8&quot;).
     
 <nav class="article-nav">
   
-    <a href="/2023/09/02/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
-      <div class="article-nav-caption">下一篇</div>
-      <div class="article-nav-title">
-        
-          Hello World
-        
-      </div>
-    </a>
   
+    <a href="/2023/12/19/%E5%9C%A8MacOS%E4%B8%8A%E7%BC%96%E8%AF%91jdk12/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">在MacOS上编译jdk12</div>
+    </a>
   
 </nav>
 
@@ -340,15 +285,15 @@ perl: warning: Falling back to a fallback locale (&quot;en_US.UTF-8&quot;).
     <section class="share" style="display: none;">
         <div class="share-title">分享</div>
         <a class="share-item" target="_blank"
-            href="https://twitter.com/share?text=在Ubuntu22.04上安装Postgresql - LOZHU的博客&url=https%3A%2F%2Flozhu20.github.io%2F2023%2F09%2F01%2F%25E5%259C%25A8Ubuntu22-04%25E4%25B8%258A%25E5%25AE%2589%25E8%25A3%2585Postgresql%2F">
+            href="https://twitter.com/share?text=Springboot3+PageHelper分页不生效问题 - LOZHU的博客&url=https%3A%2F%2Flozhu20.github.io%2F2023%2F12%2F22%2FSpringboot3-PageHelper%25E5%2588%2586%25E9%25A1%25B5%25E4%25B8%258D%25E7%2594%259F%25E6%2595%2588%25E9%2597%25AE%25E9%25A2%2598%2F">
             <ion-icon name="logo-twitter"></ion-icon>
         </a>
         <a class="share-item" target="_blank"
-            href="https://www.facebook.com/sharer.php?title=在Ubuntu22.04上安装Postgresql - LOZHU的博客&u=https%3A%2F%2Flozhu20.github.io%2F2023%2F09%2F01%2F%25E5%259C%25A8Ubuntu22-04%25E4%25B8%258A%25E5%25AE%2589%25E8%25A3%2585Postgresql%2F">
+            href="https://www.facebook.com/sharer.php?title=Springboot3+PageHelper分页不生效问题 - LOZHU的博客&u=https%3A%2F%2Flozhu20.github.io%2F2023%2F12%2F22%2FSpringboot3-PageHelper%25E5%2588%2586%25E9%25A1%25B5%25E4%25B8%258D%25E7%2594%259F%25E6%2595%2588%25E9%2597%25AE%25E9%25A2%2598%2F">
             <ion-icon name="logo-facebook"></ion-icon>
         </a>
         <!-- <a class="share-item" target="_blank"
-            href="https://service.weibo.com/share/share.php?title=在Ubuntu22.04上安装Postgresql - LOZHU的博客&url=https://lozhu20.github.io/2023/09/01/%E5%9C%A8Ubuntu22-04%E4%B8%8A%E5%AE%89%E8%A3%85Postgresql/&pic=">
+            href="https://service.weibo.com/share/share.php?title=Springboot3+PageHelper分页不生效问题 - LOZHU的博客&url=https://lozhu20.github.io/2023/12/22/Springboot3-PageHelper%E5%88%86%E9%A1%B5%E4%B8%8D%E7%94%9F%E6%95%88%E9%97%AE%E9%A2%98/&pic=">
             <div class="n-icon n-icon-weibo"></div>
         </a> -->
     </section>

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>MySQL自测题目 | LOZHU的博客</title>
+
+    <meta name="description" content="&lt;p&gt;整理了一些 SQL 语法的自测题目，包括基础的 ddl 操作，以及分组统计、递归、窗口函数等进阶操作。某些语法可能 MySQL 不支持。&lt;/p&gt;">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="cn" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "MySQL自测题目 | LOZHU的博客"  />
+    <meta property="og:description" content= "&lt;p&gt;整理了一些 SQL 语法的自测题目，包括基础的 ddl 操作，以及分组统计、递归、窗口函数等进阶操作。某些语法可能 MySQL 不支持。&lt;/p&gt;" />
+    <meta property="og:url" content="https://lozhu20.github.io/2024/01/13/MySQL%E8%87%AA%E6%B5%8B%E9%A2%98%E7%9B%AE/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="lozhu" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="&lt;p&gt;整理了一些 SQL 语法的自测题目，包括基础的 ddl 操作，以及分组统计、递归、窗口函数等进阶操作。某些语法可能 MySQL 不支持。&lt;/p&gt;" />
+    <meta name="twitter:title" content="MySQL自测题目 | LOZHU的博客"/>
+    <meta name="twitter:description" content="&lt;p&gt;整理了一些 SQL 语法的自测题目，包括基础的 ddl 操作，以及分组统计、递归、窗口函数等进阶操作。某些语法可能 MySQL 不支持。&lt;/p&gt;"/>
+    <script type="application/ld+json">
+        {
+            "description": "&lt;p&gt;整理了一些 SQL 语法的自测题目，包括基础的 ddl 操作，以及分组统计、递归、窗口函数等进阶操作。某些语法可能 MySQL 不支持。&lt;/p&gt;",
+            "author": { "@type": "Person", "name": "lozhu" },
+            "@type": "BlogPosting",
+            "url": "https://lozhu20.github.io/2024/01/13/MySQL%E8%87%AA%E6%B5%8B%E9%A2%98%E7%9B%AE/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://lozhu20.github.ionull"
+            },
+            "name": "lozhu"
+            },
+            "headline": "MySQL自测题目 | LOZHU的博客",
+            "datePublished": "2024-01-12T17:05:03.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://lozhu20.github.io/2024/01/13/MySQL%E8%87%AA%E6%B5%8B%E9%A2%98%E7%9B%AE/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍬</text></svg>">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">LOZHU的博客</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">Home</a>
+                
+                <a href="/archives">Archives</a>
+                
+                <a href="/friends">Friends</a>
+                
+                <a href="/about">About</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+    <a class="social" target="_blank" href="mailto:earth.aioli0o@icloud.com">
+        <ion-icon name="mail-open-outline"></ion-icon>
+    </a>
+
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">Home</a>
+                    
+                    <a href="/archives">Archives</a>
+                    
+                    <a href="/friends">Friends</a>
+                    
+                    <a href="/about">About</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-clrbq9o4f0008jrtt9au231ru" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      MySQL自测题目
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2024-01-12T17:05:03.000Z" itemprop="datePublished">2024-01-13</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            </div>
+            
+
+            <!-- 
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+            </div>
+             -->
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <p>整理了一些 SQL 语法的自测题目，包括基础的 ddl 操作，以及分组统计、递归、窗口函数等进阶操作。某些语法可能 MySQL 不支持。</p>
+<span id="more"></span>
+
+<h1 id="MySQL-常见语法自测题目"><a href="#MySQL-常见语法自测题目" class="headerlink" title="MySQL 常见语法自测题目"></a>MySQL 常见语法自测题目</h1><h2 id="新建库和表"><a href="#新建库和表" class="headerlink" title="新建库和表"></a>新建库和表</h2><ol>
+<li><p>新建数据库 mydb（可选）</p>
+</li>
+<li><p>查看数据库版本、时区、字符集等，了解如何修改时区、字符集等</p>
+</li>
+<li><p>给出SQL：如果 client 表存在则删除该表</p>
+</li>
+<li><p>新建客户信息表 client，包含以下字段并给对应字段设置相应长度，并设置存储引擎为 InnoDB，字符集为 utf8mb4</p>
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>字段类型</th>
+<th>注释</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>varchar</td>
+<td>id</td>
+<td></td>
+</tr>
+<tr>
+<td>client_no</td>
+<td>varchar</td>
+<td>客户号</td>
+<td></td>
+</tr>
+<tr>
+<td>client_name</td>
+<td>varchar</td>
+<td>客户姓名</td>
+<td></td>
+</tr>
+<tr>
+<td>sex</td>
+<td>char</td>
+<td>性别(F:男性, M:女性, U:保密)</td>
+<td></td>
+</tr>
+<tr>
+<td>birthday</td>
+<td>date</td>
+<td>出生日期</td>
+<td></td>
+</tr>
+<tr>
+<td>is_validate</td>
+<td>char</td>
+<td>有效标识(Y:有效,N:无效)</td>
+<td></td>
+</tr>
+<tr>
+<td>note</td>
+<td>text</td>
+<td>其他说明</td>
+<td></td>
+</tr>
+<tr>
+<td>stand_by</td>
+<td>text</td>
+<td>预留备用字段</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>新建保单信息表 pol，包含以下字段并给对应字段设置相应长度，并设置存储引擎为 InnoDB，字符集为 utf8mb4</p>
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>字段类型</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>varchar</td>
+<td>id</td>
+</tr>
+<tr>
+<td>pol_no</td>
+<td>varchar</td>
+<td>保单号</td>
+</tr>
+<tr>
+<td>client_no</td>
+<td>int</td>
+<td>客户号</td>
+</tr>
+<tr>
+<td>app_date</td>
+<td>datetime</td>
+<td>投保时间</td>
+</tr>
+<tr>
+<td>payment_period</td>
+<td>char</td>
+<td>缴费周期(M:月缴,Y:年缴,O:一次交清)</td>
+</tr>
+<tr>
+<td>payment_amount</td>
+<td>decimal</td>
+<td>期缴保费</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<h2 id="新建用户、修改用户密码、表权限控制等"><a href="#新建用户、修改用户密码、表权限控制等" class="headerlink" title="新建用户、修改用户密码、表权限控制等"></a>新建用户、修改用户密码、表权限控制等</h2><p>略，自行了解。</p>
+<h2 id="常见数据库操作（DDL）"><a href="#常见数据库操作（DDL）" class="headerlink" title="常见数据库操作（DDL）"></a>常见数据库操作（DDL）</h2><ol>
+<li>按照建表规范，给 client 表和 pol 表的表明增加统一前缀</li>
+<li>按照建表规范，给 client 表和 pol 表增加以下4列<ul>
+<li>created_time 数据创建时间，字段类型时间戳，默认值为数据插入表中的时间</li>
+<li>created_by 数据创建人，默认值为 “unknown”</li>
+<li>updated_time 数据更新时间，字段类型为时间戳，默认为当前时间，每次更新数据时要自动更新该字段为当前时间</li>
+<li>updated_by 数据更新人，默认值为 “unknown”</li>
+</ul>
+</li>
+<li>在 client 表 birthday 字段后新增手机号字段 phone_number</li>
+<li>修改 pol 表的 client_no 字段类型，与 client 表中的字段类型保持一致</li>
+<li>将两个表的 id 字段修改为 int 自增，并设置为主键</li>
+<li>给 client 表的 client_no 字段增加唯一键约束，给 pol 表的 pol_no 字段增加唯一键约束</li>
+<li>给 client 表的 client_name 字段添加索引，给 pol 表的 client_no 字段添加索引，索引名称以 idx_表名_字段名命名</li>
+<li>删除 client 表的 stand_by 字段</li>
+</ol>
+<h2 id="常见数据操作（DML）"><a href="#常见数据操作（DML）" class="headerlink" title="常见数据操作（DML）"></a>常见数据操作（DML）</h2><ol>
+<li><p>使用 truncate 命令清空 client 表和 pol 表，了解 truncate 和 delete 命令的区别</p>
+</li>
+<li><p>向 client 表中写入如下数据</p>
+<table>
+<thead>
+<tr>
+<th>客户号</th>
+<th>客户姓名</th>
+<th>性别</th>
+<th>出生日期</th>
+<th>是否有效</th>
+<th>其他说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C01</td>
+<td>丁一</td>
+<td>F</td>
+<td>1990-01-19</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>C02</td>
+<td>王二</td>
+<td>M</td>
+<td>2002-11-28</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>C03</td>
+<td>王三</td>
+<td>F</td>
+<td>1976-09-15</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>C04</td>
+<td>李四</td>
+<td>F</td>
+<td>1999-04-02</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>C05</td>
+<td>李五</td>
+<td>M</td>
+<td>2004-08-10</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>C06</td>
+<td>老六</td>
+<td>M</td>
+<td>1980-09-09</td>
+<td>Y</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>向 pol 表中写入以下数据</p>
+<table>
+<thead>
+<tr>
+<th>保单号</th>
+<th>客户号</th>
+<th>投保日期</th>
+<th>缴费频次</th>
+<th>期缴保费</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P001</td>
+<td>C02</td>
+<td>2005-01-01</td>
+<td>Y</td>
+<td>100.00</td>
+</tr>
+<tr>
+<td>P002</td>
+<td>C05</td>
+<td>2020-09-10</td>
+<td>M</td>
+<td>200.00</td>
+</tr>
+<tr>
+<td>P003</td>
+<td>C01</td>
+<td>1999-08-10</td>
+<td>Y</td>
+<td>300.00</td>
+</tr>
+<tr>
+<td>P004</td>
+<td>C02</td>
+<td>2021-08-18</td>
+<td>O</td>
+<td>400.00</td>
+</tr>
+<tr>
+<td>P005</td>
+<td>C04</td>
+<td>2008-03-08</td>
+<td>M</td>
+<td>500.00</td>
+</tr>
+<tr>
+<td>P006</td>
+<td>C04</td>
+<td>2020-05-02</td>
+<td>M</td>
+<td>600.00</td>
+</tr>
+<tr>
+<td>P007</td>
+<td>C05</td>
+<td>2023-01-29</td>
+<td>M</td>
+<td>700.00</td>
+</tr>
+<tr>
+<td>P008</td>
+<td>C03</td>
+<td>1990-06-18</td>
+<td>M</td>
+<td>800.00</td>
+</tr>
+<tr>
+<td>P009</td>
+<td>C02</td>
+<td>2010-01-01</td>
+<td>Y</td>
+<td>900.00</td>
+</tr>
+<tr>
+<td>P010</td>
+<td>C02</td>
+<td>2018-11-01</td>
+<td>M</td>
+<td>1000.00</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>将不存在保单的客户状态更新为失效，其他说明更新为：无保单</p>
+</li>
+<li><p>删除失效客户</p>
+</li>
+</ol>
+<h2 id="常见分组统计"><a href="#常见分组统计" class="headerlink" title="常见分组统计"></a>常见分组统计</h2><ol>
+<li><p>查出姓“王”的客户</p>
+</li>
+<li><p>查出名字中包含“李”字的客户</p>
+</li>
+<li><p>查出名字以“一”结尾的客户</p>
+</li>
+<li><p>以姓名第一个字为姓氏，查出每个姓氏对应的客户数量</p>
+</li>
+<li><p>查询年龄在30以内的客户并按出生日期倒序排序</p>
+</li>
+<li><p>在一个SQL中查出每个性别对应的客户群体的人数、最小年龄、最大年龄、平均年龄。</p>
+</li>
+<li><p>出生日期在1990年前的客户定义为“客户群1”，1990年-2000年之间的定义为“客户群2”，2000年以后的定义为“客户群3”，查出各个客户群的客户数量，展示字段如下：</p>
+<table>
+<thead>
+<tr>
+<th>客户群名称</th>
+<th>客户数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>查出所有客户名下满足以下条件的保单信息：</p>
+<ol>
+<li>投保日期在2000年以后且缴费频次为月缴</li>
+<li>投保日期在2000年以前且缴费频次为年缴</li>
+<li>期缴保费在 300 元以上</li>
+</ol>
+<p> 展示以下字段：</p>
+<table>
+<thead>
+<tr>
+<th>客户号</th>
+<th>客户姓名</th>
+<th>保单号</th>
+<th>投保日期</th>
+<th>缴费频次</th>
+<th>期缴保费</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p> 缴费频次需展示为对应的注释，投保日期展示格式 yyyy年M月d日</p>
+</li>
+<li><p>查出缴费频次为月缴的保单数量</p>
+</li>
+<li><p>查出8年前投保过保单的客户数量</p>
+</li>
+<li><p>查出投保过3个及3个以上保单的客户</p>
+</li>
+<li><p>查出每个客户每个保单至今的缴费总额</p>
+</li>
+<li><p>查出每个客户每年投保的前两个保单，并根据客户号升序、投保日期降序排序</p>
+</li>
+<li><p>了解 MySQL 数据类型转换（字符串转数字、字符串转日期等）</p>
+</li>
+</ol>
+<h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h2><p>创建视图 vw_vip_client，视图中的客户信息为投保过3个及3个以上保单的客户，字段如下：</p>
+<table>
+<thead>
+<tr>
+<th>客户号</th>
+<th>客户姓名</th>
+<th>性别</th>
+<th>出生日期</th>
+<th>投保的保单数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>了解视图的原理、性能等。</p>
+<h2 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h2><ul>
+<li>字符串拼接</li>
+<li>字符串大小写转换</li>
+<li>字符串截取</li>
+<li>数学计算</li>
+<li>数据类型转换</li>
+<li>去除空白字符</li>
+<li>日期计算</li>
+<li>日期格式化</li>
+</ul>
+<h2 id="其他进阶主题"><a href="#其他进阶主题" class="headerlink" title="其他进阶主题"></a>其他进阶主题</h2><ol>
+<li>递归查询（常用且实用）</li>
+<li>正则表达式</li>
+<li>数据备份及恢复</li>
+<li>SQL 注入及防注入</li>
+<li>分析 SQL 执行计划</li>
+<li>常见的 SQL 性能优化</li>
+</ol>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+  
+    <a href="/2023/12/29/%E4%BD%BF%E7%94%A8Docker%E6%89%93%E5%8C%85Springboot%E5%BA%94%E7%94%A8%E5%B9%B6%E5%90%AF%E5%8A%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">使用Docker打包Springboot应用并启动</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share" style="display: none;">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=MySQL自测题目 - LOZHU的博客&url=https%3A%2F%2Flozhu20.github.io%2F2024%2F01%2F13%2FMySQL%25E8%2587%25AA%25E6%25B5%258B%25E9%25A2%2598%25E7%259B%25AE%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=MySQL自测题目 - LOZHU的博客&u=https%3A%2F%2Flozhu20.github.io%2F2024%2F01%2F13%2FMySQL%25E8%2587%25AA%25E6%25B5%258B%25E9%25A2%2598%25E7%259B%25AE%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=MySQL自测题目 - LOZHU的博客&url=https://lozhu20.github.io/2024/01/13/MySQL%E8%87%AA%E6%B5%8B%E9%A2%98%E7%9B%AE/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2024/01/13/MySQL%E8%87%AA%E6%B5%8B%E9%A2%98%E7%9B%AE/">MySQL自测题目</a>
+          </li>
+        
+          <li>
+            <a href="/2023/12/29/%E4%BD%BF%E7%94%A8Docker%E6%89%93%E5%8C%85Springboot%E5%BA%94%E7%94%A8%E5%B9%B6%E5%90%AF%E5%8A%A8/">使用Docker打包Springboot应用并启动</a>
+          </li>
+        
+          <li>
+            <a href="/2023/12/22/Springboot3-PageHelper%E5%88%86%E9%A1%B5%E4%B8%8D%E7%94%9F%E6%95%88%E9%97%AE%E9%A2%98/">Springboot3+PageHelper分页不生效问题</a>
+          </li>
+        
+          <li>
+            <a href="/2023/12/19/%E5%9C%A8MacOS%E4%B8%8A%E7%BC%96%E8%AF%91jdk12/">在MacOS上编译jdk12</a>
+          </li>
+        
+          <li>
+            <a href="/2023/12/06/%E5%9C%A8-MacOS-%E4%B8%8A%E7%BC%96%E8%AF%91-OpenJDK/">在 MacOS 上编译 OpenJDK</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            <div style="margin: 2px 0;">
+                🍬 LOZHU的博客 &copy; 2024<br>
+            </div>
+            <div style="margin: 2px 0;">
+                🌱 已运行 <span id="runningDaysDiv"></span> 天
+            </div>
+            <div style="margin: 2px 0;">
+                ♥️  Powered By Hexo · Theme By <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Aomori</a>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 计算运行天数 -->
+<script type="text/javascript">
+    var runningDays = 1;
+    var startDate = Date.parse('2023-08-31');
+
+    var currentDate = new Date();
+    var nowMonth = currentDate.getMonth() + 1;
+    var strDate = currentDate.getDate();
+
+    var seperator = "-";
+
+    if (!(nowMonth >= 10)) {
+        nowMonth = "0" + nowMonth;
+    }
+
+    if (!(strDate > 9)) {
+        strDate = "0" + strDate;
+    }
+
+    var nowDate = currentDate.getFullYear() + seperator + nowMonth + seperator + strDate;
+    var endDate = Date.parse(nowDate);
+
+    if (startDate > endDate) {
+        runningDays = 0;
+    } else if (startDate === endDate) {
+        runningDays = 1;
+    } else {
+        runningDays = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+    }
+    var runningDaysDiv = document.getElementById('runningDaysDiv')
+    console.log(runningDaysDiv)
+    console.log(runningDaysDiv)
+    if (runningDaysDiv) {
+        runningDaysDiv.innerHTML = runningDays
+    }
+</script>
+
+
+</body>
+
+</html>

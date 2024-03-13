@@ -8,7 +8,9 @@
     
     <title>Docker部署PostgreSQL主从 | LOZHU的博客</title>
 
-    <meta name="description" content="LOZHU的博客">
+    <meta name="description" content="&lt;h2 id=&#34;前置准备&#34;&gt;&lt;a href=&#34;#前置准备&#34; class=&#34;headerlink&#34; title=&#34;前置准备&#34;&gt;&lt;/a&gt;前置准备&lt;/h2&gt;&lt;h3 id=&#34;创建-Docker-网络&#34;&gt;&lt;a href=&#34;#创建-Docker-网络&#34; class=&#34;headerlink&#34; title=&#34;创建 Docker 网络&#34;&gt;&lt;/a&gt;创建 Docker 网络&lt;/h3&gt;&lt;p&gt;因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。&lt;/p&gt;
+&lt;p&gt;主库地址：172.12.0.2&lt;/p&gt;
+&lt;p&gt;从库地址：172.12.0.3&lt;/p&gt;">
     <meta name="keywords" content="">
 
     
@@ -16,17 +18,25 @@
     <meta property="og:locale" content="cn" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content= "Docker部署PostgreSQL主从 | LOZHU的博客"  />
-    <meta property="og:description" content= "LOZHU的博客" />
+    <meta property="og:description" content= "&lt;h2 id=&#34;前置准备&#34;&gt;&lt;a href=&#34;#前置准备&#34; class=&#34;headerlink&#34; title=&#34;前置准备&#34;&gt;&lt;/a&gt;前置准备&lt;/h2&gt;&lt;h3 id=&#34;创建-Docker-网络&#34;&gt;&lt;a href=&#34;#创建-Docker-网络&#34; class=&#34;headerlink&#34; title=&#34;创建 Docker 网络&#34;&gt;&lt;/a&gt;创建 Docker 网络&lt;/h3&gt;&lt;p&gt;因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。&lt;/p&gt;
+&lt;p&gt;主库地址：172.12.0.2&lt;/p&gt;
+&lt;p&gt;从库地址：172.12.0.3&lt;/p&gt;" />
     <meta property="og:url" content="https://lozhu20.github.io/2024/03/14/Docker%E9%83%A8%E7%BD%B2PostgreSQL%E4%B8%BB%E4%BB%8E/index.html" />
     <meta property="og:site_name" content="" />
     <meta property="article:author" content="lozhu" />
     <meta property="article:publisher" content="" />
-    <meta property="og:description" content="LOZHU的博客" />
+    <meta property="og:description" content="&lt;h2 id=&#34;前置准备&#34;&gt;&lt;a href=&#34;#前置准备&#34; class=&#34;headerlink&#34; title=&#34;前置准备&#34;&gt;&lt;/a&gt;前置准备&lt;/h2&gt;&lt;h3 id=&#34;创建-Docker-网络&#34;&gt;&lt;a href=&#34;#创建-Docker-网络&#34; class=&#34;headerlink&#34; title=&#34;创建 Docker 网络&#34;&gt;&lt;/a&gt;创建 Docker 网络&lt;/h3&gt;&lt;p&gt;因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。&lt;/p&gt;
+&lt;p&gt;主库地址：172.12.0.2&lt;/p&gt;
+&lt;p&gt;从库地址：172.12.0.3&lt;/p&gt;" />
     <meta name="twitter:title" content="Docker部署PostgreSQL主从 | LOZHU的博客"/>
-    <meta name="twitter:description" content="LOZHU的博客"/>
+    <meta name="twitter:description" content="&lt;h2 id=&#34;前置准备&#34;&gt;&lt;a href=&#34;#前置准备&#34; class=&#34;headerlink&#34; title=&#34;前置准备&#34;&gt;&lt;/a&gt;前置准备&lt;/h2&gt;&lt;h3 id=&#34;创建-Docker-网络&#34;&gt;&lt;a href=&#34;#创建-Docker-网络&#34; class=&#34;headerlink&#34; title=&#34;创建 Docker 网络&#34;&gt;&lt;/a&gt;创建 Docker 网络&lt;/h3&gt;&lt;p&gt;因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。&lt;/p&gt;
+&lt;p&gt;主库地址：172.12.0.2&lt;/p&gt;
+&lt;p&gt;从库地址：172.12.0.3&lt;/p&gt;"/>
     <script type="application/ld+json">
         {
-            "description": "LOZHU的博客",
+            "description": "&lt;h2 id=&#34;前置准备&#34;&gt;&lt;a href=&#34;#前置准备&#34; class=&#34;headerlink&#34; title=&#34;前置准备&#34;&gt;&lt;/a&gt;前置准备&lt;/h2&gt;&lt;h3 id=&#34;创建-Docker-网络&#34;&gt;&lt;a href=&#34;#创建-Docker-网络&#34; class=&#34;headerlink&#34; title=&#34;创建 Docker 网络&#34;&gt;&lt;/a&gt;创建 Docker 网络&lt;/h3&gt;&lt;p&gt;因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。&lt;/p&gt;
+&lt;p&gt;主库地址：172.12.0.2&lt;/p&gt;
+&lt;p&gt;从库地址：172.12.0.3&lt;/p&gt;",
             "author": { "@type": "Person", "name": "lozhu" },
             "@type": "BlogPosting",
             "url": "https://lozhu20.github.io/2024/03/14/Docker%E9%83%A8%E7%BD%B2PostgreSQL%E4%B8%BB%E4%BB%8E/index.html",
@@ -160,7 +170,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cltq0kdh50007dxtt29rgdhfo" class="article article-type-post" itemscope
+    <article id="post-cltq0miz70006h6tt2opa82lm" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -209,6 +219,8 @@
             <h2 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h2><h3 id="创建-Docker-网络"><a href="#创建-Docker-网络" class="headerlink" title="创建 Docker 网络"></a>创建 Docker 网络</h3><p>因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。</p>
 <p>主库地址：172.12.0.2</p>
 <p>从库地址：172.12.0.3</p>
+<span id="more"></span>
+
 <p>创建 Docker 网络：</p>
 <pre><code class="sh"># 创建
 docker network create --driver bridge --subnet 172.12.0.0/16 --gateway 172.12.0.1 postgresqlnet

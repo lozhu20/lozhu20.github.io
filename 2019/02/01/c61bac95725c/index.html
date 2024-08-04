@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="第十四章 类型信息  运行时类型信息可以使得你可以在程序运行时发现和使用类型信息。  本章主要讨论Java如何让我们在运行时识别对象和类的信息，主要有两种方式：  “传统的RTTI”，假定我们在编译时已经知道了所有的类型； “反射机制”，允许在运行时发现和使用类的信息。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java编程思想——第十四章——类型信息">
+<meta property="og:url" content="https://lozhu.happy365.day/2019/02/01/c61bac95725c/index.html">
+<meta property="og:site_name" content="Lozhu&#39;s blog">
+<meta property="og:description" content="第十四章 类型信息  运行时类型信息可以使得你可以在程序运行时发现和使用类型信息。  本章主要讨论Java如何让我们在运行时识别对象和类的信息，主要有两种方式：  “传统的RTTI”，假定我们在编译时已经知道了所有的类型； “反射机制”，允许在运行时发现和使用类的信息。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-02-01T15:16:43.000Z">
+<meta property="article:modified_time" content="2024-08-04T09:08:29.788Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Java编程思想">
+<meta property="article:tag" content="Java类型信息">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Java编程思想——第十四章——类型信息</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Lozhu's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2019/03/03/385663560223/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2019/01/24/a7bf16cc5800/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2019/02/01/c61bac95725c/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&text=Java编程思想——第十四章——类型信息"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&title=Java编程思想——第十四章——类型信息"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&is_video=false&description=Java编程思想——第十四章——类型信息"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Java编程思想——第十四章——类型信息&body=Check out this article: https://lozhu.happy365.day/2019/02/01/c61bac95725c/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&title=Java编程思想——第十四章——类型信息"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&title=Java编程思想——第十四章——类型信息"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&title=Java编程思想——第十四章——类型信息"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&title=Java编程思想——第十四章——类型信息"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&name=Java编程思想——第十四章——类型信息&description=&lt;h1 id=&#34;第十四章-类型信息&#34;&gt;&lt;a href=&#34;#第十四章-类型信息&#34; class=&#34;headerlink&#34; title=&#34;第十四章 类型信息&#34;&gt;&lt;/a&gt;第十四章 类型信息&lt;/h1&gt;&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;运行时类型信息可以使得你可以在程序运行时发现和使用类型信息。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本章主要讨论Java如何让我们在运行时识别对象和类的信息，主要有两种方式：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;“传统的RTTI”，假定我们在编译时已经知道了所有的类型；&lt;/li&gt;
+&lt;li&gt;“反射机制”，允许在运行时发现和使用类的信息。&lt;/li&gt;
+&lt;/ol&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&t=Java编程思想——第十四章——类型信息"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E7%B1%BB%E5%9E%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">1.</span> <span class="toc-text">第十四章 类型信息</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#14-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81RTTI-Run-Time-Type-Identification"><span class="toc-number">1.1.</span> <span class="toc-text">14.1 为什么需要RTTI(Run-Time Type Identification)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-2-Class%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.2.</span> <span class="toc-text">14.2 Class对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#output-javaClass-name-com-typeinfo-FancyToy-is-interface-false-Simple-name-FancyToyCanonical-name-com-typeinfo-FancyToy"><span class="toc-number">1.3.</span> <span class="toc-text">output:&#96;&#96;&#96;javaClass name: com.typeinfo.FancyToy is interface? [false]Simple name: FancyToyCanonical name: com.typeinfo.FancyToy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-name-com-typeinfo-HasBatteries-is-interface-true-Simple-name-HasBatteriesCanonical-name-com-typeinfo-HasBatteries"><span class="toc-number">1.4.</span> <span class="toc-text">Class name: com.typeinfo.HasBatteries is interface? [true]Simple name: HasBatteriesCanonical name: com.typeinfo.HasBatteries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-name-com-typeinfo-WaterProof-is-interface-true-Simple-name-WaterProofCanonical-name-com-typeinfo-WaterProof"><span class="toc-number">1.5.</span> <span class="toc-text">Class name: com.typeinfo.WaterProof is interface? [true]Simple name: WaterProofCanonical name: com.typeinfo.WaterProof</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-name-com-typeinfo-Shoots-is-interface-true-Simple-name-ShootsCanonical-name-com-typeinfo-Shoots"><span class="toc-number">1.6.</span> <span class="toc-text">Class name: com.typeinfo.Shoots is interface? [true]Simple name: ShootsCanonical name: com.typeinfo.Shoots</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-name-com-typeinfo-Toy-is-interface-false-Simple-name-ToyCanonical-name-com-typeinfo-Toy"><span class="toc-number">1.7.</span> <span class="toc-text">Class name: com.typeinfo.Toy is interface? [false]Simple name: ToyCanonical name: com.typeinfo.Toy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#14-2-2-%E6%B3%9B%E5%8C%96%E7%9A%84Class%E5%BC%95%E7%94%A8"><span class="toc-number">1.7.1.</span> <span class="toc-text">14.2.2 泛化的Class引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-2-3-%E6%96%B0%E7%9A%84%E8%BD%AC%E5%9E%8B%E8%AF%AD%E6%B3%95"><span class="toc-number">1.7.2.</span> <span class="toc-text">14.2.3 新的转型语法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-3-%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%89%8D%E5%85%88%E5%81%9A%E6%A3%80%E6%9F%A5"><span class="toc-number">1.8.</span> <span class="toc-text">14.3 类型转换前先做检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-5-instanceof%E5%92%8CClass%E7%9A%84%E7%AD%89%E4%BB%B7%E6%80%A7"><span class="toc-number">1.9.</span> <span class="toc-text">14.5 instanceof和Class的等价性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-6-%E5%8F%8D%E5%B0%84%EF%BC%9A%E8%BF%90%E8%A1%8C%E6%97%B6%E7%9A%84%E7%B1%BB%E4%BF%A1%E6%81%AF"><span class="toc-number">1.10.</span> <span class="toc-text">14.6 反射：运行时的类信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#14-6-1-%E7%B1%BB%E6%96%B9%E6%B3%95%E6%8F%90%E5%8F%96%E5%99%A8"><span class="toc-number">1.10.1.</span> <span class="toc-text">14.6.1 类方法提取器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-7-%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="toc-number">1.11.</span> <span class="toc-text">14.7 动态代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-8-%E7%A9%BA%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.12.</span> <span class="toc-text">14.8 空对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-9-%E6%8E%A5%E5%8F%A3%E4%B8%8E%E7%B1%BB%E5%9E%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">1.13.</span> <span class="toc-text">14.9 接口与类型信息</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Java编程思想——第十四章——类型信息
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-02-01T15:16:43.000Z" class="dt-published" itemprop="datePublished">2019-02-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Java/" rel="tag">Java</a>, <a class="p-category" href="/tags/Java%E7%B1%BB%E5%9E%8B%E4%BF%A1%E6%81%AF/" rel="tag">Java类型信息</a>, <a class="p-category" href="/tags/Java%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/" rel="tag">Java编程思想</a> -->
+        <a class="category-link" href="/tags/Java/" rel="tag">Java</a>, <a class="category-link" href="/tags/Java%E7%B1%BB%E5%9E%8B%E4%BF%A1%E6%81%AF/" rel="tag">Java类型信息</a>, <a class="category-link" href="/tags/Java%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/" rel="tag">Java编程思想</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="第十四章-类型信息"><a href="#第十四章-类型信息" class="headerlink" title="第十四章 类型信息"></a>第十四章 类型信息</h1><hr>
+<blockquote>
+<p>运行时类型信息可以使得你可以在程序运行时发现和使用类型信息。</p>
+</blockquote>
+<p>本章主要讨论Java如何让我们在运行时识别对象和类的信息，主要有两种方式：</p>
+<ol>
+<li>“传统的RTTI”，假定我们在编译时已经知道了所有的类型；</li>
+<li>“反射机制”，允许在运行时发现和使用类的信息。</li>
+</ol>
+<span id="more"></span>
+
+
+
+
+<h2 id="14-1-为什么需要RTTI-Run-Time-Type-Identification"><a href="#14-1-为什么需要RTTI-Run-Time-Type-Identification" class="headerlink" title="14.1 为什么需要RTTI(Run-Time Type Identification)"></a>14.1 为什么需要RTTI(Run-Time Type Identification)</h2><p>RTTI提供类型维护的信息，为多态机制提供实现基础。多态的实现主要是通过向上转型，通过泛化父类来引用子类对象。</p>
+<pre><code class="java">package com.typeinfo;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-06 14:52
+ */
+public class Shapes &#123;
+    public static void main(String[] args) &#123;
+        List&lt;Shape&gt; shapeList = Arrays.asList(new Circle(), new Square(), new Triangle());
+        shapeList.forEach(Shape::draw);
+    &#125;
+&#125;
+
+abstract class Shape &#123;
+    void draw() &#123;
+        System.out.println(this + &quot;.draw.&quot;);
+    &#125;
+
+    public abstract String toString();
+&#125;
+
+class Circle extends Shape &#123;
+
+    @Override
+    public String toString() &#123;
+        return &quot;Circle&quot;;
+    &#125;
+&#125;
+
+class Triangle extends Shape &#123;
+
+    @Override
+    public String toString() &#123;
+        return &quot;Triangle&quot;;
+    &#125;
+&#125;
+
+class Square extends Shape &#123;
+
+    @Override
+    public String toString() &#123;
+        return &quot;Square&quot;;
+    &#125;
+&#125;
+</code></pre>
+<p>output:</p>
+<pre><code class="java">Circle.draw.
+Square.draw.
+Triangle.draw.
+
+Process finished with exit code 0
+</code></pre>
+<h2 id="14-2-Class对象"><a href="#14-2-Class对象" class="headerlink" title="14.2 Class对象"></a>14.2 Class对象</h2><p>RTTI的功能主要是由Class类实现的，每个类都是Class类的一个对象。所有的类都是在第一次使用时被”类加载器”动态的加载到JVM中的，当程序创建第一个类的成员引用时，便会加载这个类，这说明构造器是类的静态方法。使用new创建的类的新对象也会被当作类的静态成员，因此Java是动态加载的。首先检查类的Class对象是否加载，如果尚未加载，默认的类的加载器会查找同名的.class文件,一旦某个类的Class对象被载入内存，便会用来创建这个类的所有对象。</p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-07 17:07
+ */
+public class SweetShop &#123;
+    public static void main(String[] args) &#123;
+        System.out.println(&quot;inside main.&quot;);
+        new Candy();
+        System.out.println(&quot;after create candy&quot;);
+        new Candy();
+        System.out.println(&quot;after create candy2&quot;);
+        try&#123;
+            Class.forName(&quot;com.typeinfo.Gum&quot;);
+        &#125;catch (ClassNotFoundException e) &#123;
+            System.out.println(&quot;Class Gum not found.&quot;);
+        &#125;
+        System.out.println(&quot;after create after gum.&quot;);
+        new Cookie();
+        System.out.println(&quot;after create cookie&quot;);
+    &#125;
+&#125;
+
+class Candy &#123;
+    static &#123;
+        System.out.println(&quot;Loading candy.&quot;);
+    &#125;
+&#125;
+
+class Gum &#123;
+    static &#123;
+        System.out.println(&quot;Loading gum.&quot;);
+    &#125;
+&#125;
+
+class Cookie &#123;
+    static &#123;
+        System.out.println(&quot;Loading cookie.&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>output:</p>
+<pre><code class="java">inside main.
+Loading candy.
+after create candy
+after create candy2
+Loading gum.
+after create after gum.
+Loading cookie.
+after create cookie
+
+Process finished with exit code 0
+</code></pre>
+<p>从输出中可以看出，Java中的类都是在需要时才被加载的。forName()是Class类的一个静态成员，调用该方法可以返回相应类的实例。<br>无论何时，若要使用类型信息，必须持有Class对象的引用，Class.forName()是实现此功能的便捷方式，因为不需要再为了获取Class引用而持有该类型的引用。如果已经拥有一个类型的对象，可以使用getClass()来获取Class引用，返回表示该对象的实际类型的Class引用。</p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-07 18:22
+ */
+public class ToyTest &#123;
+    private static void printInfo(Class cc) &#123;
+        System.out.println(&quot;Class name: &quot; + cc.getName() + &quot; is interface? [&quot; + cc.isInterface() + &quot;]&quot;);
+        System.out.println(&quot;Simple name: &quot; + cc.getSimpleName());
+        System.out.println(&quot;Canonical name: &quot; + cc.getCanonicalName());
+        System.out.println(&quot;---------------&quot;);
+    &#125;
+
+    public static void main(String[] args) &#123;
+        Class c = null;
+        try &#123;
+            c = Class.forName(&quot;com.typeinfo.FancyToy&quot;);
+        &#125; catch (ClassNotFoundException e) &#123;
+            System.out.println(&quot;class not found.&quot;);
+        &#125;
+        assert c != null;
+        printInfo(c);
+        for (Class face : c.getInterfaces()) &#123;
+            printInfo(face);
+        &#125;
+        Class up = c.getSuperclass();
+        Object object = null;
+        try &#123;
+            object = up.newInstance();
+        &#125; catch (InstantiationException e) &#123;
+            System.out.println(&quot;获取实例失败.&quot;);
+        &#125; catch (IllegalAccessException e) &#123;
+            System.out.println(&quot;无法访问.&quot;);
+        &#125;
+        assert object != null;
+        printInfo(object.getClass());
+    &#125;
+&#125;
+
+interface HasBatteries &#123;
+&#125;
+
+interface WaterProof &#123;
+&#125;
+
+interface Shoots &#123;
+&#125;
+
+class Toy &#123;
+    Toy() &#123;
+    &#125;
+
+    Toy(int i) &#123;
+    &#125;
+&#125;
+
+class FancyToy extends Toy implements HasBatteries, WaterProof, Shoots &#123;
+    FancyToy() &#123;
+        super(1);
+    &#125;
+&#125;
+</code></pre>
+<h2 id="output-javaClass-name-com-typeinfo-FancyToy-is-interface-false-Simple-name-FancyToyCanonical-name-com-typeinfo-FancyToy"><a href="#output-javaClass-name-com-typeinfo-FancyToy-is-interface-false-Simple-name-FancyToyCanonical-name-com-typeinfo-FancyToy" class="headerlink" title="output:&#96;&#96;&#96;javaClass name: com.typeinfo.FancyToy is interface? [false]Simple name: FancyToyCanonical name: com.typeinfo.FancyToy"></a>output:<br>&#96;&#96;&#96;java<br>Class name: com.typeinfo.FancyToy is interface? [false]<br>Simple name: FancyToy<br>Canonical name: com.typeinfo.FancyToy</h2><h2 id="Class-name-com-typeinfo-HasBatteries-is-interface-true-Simple-name-HasBatteriesCanonical-name-com-typeinfo-HasBatteries"><a href="#Class-name-com-typeinfo-HasBatteries-is-interface-true-Simple-name-HasBatteriesCanonical-name-com-typeinfo-HasBatteries" class="headerlink" title="Class name: com.typeinfo.HasBatteries is interface? [true]Simple name: HasBatteriesCanonical name: com.typeinfo.HasBatteries"></a>Class name: com.typeinfo.HasBatteries is interface? [true]<br>Simple name: HasBatteries<br>Canonical name: com.typeinfo.HasBatteries</h2><h2 id="Class-name-com-typeinfo-WaterProof-is-interface-true-Simple-name-WaterProofCanonical-name-com-typeinfo-WaterProof"><a href="#Class-name-com-typeinfo-WaterProof-is-interface-true-Simple-name-WaterProofCanonical-name-com-typeinfo-WaterProof" class="headerlink" title="Class name: com.typeinfo.WaterProof is interface? [true]Simple name: WaterProofCanonical name: com.typeinfo.WaterProof"></a>Class name: com.typeinfo.WaterProof is interface? [true]<br>Simple name: WaterProof<br>Canonical name: com.typeinfo.WaterProof</h2><h2 id="Class-name-com-typeinfo-Shoots-is-interface-true-Simple-name-ShootsCanonical-name-com-typeinfo-Shoots"><a href="#Class-name-com-typeinfo-Shoots-is-interface-true-Simple-name-ShootsCanonical-name-com-typeinfo-Shoots" class="headerlink" title="Class name: com.typeinfo.Shoots is interface? [true]Simple name: ShootsCanonical name: com.typeinfo.Shoots"></a>Class name: com.typeinfo.Shoots is interface? [true]<br>Simple name: Shoots<br>Canonical name: com.typeinfo.Shoots</h2><h2 id="Class-name-com-typeinfo-Toy-is-interface-false-Simple-name-ToyCanonical-name-com-typeinfo-Toy"><a href="#Class-name-com-typeinfo-Toy-is-interface-false-Simple-name-ToyCanonical-name-com-typeinfo-Toy" class="headerlink" title="Class name: com.typeinfo.Toy is interface? [false]Simple name: ToyCanonical name: com.typeinfo.Toy"></a>Class name: com.typeinfo.Toy is interface? [false]<br>Simple name: Toy<br>Canonical name: com.typeinfo.Toy</h2><p>Process finished with exit code 0</p>
+<pre><code>
+在给forName()方法传递类名是必须使用全限定名。
+Class类常用方法列表：
+
+| 方法               | 描述                               |
+| ------------------ | ---------------------------------- |
+| getName()          | 获取全限定类名                     |
+| getSimpleName()    | 获取不含包类名                     |
+| getCanonicalName() | 含包名的全限定名                   |
+| getInterfaces()    | Class对象所包含的接口              |
+| isInterface()      | 判断Class对象是否是接口            |
+| newInstance()      | 虚拟构造器(该类必须含有默认构造器) |
+| getSuperClass()    | 间接获取Class对象基类              |
+
+### 14.2.1 类字面常量
+
+Java还提供了另一种方法来生成Class对象的引用，即使用类字面常量，例如
+
+```java
+FancyToy.class;
+</code></pre>
+<p>这样做更加简单、安全，因为它在编译器就会受到检查，因此不需要异常检查，同时根除了对forNam()方法的调用，因此更加高效。<br>类字面常量方法不仅适用于普通的类，也适用于接口，基本数据类型，数组。对于基本包装类型的Class对象。还有一个标准字段TYPE，TYPE字段是一个引用，指向对应的基本类型Class对象。<br><strong>建议使用.class方法，与普通类保持一致</strong></p>
+<table>
+<thead>
+<tr>
+<th>字面常量</th>
+<th>标准TYPE字段</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean.class</td>
+<td>Boolean.class</td>
+</tr>
+<tr>
+<td>char.class</td>
+<td>Char.class</td>
+</tr>
+<tr>
+<td>byte.class</td>
+<td>Byte.class</td>
+</tr>
+<tr>
+<td>short.class</td>
+<td>Short.class</td>
+</tr>
+<tr>
+<td>int.class</td>
+<td>Integer.class</td>
+</tr>
+<tr>
+<td>long.class</td>
+<td>Long.class</td>
+</tr>
+<tr>
+<td>float.class</td>
+<td>Flocat.class</td>
+</tr>
+<tr>
+<td>double.class</td>
+<td>Double.class</td>
+</tr>
+<tr>
+<td>void.class</td>
+<td>Void.class</td>
+</tr>
+</tbody></table>
+<p>当使用.class来创建Class对象引用时，不会自动初始化该Class对象，包含三个过程的准备：</p>
+<ol>
+<li><strong>加载</strong>：由类加载器执行，查找字节码，为字节码创建Class对象；</li>
+<li><strong>链接</strong>：验证类中的字节码，为静态域分配空间，如果必须的话，将解析这个类创建的对其他类的所有引用；</li>
+<li><strong>初始化</strong>：如果该类具有超类，则对其进行初始化，执行静态初始化和静态初始化块。初始化被延迟到对静态方法或者非静态数据域进行首次引用时执行。</li>
+</ol>
+<pre><code class="java">package com.typeinfo;
+
+import java.util.Random;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-07 19:07
+ */
+public class ClassInitailization &#123;
+    public static Random random = new Random(47);
+
+    public static void main(String[] args) throws ClassNotFoundException &#123;
+        Class initable = Initable.class;
+        System.out.println(&quot;after create initable ref.&quot;);
+        System.out.println(Initable.staticFinal);
+        System.out.println(Initable.staticFinal2);
+        System.out.println(Initable2.staticNonFinal);
+        Class initable3 = Class.forName(&quot;com.typeinfo.Initable3&quot;);
+        System.out.println(&quot;after create initable3.&quot;);
+        System.out.println(Initable3.staticNonFinal);
+
+    &#125;
+&#125;
+
+class Initable &#123;
+    static final int staticFinal = 47;
+    static final int staticFinal2 = ClassInitailization.random.nextInt(1000);
+
+    static &#123;
+        System.out.println(&quot;Initializing initable.&quot;);
+    &#125;
+&#125;
+
+class Initable2 &#123;
+    static int staticNonFinal = 147;
+
+    static &#123;
+        System.out.println(&quot;initializing initable2.&quot;);
+    &#125;
+&#125;
+
+class Initable3 &#123;
+    static int staticNonFinal = 74;
+
+    static &#123;
+        System.out.println(&quot;initializing initable3.&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>output:</p>
+<pre><code class="java">after create initable ref.
+47
+Initializing initable.
+258
+initializing initable2.
+147
+initializing initable3.
+after create initable3.
+74
+
+Process finished with exit code 0
+</code></pre>
+<p>初始化有效的体现了”惰性”，从Initable的引用创建中知道<strong>使用.class创建Class引用不会引发初始化</strong>，但是为了产生引用，<strong>Class.forName()立即进行了初始化</strong>。<br><strong>如果一个static final值是编译期常量，那么这个值不需要对类进行初始化就可以进行读取。但是将一个域设置为static final不足以确保这种行为</strong>，如Initable.staticFinal2的访问强制类进行了初始化。<br>如果一个常量是static但不是final的，那么在对它进行访问时，总是要求在对它进行读取前，先进行链接(分配存储空间)和初始化(初始化该域磁盘)。</p>
+<h3 id="14-2-2-泛化的Class引用"><a href="#14-2-2-泛化的Class引用" class="headerlink" title="14.2.2 泛化的Class引用"></a>14.2.2 泛化的Class引用</h3><p>Class引用所表示的就是它所指向的类的确切类型，可以制造类的实例，包含类的静态成员和方法代码。<br>在Java SE5中Class引用的类型变得更加具体，这是通过允许你Class引用所指向的Class对象引用类型进行限定实现的。</p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-07 19:36
+ */
+public class GenericClassReference &#123;
+    public static void main(String[] args) &#123;
+        Class intClass = int.class;
+        Class&lt;Integer&gt; genericIntClass = int.class;
+        genericIntClass = Integer.class;
+        intClass = double.class;
+        //genericIntClass = double.class;  //编译错误
+    &#125;
+&#125;
+</code></pre>
+<p><strong>普通的类引用不会产生警告，尽管泛型类引用只能指向其声明的类型，但是普通的类引用可以被重新赋值为其他任何类型的引用，因此通过使用泛型，可以强制编译器进行类型检查。</strong></p>
+<p>如果希望稍微放宽这种限制，如：</p>
+<pre><code class="java">Class&lt;Number&gt; c = int.class;
+</code></pre>
+<p>上述代码产生了编译错误，因为Integer Class对象不是Number Class的子类。<br>为了能够在使用泛化的Class引用时放宽限制，可以使用泛型通配符。</p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-07 19:46
+ */
+public class WildcardClassReference &#123;
+    public static void main(String[] args) &#123;
+        Class&lt;? extends Number&gt; c = int.class;
+        c = double.class;
+    &#125;
+&#125;
+</code></pre>
+<p>上述代码没有产生任何警告信息。Class<?>优于普通的Class，并且两者等价。
+**Class<?>的好处是它表示你并非碰巧或者处于疏忽而使用了一个非具体的类型。**为了创建一个Class引用，它被限定为某种类型，和extends结合，可以创建一个范围。<br><strong>使用泛型可以促使编译器在编译器提供类型检查。</strong></p>
+<p>将泛型用于Class对象，newInstance()方法返回的将是具体的类型而不是Object。但是这种具体类型有些许限制，由具体类型的Class引用getSuperClass()返回的类型是Object类型。</p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-07 20:04
+ */
+public class GenericToyTest &#123;
+    public static void main(String[] args) throws IllegalAccessException, InstantiationException &#123;
+        Class&lt;FancyToy&gt; fancyToyClass = FancyToy.class;
+        FancyToy fancyToy = fancyToyClass.newInstance();
+        Class&lt;? super FancyToy&gt; c = fancyToyClass.getSuperclass();
+//        Class&lt;Toy&gt; toyClass = fancyToyClass.getSuperclass();   编译错误
+        Object object = fancyToyClass.getSuperclass();
+    &#125;
+&#125;
+</code></pre>
+<h3 id="14-2-3-新的转型语法"><a href="#14-2-3-新的转型语法" class="headerlink" title="14.2.3 新的转型语法"></a>14.2.3 新的转型语法</h3><p>Java SE5还添加了用于Class引用转型的语法，即cast()方法。cast()方法接收参数对象，并将其转型为Class引用的类型。<br>在Java SE5中另一个最没用的新特性就是Class.asSubclass，该方法允许你将一个类对象转为更加具体的对象类型。</p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-07 20:12
+ */
+public class ClassCasts &#123;
+    Building building = new House();
+    Class&lt;House&gt; houseClass = House.class;
+    House house = houseClass.cast(building);
+&#125;
+
+class Building&#123;
+&#125;
+
+class House extends Building &#123;
+&#125;
+</code></pre>
+<h2 id="14-3-类型转换前先做检查"><a href="#14-3-类型转换前先做检查" class="headerlink" title="14.3 类型转换前先做检查"></a>14.3 类型转换前先做检查</h2><p>迄今为止，RTTI的形式包括：</p>
+<ol>
+<li>传统的类型转换；</li>
+<li>代表对象的类型的Class对象；</li>
+<li>关键字instanceof：判断一个对象是不是某个特定类型的实例。</li>
+</ol>
+<pre><code class="java">if(x instaceof Dog) &#123;
+    (Dog)x.bark();
+&#125;
+</code></pre>
+<p>instanceof有比较严格的限制，只可将其与命名类型比较，而不能与Class对象比较。</p>
+<h2 id="14-5-instanceof和Class的等价性"><a href="#14-5-instanceof和Class的等价性" class="headerlink" title="14.5 instanceof和Class的等价性"></a>14.5 instanceof和Class的等价性</h2><p>instanceof()和isInstance()方法生成的结果完全一样，equals和&#x3D;&#x3D;也完全一样。但是<strong>instanceof保持了类型的概念，而&#x3D;&#x3D;比较的是实际的Class对象，没有考虑继承。</strong></p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-07 20:51
+ */
+public class FamilyVsExactType &#123;
+    static void test(Object object) &#123;
+        System.out.println(&quot;Testing object of type :&quot; + object.getClass());
+        System.out.println(&quot;object instanceof Base: &quot; + (object instanceof Base));
+        System.out.println(&quot;object instanceof Derived :&quot; + (object instanceof Derived));
+        System.out.println(&quot;Base.isInstance(object): &quot; + Base.class.isInstance(object));
+        System.out.println(&quot;Derived.isInstance(object): &quot; + Derived.class.isInstance(object));
+        System.out.println(&quot;object.getClass() == Base.class(): &quot; + (object.getClass() == Base.class));
+        System.out.println(&quot;object.getClass() == Derived.class(): &quot; + (object.getClass() == Derived.class));
+        System.out.println(&quot;object.getClass().equals(Base.class()): &quot; + (object.getClass().equals(Base.class)));
+        System.out.println(&quot;object.getClass().equals(Derived.class()): &quot; + (object.getClass().equals(Derived.class)));
+    &#125;
+
+    public static void main(String[] args) &#123;
+        test(new Base());
+        test(new Derived());
+    &#125;
+&#125;
+
+class Base &#123;
+&#125;
+
+class Derived extends Base &#123;
+&#125;
+</code></pre>
+<p>output:</p>
+<pre><code class="java">Testing object of type :class com.typeinfo.Base
+object instanceof Base: true
+object instanceof Derived :false
+Base.isInstance(object): true
+Derived.isInstance(object): false
+object.getClass() == Base.class(): true
+object.getClass() == Derived.class(): false
+object.getClass().equals(Base.class()): true
+object.getClass().equals(Derived.class()): false
+Testing object of type :class com.typeinfo.Derived
+object instanceof Base: true
+object instanceof Derived :true
+Base.isInstance(object): true
+Derived.isInstance(object): true
+object.getClass() == Base.class(): false
+object.getClass() == Derived.class(): true
+object.getClass().equals(Base.class()): false
+object.getClass().equals(Derived.class()): true
+
+Process finished with exit code 0
+</code></pre>
+<h2 id="14-6-反射：运行时的类信息"><a href="#14-6-反射：运行时的类信息" class="headerlink" title="14.6 反射：运行时的类信息"></a>14.6 反射：运行时的类信息</h2><p>RTTI的限制：如果需要知道某个对象的确切类型，可以使用RTTI，但是有一个限制：这个类型在编译时必须是可知的。如果获取了持有一个不在程序空间内的对象的引用或者这个类在你的程序运行许久之后才出现，此时则无法使用RTTI。</p>
+<p>为什么需要反射？</p>
+<ol>
+<li>解决RTTI的限制；</li>
+<li>希望提供在跨网络的平台上创建和运行对象的能力，即*远程方法调用(RMI)*。</li>
+</ol>
+<p>Class类与Java.lang.Reflect类库对反射进行了支持，该类库包含Field、Method和Constructor等类。可以用invoke()调用与Method关联的方法，调用getField()、getMethods()和getConstructor()等方法返回表示字段、方法和构造方法的数组。</p>
+<p><strong>RTTI与反射之间真正的区别在于对于RTTI来说，编译器在编译时打开和检查.class文件，而对于反射机制来说，.class文件在编译时是不可获取的，所以是在运行时打开和检查.class文件。</strong></p>
+<h3 id="14-6-1-类方法提取器"><a href="#14-6-1-类方法提取器" class="headerlink" title="14.6.1 类方法提取器"></a>14.6.1 类方法提取器</h3><pre><code class="java">package com.typeinfo;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-08 9:45
+ */
+public class ShowMethods &#123;
+    private static String usage = &quot;usage&quot;;
+
+    public static void main(String[] args) &#123;
+        if (args.length &lt; 1) &#123;
+            System.out.println(usage);
+            System.exit(0);
+        &#125;
+        try &#123;
+            Class&lt;?&gt; c = Class.forName(args[0]);
+            Method[] methods = c.getMethods();
+            Constructor[] constructors = c.getConstructors();
+            if (args.length == 1) &#123;
+                for (Method method : methods) &#123;
+                    System.out.println(method.toString());
+                &#125;
+                for (Constructor constructor : constructors) &#123;
+                    System.out.println(constructor.toString());
+                &#125;
+            &#125; else &#123;
+                for (Method method : methods) &#123;
+                    if (method.toString().contains(args[1])) &#123;
+                        System.out.println(method.toString());
+                    &#125;
+                &#125;
+                for (Constructor constructor : constructors) &#123;
+                    if (constructor.toString().contains(args[1])) &#123;
+                        System.out.println(constructor.toString());
+                    &#125;
+                &#125;
+            &#125;
+        &#125; catch (ClassNotFoundException e) &#123;
+            System.out.println(&quot;No such class.&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>output:</p>
+<pre><code class="java">public boolean java.lang.String.equals(java.lang.Object)
+public java.lang.String java.lang.String.toString()
+public int java.lang.String.hashCode()
+public int java.lang.String.compareTo(java.lang.String)
+public int java.lang.String.compareTo(java.lang.Object)
+public int java.lang.String.indexOf(java.lang.String,int)
+public int java.lang.String.indexOf(java.lang.String)
+public int java.lang.String.indexOf(int,int)
+public int java.lang.String.indexOf(int)
+public static java.lang.String java.lang.String.valueOf(int)
+public static java.lang.String java.lang.String.valueOf(long)
+public static java.lang.String java.lang.String.valueOf(float)
+public static java.lang.String java.lang.String.valueOf(boolean)
+public static java.lang.String java.lang.String.valueOf(char[])
+public static java.lang.String java.lang.String.valueOf(char[],int,int)
+public static java.lang.String java.lang.String.valueOf(java.lang.Object)
+public static java.lang.String java.lang.String.valueOf(char)
+public static java.lang.String java.lang.String.valueOf(double)
+public char java.lang.String.charAt(int)
+public int java.lang.String.codePointAt(int)
+public int java.lang.String.codePointBefore(int)
+public int java.lang.String.codePointCount(int,int)
+public int java.lang.String.compareToIgnoreCase(java.lang.String)
+public java.lang.String java.lang.String.concat(java.lang.String)
+public boolean java.lang.String.contains(java.lang.CharSequence)
+public boolean java.lang.String.contentEquals(java.lang.CharSequence)
+public boolean java.lang.String.contentEquals(java.lang.StringBuffer)
+public static java.lang.String java.lang.String.copyValueOf(char[])
+public static java.lang.String java.lang.String.copyValueOf(char[],int,int)
+public boolean java.lang.String.endsWith(java.lang.String)
+public boolean java.lang.String.equalsIgnoreCase(java.lang.String)
+public static java.lang.String java.lang.String.format(java.util.Locale,java.lang.String,java.lang.Object[])
+public static java.lang.String java.lang.String.format(java.lang.String,java.lang.Object[])
+public void java.lang.String.getBytes(int,int,byte[],int)
+public byte[] java.lang.String.getBytes(java.nio.charset.Charset)
+public byte[] java.lang.String.getBytes(java.lang.String) throws java.io.UnsupportedEncodingException
+public byte[] java.lang.String.getBytes()
+public void java.lang.String.getChars(int,int,char[],int)
+public native java.lang.String java.lang.String.intern()
+public boolean java.lang.String.isEmpty()
+public static java.lang.String java.lang.String.join(java.lang.CharSequence,java.lang.CharSequence[])
+public static java.lang.String java.lang.String.join(java.lang.CharSequence,java.lang.Iterable)
+public int java.lang.String.lastIndexOf(int)
+public int java.lang.String.lastIndexOf(java.lang.String)
+public int java.lang.String.lastIndexOf(java.lang.String,int)
+public int java.lang.String.lastIndexOf(int,int)
+public int java.lang.String.length()
+public boolean java.lang.String.matches(java.lang.String)
+public int java.lang.String.offsetByCodePoints(int,int)
+public boolean java.lang.String.regionMatches(int,java.lang.String,int,int)
+public boolean java.lang.String.regionMatches(boolean,int,java.lang.String,int,int)
+public java.lang.String java.lang.String.replace(char,char)
+public java.lang.String java.lang.String.replace(java.lang.CharSequence,java.lang.CharSequence)
+public java.lang.String java.lang.String.replaceAll(java.lang.String,java.lang.String)
+public java.lang.String java.lang.String.replaceFirst(java.lang.String,java.lang.String)
+public java.lang.String[] java.lang.String.split(java.lang.String)
+public java.lang.String[] java.lang.String.split(java.lang.String,int)
+public boolean java.lang.String.startsWith(java.lang.String,int)
+public boolean java.lang.String.startsWith(java.lang.String)
+public java.lang.CharSequence java.lang.String.subSequence(int,int)
+public java.lang.String java.lang.String.substring(int)
+public java.lang.String java.lang.String.substring(int,int)
+public char[] java.lang.String.toCharArray()
+public java.lang.String java.lang.String.toLowerCase(java.util.Locale)
+public java.lang.String java.lang.String.toLowerCase()
+public java.lang.String java.lang.String.toUpperCase()
+public java.lang.String java.lang.String.toUpperCase(java.util.Locale)
+public java.lang.String java.lang.String.trim()
+public final void java.lang.Object.wait() throws java.lang.InterruptedException
+public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
+public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException
+public final native java.lang.Class java.lang.Object.getClass()
+public final native void java.lang.Object.notify()
+public final native void java.lang.Object.notifyAll()
+public default java.util.stream.IntStream java.lang.CharSequence.chars()
+public default java.util.stream.IntStream java.lang.CharSequence.codePoints()
+public java.lang.String(byte[],int,int)
+public java.lang.String(byte[],java.nio.charset.Charset)
+public java.lang.String(byte[],java.lang.String) throws java.io.UnsupportedEncodingException
+public java.lang.String(byte[],int,int,java.nio.charset.Charset)
+public java.lang.String(byte[],int,int,java.lang.String) throws java.io.UnsupportedEncodingException
+public java.lang.String(java.lang.StringBuilder)
+public java.lang.String(java.lang.StringBuffer)
+public java.lang.String(byte[])
+public java.lang.String(int[],int,int)
+public java.lang.String()
+public java.lang.String(char[])
+public java.lang.String(java.lang.String)
+public java.lang.String(char[],int,int)
+public java.lang.String(byte[],int)
+public java.lang.String(byte[],int,int,int)
+
+Process finished with exit code 0
+</code></pre>
+<p>参数为java.lang.String，在idea中设置运行参数：Edit Configurations&gt;Configuration&gt;Program arguments，需要填写某个类的全限定名。</p>
+<h2 id="14-7-动态代理"><a href="#14-7-动态代理" class="headerlink" title="14.7 动态代理"></a>14.7 动态代理</h2><p>代理是基本的设计模式之一，是用来代替实际对象的对象，通常涉及与实际对象的通信，充当中间人的角色。</p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-08 10:22
+ */
+public class SimpleProxyDemo &#123;
+    public static void consumer(Interface inter) &#123;
+        inter.doSomething();
+        inter.somethingElse(&quot;banana&quot;);
+    &#125;
+
+    public static void main(String[] args) &#123;
+        consumer(new RealObject());
+        consumer(new ProxyObject(new RealObject()));
+    &#125;
+&#125;
+
+interface Interface &#123;
+    void doSomething();
+
+    void somethingElse(String arg);
+&#125;
+
+class RealObject implements Interface &#123;
+
+    @Override
+    public void doSomething() &#123;
+        System.out.println(&quot;do something.&quot;);
+    &#125;
+
+    @Override
+    public void somethingElse(String arg) &#123;
+        System.out.println(&quot;do something else :&quot; + arg);
+    &#125;
+&#125;
+
+class ProxyObject implements Interface &#123;
+    private Interface proxied;
+
+    public ProxyObject(Interface proxied) &#123;
+        this.proxied = proxied;
+    &#125;
+
+    @Override
+    public void doSomething() &#123;
+        System.out.println(&quot;proxy object do something.&quot;);
+        proxied.doSomething();
+    &#125;
+
+    @Override
+    public void somethingElse(String arg) &#123;
+        System.out.println(&quot;proxy object do something else: &quot; + arg);
+        proxied.somethingElse(arg);
+    &#125;
+&#125;
+</code></pre>
+<p>output:</p>
+<pre><code class="java">do something.
+do something else :banana
+proxy object do something.
+do something.
+proxy object do something else: banana
+do something else :banana
+
+Process finished with exit code 0
+</code></pre>
+<p>当想要执行一些额外操作，同时想将这些操作从”实际”对象中分离出去时，或者想要更加容易的做出修改时代理是很有用的。</p>
+<p>通过调用静态方法Proxy.newProxyInstance()可以创建动态代理对象，<br>newProxyInstance(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler h)<br>Returns an instance of a proxy class for the specified interfaces that dispatches method invocations to the specified invocation handler.</p>
+<pre><code class="java">package com.typeinfo;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-08 10:35
+ */
+public class SimpleDynamicProxy &#123;
+    public static void consumer(Interface inter) &#123;
+        inter.doSomething();
+        inter.somethingElse(&quot;Banana&quot;);
+    &#125;
+
+    public static void main(String[] args) &#123;
+        RealObject realObject = new RealObject();
+        consumer(realObject);
+        Interface proxy = (Interface) Proxy.newProxyInstance(Interface.class.getClassLoader(),
+                new Class[]&#123;Interface.class&#125;, new DynamicProxyHandler(realObject));
+        consumer(proxy);
+    &#125;
+&#125;
+
+class DynamicProxyHandler implements InvocationHandler &#123;
+    private Object proxied;
+
+    public DynamicProxyHandler(Object proxied) &#123;
+        this.proxied = proxied;
+    &#125;
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;
+        System.out.println(&quot;proxy: &quot; + proxy.getClass() + &quot; .method: &quot; + method + &quot; .args: &quot; + args);
+        if (args != null) &#123;
+            for (Object object : args) &#123;
+                System.out.println(object + &quot;   &quot;);
+            &#125;
+        &#125;
+        return method.invoke(proxied, args);
+    &#125;
+&#125;
+</code></pre>
+<p>output:</p>
+<pre><code class="java">do something.
+do something else :Banana
+proxy: class com.typeinfo.$Proxy0 .method: public abstract void com.typeinfo.Interface.doSomething() .args: null
+do something.
+proxy: class com.typeinfo.$Proxy0 .method: public abstract void com.typeinfo.Interface.somethingElse(java.lang.String) .args: [Ljava.lang.Object;@12a3a380
+Banana   
+do something else :Banana
+
+Process finished with exit code 0
+</code></pre>
+<h2 id="14-8-空对象"><a href="#14-8-空对象" class="headerlink" title="14.8 空对象"></a>14.8 空对象</h2><p>当时用内置的null去表示空对象时，在每次使用这个对象的时候都需要先判断该对象是否为null，并且判断除了用来产生NullPointerException之外，没有任何帮助，还会产生大量冗余代码。我们希望有一个空对象，可以接收传传给它所代表的对象，但是将返回表示该对象不存在的任何真实对象的值。<br>最简单的是创建一个标记接口。</p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-08 11:02
+ */
+public class NullPerson extends Person implements Null &#123;
+    private NullPerson() &#123;
+        super(&quot;None&quot;, &quot;None&quot;, &quot;None&quot;);
+    &#125;
+
+    public String toString() &#123;
+        return &quot;NullPerson&quot;;
+    &#125;
+
+    public static final Person Null = new NullPerson();
+&#125;
+
+interface Null &#123;
+&#125;
+
+class Person &#123;
+    public final String first;
+    public final String last;
+    public final String address;
+
+    public Person(String first, String last, String address) &#123;
+        this.first = first;
+        this.last = last;
+        this.address = address;
+    &#125;
+
+    @Override
+    public String toString() &#123;
+        return &quot;Person&#123;&quot; +
+                &quot;first=&#39;&quot; + first + &#39;\&#39;&#39; +
+                &quot;, last=&#39;&quot; + last + &#39;\&#39;&#39; +
+                &quot;, address=&#39;&quot; + address + &#39;\&#39;&#39; +
+                &#39;&#125;&#39;;
+    &#125;
+&#125;
+</code></pre>
+<h2 id="14-9-接口与类型信息"><a href="#14-9-接口与类型信息" class="headerlink" title="14.9 接口与类型信息"></a>14.9 接口与类型信息</h2><p>interface的一种重要目标就是允许隔离构件，进而降低耦合度，如果编写接口，那么可以实现这一目标，但是通过类型信息，这种耦合性还是会传播出去。</p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-08 11:13
+ */
+public class InterfaceViolation &#123;
+    public static void main(String[] args) &#123;
+        A a = new B();
+        a.f();
+        System.out.println(a.getClass().getCanonicalName());
+        if (a instanceof B) &#123;
+            B b = (B) a;
+            b.g();
+        &#125;
+    &#125;
+&#125;
+
+interface A &#123;
+    void f();
+&#125;
+
+class B implements A &#123;
+
+    @Override
+    public void f() &#123;
+    &#125;
+
+    public void g() &#123;
+    &#125;
+&#125;
+</code></pre>
+<p>a被当作B实现，通过转型为B，可以调用A中不存在的方法。<br>一种解决方法是直接声明，使用实际的类而不是接口。最简单的方式是对实现使用包访问权限，这样在包外便无法访问。</p>
+<pre><code class="java">package com.typeinfo;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-08 11:27
+ */
+public class HiddenC &#123;
+    public static A makeA() &#123;
+        return new C();
+    &#125;
+&#125;
+
+class C implements A &#123;
+
+    @Override
+    public void f() &#123;
+    &#125;
+
+    public void g() &#123;
+    &#125;
+
+    void u() &#123;
+    &#125;
+    
+    protected void v() &#123;
+    &#125;
+    
+    private void w() &#123;
+    &#125;
+&#125;
+</code></pre>
+<p>即使从makeA()返回的是C类型，在包外依然无法使用A之外的任何方法。</p>
+<pre><code class="java">package com.typeinfo;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-08 11:30
+ */
+public class HiddenImplementation &#123;
+    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException,
+            InvocationTargetException &#123;
+        A a = HiddenC.makeA();
+        a.f();
+        System.out.println(a.getClass().getCanonicalName());
+        if (a instanceof C) &#123;
+            C c = (C) a;
+            c.g();
+        &#125;
+        callHiddenMethod(a, &quot;g&quot;);
+        callHiddenMethod(a, &quot;v&quot;);
+        callHiddenMethod(a, &quot;u&quot;);
+        callHiddenMethod(a, &quot;w&quot;);
+    &#125;
+
+    static void callHiddenMethod(Object object, String methodName) throws NoSuchMethodException,
+            InvocationTargetException, IllegalAccessException &#123;
+        Method g = object.getClass().getDeclaredMethod(methodName);
+        g.setAccessible(true);
+        g.invoke(object);
+    &#125;
+&#125;
+</code></pre>
+<p>output:</p>
+<pre><code class="java">public f().
+com.typeinfo.C
+public g().
+public g().
+protected v().
+package u().
+private w().
+
+Process finished with exit code 0
+</code></pre>
+<p>通过反射，仍旧可以调用所有方法，甚至是private方法，如果知道方法名，可以在Method对象上调用setAccessible(true)。<br>甚至使用发布编译后的代码也无法阻止这种情况，因为在发布的jdk中有反编译器便可突破这一限制。<br>内部类与匿名类也无法阻止反射到达并调用非公共访问权限的方法。</p>
+<pre><code class="java">package com.typeinfo;
+
+import java.lang.reflect.InvocationTargetException;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-08 11:46
+ */
+public class InnerImplementation &#123;
+    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException &#123;
+        A a = InnerA.makeA();
+        a.f();
+        System.out.println(a.getClass().getName());
+        HiddenImplementation.callHiddenMethod(a, &quot;g&quot;);
+        HiddenImplementation.callHiddenMethod(a, &quot;u&quot;);
+        HiddenImplementation.callHiddenMethod(a, &quot;v&quot;);
+        HiddenImplementation.callHiddenMethod(a, &quot;w&quot;);
+    &#125;
+&#125;
+
+class InnerA &#123;
+    private static class C implements A &#123;
+
+        @Override
+        public void f() &#123;
+            System.out.println(&quot;C.f()&quot;);
+        &#125;
+
+        public void g() &#123;
+            System.out.println(&quot;C.g()&quot;);
+        &#125;
+
+        void u() &#123;
+            System.out.println(&quot;C.u()&quot;);
+        &#125;
+
+        protected void v() &#123;
+            System.out.println(&quot;C.v()&quot;);
+        &#125;
+
+        private void w() &#123;
+            System.out.println(&quot;C.w()&quot;);
+        &#125;
+    &#125;
+
+    public static A makeA()&#123;
+        return new C();
+    &#125;
+&#125;
+</code></pre>
+<p>output:</p>
+<pre><code class="java">C.f()
+com.typeinfo.InnerA$C
+C.g()
+C.u()
+C.v()
+C.w()
+
+Process finished with exit code 0
+</code></pre>
+<pre><code class="java">package com.typeinfo;
+
+import java.lang.reflect.InvocationTargetException;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018-06-08 11:51
+ */
+public class AnonymousImplementation &#123;
+    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException,
+            InvocationTargetException &#123;
+        A a = AnonymousA.makeA();
+        a.f();
+        System.out.println(a.getClass().getName());
+        HiddenImplementation.callHiddenMethod(a, &quot;g&quot;);
+        HiddenImplementation.callHiddenMethod(a, &quot;u&quot;);
+        HiddenImplementation.callHiddenMethod(a, &quot;v&quot;);
+        HiddenImplementation.callHiddenMethod(a, &quot;w&quot;);
+    &#125;
+&#125;
+
+class AnonymousA &#123;
+    public static A makeA() &#123;
+        return new A() &#123;
+            @Override
+            public void f() &#123;
+                System.out.println(&quot;public c.f()&quot;);
+            &#125;
+
+            public void g() &#123;
+                System.out.println(&quot;public c.g()&quot;);
+            &#125;
+
+            void u() &#123;
+                System.out.println(&quot;package u()&quot;);
+            &#125;
+
+            protected void v() &#123;
+                System.out.println(&quot;protected v()&quot;);
+            &#125;
+
+            private void w() &#123;
+                System.out.println(&quot;private w()&quot;);
+            &#125;
+        &#125;;
+    &#125;
+&#125;
+</code></pre>
+<p>output:</p>
+<pre><code class="java">public c.f()
+com.typeinfo.AnonymousA$1
+public c.g()
+package u()
+protected v()
+private w()
+
+Process finished with exit code 0
+</code></pre>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E7%B1%BB%E5%9E%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">1.</span> <span class="toc-text">第十四章 类型信息</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#14-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81RTTI-Run-Time-Type-Identification"><span class="toc-number">1.1.</span> <span class="toc-text">14.1 为什么需要RTTI(Run-Time Type Identification)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-2-Class%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.2.</span> <span class="toc-text">14.2 Class对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#output-javaClass-name-com-typeinfo-FancyToy-is-interface-false-Simple-name-FancyToyCanonical-name-com-typeinfo-FancyToy"><span class="toc-number">1.3.</span> <span class="toc-text">output:&#96;&#96;&#96;javaClass name: com.typeinfo.FancyToy is interface? [false]Simple name: FancyToyCanonical name: com.typeinfo.FancyToy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-name-com-typeinfo-HasBatteries-is-interface-true-Simple-name-HasBatteriesCanonical-name-com-typeinfo-HasBatteries"><span class="toc-number">1.4.</span> <span class="toc-text">Class name: com.typeinfo.HasBatteries is interface? [true]Simple name: HasBatteriesCanonical name: com.typeinfo.HasBatteries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-name-com-typeinfo-WaterProof-is-interface-true-Simple-name-WaterProofCanonical-name-com-typeinfo-WaterProof"><span class="toc-number">1.5.</span> <span class="toc-text">Class name: com.typeinfo.WaterProof is interface? [true]Simple name: WaterProofCanonical name: com.typeinfo.WaterProof</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-name-com-typeinfo-Shoots-is-interface-true-Simple-name-ShootsCanonical-name-com-typeinfo-Shoots"><span class="toc-number">1.6.</span> <span class="toc-text">Class name: com.typeinfo.Shoots is interface? [true]Simple name: ShootsCanonical name: com.typeinfo.Shoots</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-name-com-typeinfo-Toy-is-interface-false-Simple-name-ToyCanonical-name-com-typeinfo-Toy"><span class="toc-number">1.7.</span> <span class="toc-text">Class name: com.typeinfo.Toy is interface? [false]Simple name: ToyCanonical name: com.typeinfo.Toy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#14-2-2-%E6%B3%9B%E5%8C%96%E7%9A%84Class%E5%BC%95%E7%94%A8"><span class="toc-number">1.7.1.</span> <span class="toc-text">14.2.2 泛化的Class引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-2-3-%E6%96%B0%E7%9A%84%E8%BD%AC%E5%9E%8B%E8%AF%AD%E6%B3%95"><span class="toc-number">1.7.2.</span> <span class="toc-text">14.2.3 新的转型语法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-3-%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%89%8D%E5%85%88%E5%81%9A%E6%A3%80%E6%9F%A5"><span class="toc-number">1.8.</span> <span class="toc-text">14.3 类型转换前先做检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-5-instanceof%E5%92%8CClass%E7%9A%84%E7%AD%89%E4%BB%B7%E6%80%A7"><span class="toc-number">1.9.</span> <span class="toc-text">14.5 instanceof和Class的等价性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-6-%E5%8F%8D%E5%B0%84%EF%BC%9A%E8%BF%90%E8%A1%8C%E6%97%B6%E7%9A%84%E7%B1%BB%E4%BF%A1%E6%81%AF"><span class="toc-number">1.10.</span> <span class="toc-text">14.6 反射：运行时的类信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#14-6-1-%E7%B1%BB%E6%96%B9%E6%B3%95%E6%8F%90%E5%8F%96%E5%99%A8"><span class="toc-number">1.10.1.</span> <span class="toc-text">14.6.1 类方法提取器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-7-%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="toc-number">1.11.</span> <span class="toc-text">14.7 动态代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-8-%E7%A9%BA%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.12.</span> <span class="toc-text">14.8 空对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-9-%E6%8E%A5%E5%8F%A3%E4%B8%8E%E7%B1%BB%E5%9E%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">1.13.</span> <span class="toc-text">14.9 接口与类型信息</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2019/02/01/c61bac95725c/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&text=Java编程思想——第十四章——类型信息"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&title=Java编程思想——第十四章——类型信息"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&is_video=false&description=Java编程思想——第十四章——类型信息"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Java编程思想——第十四章——类型信息&body=Check out this article: https://lozhu.happy365.day/2019/02/01/c61bac95725c/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&title=Java编程思想——第十四章——类型信息"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&title=Java编程思想——第十四章——类型信息"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&title=Java编程思想——第十四章——类型信息"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&title=Java编程思想——第十四章——类型信息"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&name=Java编程思想——第十四章——类型信息&description=&lt;h1 id=&#34;第十四章-类型信息&#34;&gt;&lt;a href=&#34;#第十四章-类型信息&#34; class=&#34;headerlink&#34; title=&#34;第十四章 类型信息&#34;&gt;&lt;/a&gt;第十四章 类型信息&lt;/h1&gt;&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;运行时类型信息可以使得你可以在程序运行时发现和使用类型信息。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本章主要讨论Java如何让我们在运行时识别对象和类的信息，主要有两种方式：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;“传统的RTTI”，假定我们在编译时已经知道了所有的类型；&lt;/li&gt;
+&lt;li&gt;“反射机制”，允许在运行时发现和使用类的信息。&lt;/li&gt;
+&lt;/ol&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2019/02/01/c61bac95725c/&t=Java编程思想——第十四章——类型信息"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2024
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

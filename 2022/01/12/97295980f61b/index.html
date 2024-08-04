@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="想要窥探虚拟机内部的实现原理，最直接的一条路径就是编译一套自己的 jdk，通过阅读和调试 jdk 源码来了解 java 技术体系的运作，虽然这样门槛会高一点，但是肯定会比阅读各种文章、书籍来得更加贴近本质。此外，java 中许多方法都是 Native 的，在了解这些方法运作的过程都需要调试虚拟机代码的能力。  版本控制工具 Mecurial 常见命令# 设置用户名和邮箱 hg config --">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Java虚拟机(1)-编译openjdk">
+<meta property="og:url" content="https://lozhu.happy365.day/2022/01/12/97295980f61b/index.html">
+<meta property="og:site_name" content="Lozhu&#39;s blog">
+<meta property="og:description" content="想要窥探虚拟机内部的实现原理，最直接的一条路径就是编译一套自己的 jdk，通过阅读和调试 jdk 源码来了解 java 技术体系的运作，虽然这样门槛会高一点，但是肯定会比阅读各种文章、书籍来得更加贴近本质。此外，java 中许多方法都是 Native 的，在了解这些方法运作的过程都需要调试虚拟机代码的能力。  版本控制工具 Mecurial 常见命令# 设置用户名和邮箱 hg config --">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-12T15:56:35.000Z">
+<meta property="article:modified_time" content="2024-08-04T09:08:29.792Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="jdk">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>深入理解Java虚拟机(1)-编译openjdk</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Lozhu's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2022/01/14/6a21d3472901/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2022/01/11/8964752fc0df/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2022/01/12/97295980f61b/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&text=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&title=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&is_video=false&description=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=深入理解Java虚拟机(1)-编译openjdk&body=Check out this article: https://lozhu.happy365.day/2022/01/12/97295980f61b/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&title=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&title=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&title=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&title=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&name=深入理解Java虚拟机(1)-编译openjdk&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2022/01/12/97295980f61b/&t=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E5%B7%A5%E5%85%B7-Mecurial-%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">版本控制工具 Mecurial 常见命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%BA%90%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">获取源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%9C%AC%E5%9C%B0-JDK"><span class="toc-number">3.</span> <span class="toc-text">配置本地 JDK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%89%8D%E5%87%86%E5%A4%87"><span class="toc-number">4.</span> <span class="toc-text">编译前准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E6%B1%87%E6%80%BB"><span class="toc-number">4.1.</span> <span class="toc-text">常见错误汇总</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">5.</span> <span class="toc-text">编译</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        深入理解Java虚拟机(1)-编译openjdk
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-01-12T15:56:35.000Z" class="dt-published" itemprop="datePublished">2022-01-12</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/JVM/" rel="tag">JVM</a>, <a class="p-category" href="/tags/Java/" rel="tag">Java</a>, <a class="p-category" href="/tags/jdk/" rel="tag">jdk</a> -->
+        <a class="category-link" href="/tags/JVM/" rel="tag">JVM</a>, <a class="category-link" href="/tags/Java/" rel="tag">Java</a>, <a class="category-link" href="/tags/jdk/" rel="tag">jdk</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <blockquote>
+<p>想要窥探虚拟机内部的实现原理，最直接的一条路径就是编译一套自己的 jdk，通过阅读和调试 jdk 源码来了解 java 技术体系的运作，虽然这样门槛会高一点，但是肯定会比阅读各种文章、书籍来得更加贴近本质。此外，java 中许多方法都是 Native 的，在了解这些方法运作的过程都需要调试虚拟机代码的能力。</p>
+</blockquote>
+<h2 id="版本控制工具-Mecurial-常见命令"><a href="#版本控制工具-Mecurial-常见命令" class="headerlink" title="版本控制工具 Mecurial 常见命令"></a>版本控制工具 Mecurial 常见命令</h2><pre><code class="bash"># 设置用户名和邮箱
+hg config --edit
+
+# 初始化仓库
+hg init
+
+# 查看项目状态
+hg st
+
+# 将文件添加到版本控制
+hg add file_name
+
+# 提交修改
+hg ci -m &quot;commit comment&quot;
+
+# 初次提交
+hg push --new-branch
+
+# 正常提交
+hg push -b branch_name
+
+# 新建分支
+hg branch branch_name
+
+# 查看当前分支
+hg branch
+
+# 查看所有分支
+hg branches
+
+# 切换分支
+hg update new_branch
+
+# 合并分支
+hg merge branch
+
+# 更新
+hg pull
+
+# 回退文件
+hg revert file_name
+
+# 全部回退
+hg revert -a
+</code></pre>
+<h2 id="获取源码"><a href="#获取源码" class="headerlink" title="获取源码"></a>获取源码</h2><p>1、浏览器打开 <a target="_blank" rel="noopener" href="http://hg.openjdk.java.net/jdk8/jdk8">OpenJDK &#x2F; jdk8 &#x2F; jdk8</a> ，因为种种原因，可能会比较慢；</p>
+<p>2、点击页面左侧的 browse ，页面会列出 openjdk 的目录结构；</p>
+<p>3、点击页面左边菜单栏 zip 👈 ，就能下载到源码的压缩包；</p>
+<p>4、将源码压缩包解压缩到 jdk8-source 目录下。</p>
+<h2 id="配置本地-JDK"><a href="#配置本地-JDK" class="headerlink" title="配置本地 JDK"></a>配置本地 JDK</h2><p>要拥有梯子，你必须要先有个梯子；要编译 JDK ，必须要有一个启动 JDK（Boot JDK）。本地 JDK 版本的与要编译的 JDK 版本有关系，略过了。</p>
+<h2 id="编译前准备"><a href="#编译前准备" class="headerlink" title="编译前准备"></a>编译前准备</h2><p>1、添加源码目录中的 .configure 执行权限；</p>
+<p>2、执行 .&#x2F;configure ，不出意外的话会报错，只能一个一个消灭这些错误，不过百度一下应该都能找到答案，要有耐心。</p>
+<p>3、成功：</p>
+<pre><code>configure: creating /Users/chenxii/Documents/Java/compile-openjdk/jdk8-source/build/macosx-x86_64-normal-server-release/config.status
+config.status: creating /Users/chenxii/Documents/Java/compile-openjdk/jdk8-source/build/macosx-x86_64-normal-server-release/spec.gmk
+config.status: creating /Users/chenxii/Documents/Java/compile-openjdk/jdk8-source/build/macosx-x86_64-normal-server-release/hotspot-spec.gmk
+config.status: creating /Users/chenxii/Documents/Java/compile-openjdk/jdk8-source/build/macosx-x86_64-normal-server-release/bootcycle-spec.gmk
+config.status: creating /Users/chenxii/Documents/Java/compile-openjdk/jdk8-source/build/macosx-x86_64-normal-server-release/compare.sh
+config.status: creating /Users/chenxii/Documents/Java/compile-openjdk/jdk8-source/build/macosx-x86_64-normal-server-release/spec.sh
+config.status: creating /Users/chenxii/Documents/Java/compile-openjdk/jdk8-source/build/macosx-x86_64-normal-server-release/Makefile
+config.status: creating /Users/chenxii/Documents/Java/compile-openjdk/jdk8-source/build/macosx-x86_64-normal-server-release/config.h
+
+====================================================      * JVM variants:   server
+* OpenJDK target: OS: macosx, CPU architecture: x86, address length: 64
+
+Tools summary:
+* Boot JDK:       openjdk version &quot;1.8.0_292&quot; OpenJDK Runtime Environment (Zulu 8.54.0.21-CA-macosx) (build 1.8.0_292-b10) OpenJDK 64-Bit Server VM (Zulu 8.54.0.21-CA-macosx) (build 25.292-b10, mixed mode)  (at /opt/java/zulu8.54.0.21-ca-jdk8.0.292-macosx_x64)
+* C Compiler:      version  (at /usr/bin/gcc)
+* C++ Compiler:    version  (at /usr/bin/g++)
+
+Build performance summary:
+* Cores to use:   4
+* Memory limit:   16384 MB
+* ccache status:  installed, but disabled (version older than 3.1.4)
+
+Build performance tip: ccache gives a tremendous speedup for C++ recompilations.
+
+
+Build performance summary:
+* Cores to use:   4
+* Memory limit:   16384 MB
+* ccache status:  installed, but disabled (version older than 3.1.4)
+
+Build performance tip: ccache gives a tremendous speedup for C++ recompilations.
+You have ccache installed, but it is a version prior to 3.1.4. Try upgrading.
+</code></pre>
+<h3 id="常见错误汇总"><a href="#常见错误汇总" class="headerlink" title="常见错误汇总"></a>常见错误汇总</h3><p>1、configure: error: GCC compiler is required. Try setting –with-tools-dir.</p>
+<blockquote>
+<p>注释掉 jdk8-source&#x2F;common&#x2F;autoconf&#x2F;generated-configure.sh 中相关的地方，直接搜  GCC compiler is required ，然后将出现的行都用 # 注释掉。</p>
+</blockquote>
+<p>2、error: could not found freetype</p>
+<blockquote>
+<p>1、安装 freetype</p>
+<p>2、.&#x2F;configure -with-freetype-include&#x3D;&#x2F;usr&#x2F;local&#x2F;include&#x2F;freetype2 —with-freetype-lib&#x3D;&#x2F;usr&#x2F;local&#x2F;lib&#x2F;</p>
+</blockquote>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>1、执行 <code>chmod a+x get_source.sh</code></p>
+<p>2、执行 <code>./get_source.sh</code></p>
+<p>2、执行 <code>make all</code></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E5%B7%A5%E5%85%B7-Mecurial-%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">版本控制工具 Mecurial 常见命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%BA%90%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">获取源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%9C%AC%E5%9C%B0-JDK"><span class="toc-number">3.</span> <span class="toc-text">配置本地 JDK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%89%8D%E5%87%86%E5%A4%87"><span class="toc-number">4.</span> <span class="toc-text">编译前准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E6%B1%87%E6%80%BB"><span class="toc-number">4.1.</span> <span class="toc-text">常见错误汇总</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">5.</span> <span class="toc-text">编译</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2022/01/12/97295980f61b/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&text=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&title=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&is_video=false&description=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=深入理解Java虚拟机(1)-编译openjdk&body=Check out this article: https://lozhu.happy365.day/2022/01/12/97295980f61b/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&title=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&title=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&title=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&title=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2022/01/12/97295980f61b/&name=深入理解Java虚拟机(1)-编译openjdk&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2022/01/12/97295980f61b/&t=深入理解Java虚拟机(1)-编译openjdk"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2024
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

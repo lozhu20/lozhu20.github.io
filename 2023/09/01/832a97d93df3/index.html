@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="切换到清华源最初使用的是阿里云的源，apt 找不到 libllvm 包。 写入 &#x2F;etc&#x2F;apt&#x2F;sources.list">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Ubuntu22.04上安装Postgresql">
+<meta property="og:url" content="https://lozhu.happy365.day/2023/09/01/832a97d93df3/index.html">
+<meta property="og:site_name" content="Lozhu&#39;s blog">
+<meta property="og:description" content="切换到清华源最初使用的是阿里云的源，apt 找不到 libllvm 包。 写入 &#x2F;etc&#x2F;apt&#x2F;sources.list">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-01T08:33:03.000Z">
+<meta property="article:modified_time" content="2024-09-14T13:19:40.140Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="Postgresql">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>在Ubuntu22.04上安装Postgresql</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Lozhu's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/09/02/5157cf948645/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2022/11/17/38ae9b797575/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2023/09/01/832a97d93df3/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&text=在Ubuntu22.04上安装Postgresql"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&title=在Ubuntu22.04上安装Postgresql"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&is_video=false&description=在Ubuntu22.04上安装Postgresql"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=在Ubuntu22.04上安装Postgresql&body=Check out this article: https://lozhu.happy365.day/2023/09/01/832a97d93df3/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&title=在Ubuntu22.04上安装Postgresql"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&title=在Ubuntu22.04上安装Postgresql"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&title=在Ubuntu22.04上安装Postgresql"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&title=在Ubuntu22.04上安装Postgresql"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&name=在Ubuntu22.04上安装Postgresql&description=&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
+&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&t=在Ubuntu22.04上安装Postgresql"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E5%88%B0%E6%B8%85%E5%8D%8E%E6%BA%90"><span class="toc-number">1.</span> <span class="toc-text">切换到清华源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-libllvm14"><span class="toc-number">2.</span> <span class="toc-text">安装 libllvm14</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-ssl-cert-snakeoil-pem"><span class="toc-number">3.</span> <span class="toc-text">安装 ssl-cert-snakeoil.pem</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        在Ubuntu22.04上安装Postgresql
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-09-01T08:33:03.000Z" class="dt-published" itemprop="datePublished">2023-09-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Postgresql/" rel="tag">Postgresql</a>, <a class="p-category" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a> -->
+        <a class="category-link" href="/tags/Postgresql/" rel="tag">Postgresql</a>, <a class="category-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="切换到清华源"><a href="#切换到清华源" class="headerlink" title="切换到清华源"></a>切换到清华源</h2><p>最初使用的是阿里云的源，apt 找不到 libllvm 包。</p>
+<p>写入 &#x2F;etc&#x2F;apt&#x2F;sources.list</p>
+<span id="more"></span>
+
+<pre><code># See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
+# newer versions of the distribution.
+deb http://cn.archive.ubuntu.com/ubuntu jammy main restricted
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy main restricted
+
+## Major bug fix updates produced after the final release of the
+## distribution.
+deb http://cn.archive.ubuntu.com/ubuntu jammy-updates main restricted
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-updates main restricted
+
+## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
+## team. Also, please note that software in universe WILL NOT receive any
+## review or updates from the Ubuntu security team.
+deb http://cn.archive.ubuntu.com/ubuntu jammy universe
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy universe
+deb http://cn.archive.ubuntu.com/ubuntu jammy-updates universe
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-updates universe
+
+## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
+## team, and may not be under a free licence. Please satisfy yourself as to
+## your rights to use the software. Also, please note that software in
+## multiverse WILL NOT receive any review or updates from the Ubuntu
+## security team.
+deb http://cn.archive.ubuntu.com/ubuntu jammy multiverse
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy multiverse
+deb http://cn.archive.ubuntu.com/ubuntu jammy-updates multiverse
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-updates multiverse
+
+## N.B. software from this repository may not have been tested as
+## extensively as that contained in the main release, although it includes
+## newer versions of some applications which may provide useful features.
+## Also, please note that software in backports WILL NOT receive any review
+## or updates from the Ubuntu security team.
+deb http://cn.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
+
+deb http://cn.archive.ubuntu.com/ubuntu jammy-security main restricted
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-security main restricted
+deb http://cn.archive.ubuntu.com/ubuntu jammy-security universe
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-security universe
+deb http://cn.archive.ubuntu.com/ubuntu jammy-security multiverse
+# deb-src http://cn.archive.ubuntu.com/ubuntu jammy-security multiverse
+</code></pre>
+<h2 id="安装-libllvm14"><a href="#安装-libllvm14" class="headerlink" title="安装 libllvm14"></a>安装 libllvm14</h2><p>执行：</p>
+<pre><code class="shell">sudo apt update
+sudo apt install postgresql postgresql-contrib
+</code></pre>
+<p>提示 libllvm14 包找不到，先安装改包：</p>
+<pre><code class="shell">sudo apt install libllvm14
+</code></pre>
+<h2 id="安装-ssl-cert-snakeoil-pem"><a href="#安装-ssl-cert-snakeoil-pem" class="headerlink" title="安装 ssl-cert-snakeoil.pem"></a>安装 ssl-cert-snakeoil.pem</h2><p>再执行安装命令，成功安装，但是启动失败：</p>
+<pre><code>● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Fri 2023-03-31 15:42:45 UTC; 2s ago
+    Process: 9793 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
+   Main PID: 9793 (code=exited, status=0/SUCCESS)
+        CPU: 3ms
+
+Mar 31 15:42:45 xingzii-vm systemd[1]: Starting PostgreSQL RDBMS...
+Mar 31 15:42:45 xingzii-vm systemd[1]: Finished PostgreSQL RDBMS.
+</code></pre>
+<p>到 &#x2F;var&#x2F;log&#x2F;postgresql 查看日志，提示：</p>
+<pre><code>2023-03-31 15:37:02.316 UTC [9453] FATAL:  could not load server certificate file &quot;/etc/ssl/certs/ssl-cert-snakeoil.pem&quot;: SSL error code 2147483661
+2023-03-31 15:37:02.316 UTC [9453] LOG:  database system is shut down
+pg_ctl: could not start server
+Examine the log output.
+</code></pre>
+<p>网上看了一下，安装这个就好：</p>
+<pre><code class="shell">sudo apt install ssl-cert &amp;&amp; sudo make-ssl-cert generate-default-snakeoil
+</code></pre>
+<p>安装好记得修改一下 &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;ssl-cert-snakeoil.pem 的权限：</p>
+<pre><code class="shell">sudo chmod 755 /etc/ssl/certs/ssl-cert-snakeoil.pem
+</code></pre>
+<p>再启动 postgresql 就好了。</p>
+<p>验证：</p>
+<pre><code class="shell">sudo -u postgres psql -c &quot;SELECT version();&quot;
+</code></pre>
+<pre><code>perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+    LANGUAGE = (unset),
+    LC_ALL = (unset),
+    LC_CTYPE = &quot;UTF-8&quot;,
+    LC_TERMINAL = &quot;iTerm2&quot;,
+    LANG = &quot;en_US.UTF-8&quot;
+    are supported and installed on your system.
+perl: warning: Falling back to a fallback locale (&quot;en_US.UTF-8&quot;).
+                                                                version
+----------------------------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, 64-bit
+(1 row)
+</code></pre>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E5%88%B0%E6%B8%85%E5%8D%8E%E6%BA%90"><span class="toc-number">1.</span> <span class="toc-text">切换到清华源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-libllvm14"><span class="toc-number">2.</span> <span class="toc-text">安装 libllvm14</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-ssl-cert-snakeoil-pem"><span class="toc-number">3.</span> <span class="toc-text">安装 ssl-cert-snakeoil.pem</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2023/09/01/832a97d93df3/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&text=在Ubuntu22.04上安装Postgresql"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&title=在Ubuntu22.04上安装Postgresql"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&is_video=false&description=在Ubuntu22.04上安装Postgresql"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=在Ubuntu22.04上安装Postgresql&body=Check out this article: https://lozhu.happy365.day/2023/09/01/832a97d93df3/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&title=在Ubuntu22.04上安装Postgresql"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&title=在Ubuntu22.04上安装Postgresql"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&title=在Ubuntu22.04上安装Postgresql"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&title=在Ubuntu22.04上安装Postgresql"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&name=在Ubuntu22.04上安装Postgresql&description=&lt;h2 id=&#34;切换到清华源&#34;&gt;&lt;a href=&#34;#切换到清华源&#34; class=&#34;headerlink&#34; title=&#34;切换到清华源&#34;&gt;&lt;/a&gt;切换到清华源&lt;/h2&gt;&lt;p&gt;最初使用的是阿里云的源，apt 找不到 libllvm 包。&lt;/p&gt;
+&lt;p&gt;写入 &amp;#x2F;etc&amp;#x2F;apt&amp;#x2F;sources.list&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2023/09/01/832a97d93df3/&t=在Ubuntu22.04上安装Postgresql"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2024
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

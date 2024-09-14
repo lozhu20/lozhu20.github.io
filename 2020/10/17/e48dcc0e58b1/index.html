@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="移动 旋转 仿射变换 用到的函数：cv2.getPerspectiveTransform()">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenCV学习笔记（二）">
+<meta property="og:url" content="https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/index.html">
+<meta property="og:site_name" content="Lozhu&#39;s blog">
+<meta property="og:description" content="移动 旋转 仿射变换 用到的函数：cv2.getPerspectiveTransform()">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.happy365.day/24/04/17225724.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17225816.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17225854.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17225937.png">
+<meta property="article:published_time" content="2020-10-17T08:56:37.000Z">
+<meta property="article:modified_time" content="2024-09-14T13:19:40.136Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="OpenCV">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.happy365.day/24/04/17225724.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>OpenCV学习笔记（二）</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Lozhu's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2020/10/17/fc7568714eb6/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/10/16/2155ed03772c/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&text=OpenCV学习笔记（二）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&title=OpenCV学习笔记（二）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&is_video=false&description=OpenCV学习笔记（二）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=OpenCV学习笔记（二）&body=Check out this article: https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&title=OpenCV学习笔记（二）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&title=OpenCV学习笔记（二）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&title=OpenCV学习笔记（二）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&title=OpenCV学习笔记（二）"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&name=OpenCV学习笔记（二）&description=&lt;ul&gt;
+&lt;li&gt;移动&lt;/li&gt;
+&lt;li&gt;旋转&lt;/li&gt;
+&lt;li&gt;仿射变换&lt;/li&gt;
+&lt;li&gt;用到的函数：cv2.getPerspectiveTransform()&lt;/li&gt;
+&lt;/ul&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&t=OpenCV学习笔记（二）"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%92%8C%E7%BC%A9%E6%94%BE"><span class="toc-number">1.</span> <span class="toc-text">扩展和缩放</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#cv2-resize-%E5%87%BD%E6%95%B0%E7%94%A8%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">cv2.resize()函数用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.2.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B9%B3%E7%A7%BB"><span class="toc-number">2.</span> <span class="toc-text">图像的平移</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E6%97%8B%E8%BD%AC"><span class="toc-number">3.</span> <span class="toc-text">图像的旋转</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BF%E5%B0%84%E5%8F%98%E6%8D%A2"><span class="toc-number">4.</span> <span class="toc-text">仿射变换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E7%BF%BB%E8%BD%AC"><span class="toc-number">5.</span> <span class="toc-text">图像的翻转</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        OpenCV学习笔记（二）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-10-17T08:56:37.000Z" class="dt-published" itemprop="datePublished">2020-10-17</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/OpenCV/" rel="tag">OpenCV</a> -->
+        <a class="category-link" href="/tags/OpenCV/" rel="tag">OpenCV</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <ul>
+<li>移动</li>
+<li>旋转</li>
+<li>仿射变换</li>
+<li>用到的函数：cv2.getPerspectiveTransform()</li>
+</ul>
+<span id="more"></span>
+
+
+
+<h2 id="扩展和缩放"><a href="#扩展和缩放" class="headerlink" title="扩展和缩放"></a>扩展和缩放</h2><h3 id="cv2-resize-函数用法"><a href="#cv2-resize-函数用法" class="headerlink" title="cv2.resize()函数用法"></a>cv2.resize()函数用法</h3><pre><code class="python">void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=0, int interpolation=INTER_LINEAR )
+</code></pre>
+<pre><code>src：输入，原图像，即待改变大小的图像；
+dst：输出，改变大小之后的图像，这个图像和原图像具有相同的内容，只是大小和原图像不一样而已；
+dsize：输出图像的大小。如果这个参数不为0，那么就代表将原图像缩放到这个Size(width，height)指定的大小；如果这个参数为0，那么原图像缩放之后的大小就要通过下面的公式来计算：
+       dsize = Size(round(fx*src.cols), round(fy*src.rows))
+
+       其中，fx和fy就是下面要说的两个参数，是图像width方向和height方向的缩放比例。
+
+fx：width方向的缩放比例，如果它是0，那么它就会按照(double)dsize.width/src.cols来计算；
+fy：height方向的缩放比例，如果它是0，那么它就会按照(double)dsize.height/src.rows来计算；
+interpolation：这个是指定插值的方式，图像缩放之后，肯定像素要进行重新计算的，就靠这个参数来指定重新计算像素的方式，有以下几种：
+      INTER_NEAREST - 最邻近插值
+      INTER_LINEAR - 双线性插值，如果最后一个参数你不指定，默认使用这种方法
+      INTER_AREA -区域插值 resampling using pixel area relation. It may be a preferred method for image decimation, as it gives moire’-free results. But when the image is zoomed, it is similar to the INTER_NEAREST method.
+      INTER_CUBIC - 4x4像素邻域内的双立方插值
+      INTER_LANCZOS4 - 8x8像素邻域内的Lanczos插值
+</code></pre>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>使用cv2.resize()可以实现对图片的大小调整。</p>
+<p>三种插值方法：</p>
+<ol>
+<li>cv2.INTER_AREA</li>
+<li>cv2.INTER_LINEER</li>
+<li>cv2.INTER_CUBIC</li>
+</ol>
+<pre><code class="python">import cv2
+import numpy as np
+
+img = cv2.imread(&quot;../imgs/pi.png&quot;)
+result1 = cv2.resize(img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
+result2 = cv2.resize(img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+result3 = cv2.resize(img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_LINEAR)
+# height, width = img.shape[0:2]
+# result = cv2.resize(img, (2 * width, 2 * height), interpolation=cv2.INTER_CUBIC)
+while 1:
+    cv2.imshow(&#39;INTER_CUBIC&#39;, result1)
+    cv2.imshow(&#39;INTER_AREA&#39;, result2)
+    cv2.imshow(&#39;INTER_LINEAR&#39;, result3)
+    # cv2.imshow(&#39;image&#39;, img)
+    if cv2.waitKey(4) == ord(&#39;q&#39;):
+        break
+cv2.destroyAllWindows()
+</code></pre>
+<p>结果如下：</p>
+<p><img src="https://images.happy365.day/24/04/17225724.png" alt="结果"></p>
+<p>-&gt;&gt;<a target="_blank" rel="noopener" href="https://blog.csdn.net/guyuealian/article/details/85097633">OpenCV图像缩放resize各种插值方式的比较</a></p>
+<h2 id="图像的平移"><a href="#图像的平移" class="headerlink" title="图像的平移"></a>图像的平移</h2><p>使用cv2.wrapAffine()实现图像的平移。</p>
+<p>函数 cv2.warpAffine() 的第三个参数的是输出图像的大小，它的格式<br>应该是图像的（宽，高）。应该记住的是图像的宽对应的是列数，高对应的是行<br>数。</p>
+<pre><code class="python">import cv2
+import numpy as np
+
+img = cv2.imread(&quot;../imgs/pi.png&quot;, cv2.IMREAD_GRAYSCALE)
+height, width = img.shape
+# 平移矩阵 100x50
+M = np.float32([[1, 0, 100], [0, 1, 50]])
+result = cv2.warpAffine(img, M, (width, height), dst=None, borderMode=cv2.BORDER_REFLECT, borderValue=3)
+
+while 1:
+    cv2.imshow(&#39;result&#39;, result)
+    cv2.imshow(&#39;image&#39;, img)
+    if cv2.waitKey(0) == ord(&#39;q&#39;):
+        break
+cv2.destroyAllWindows()
+</code></pre>
+<p>结果如下：</p>
+<p><img src="https://images.happy365.day/24/04/17225816.png" alt="结果"></p>
+<h2 id="图像的旋转"><a href="#图像的旋转" class="headerlink" title="图像的旋转"></a>图像的旋转</h2><p>opencv中对图像的旋转主要是先通过getRotationMatrix2D函数得到图像的旋转矩阵，然后再通过仿射变换函数warpAffine得到旋转后的图像。</p>
+<p><strong>参数说明</strong>：</p>
+<p>getRotationMatrix2D:</p>
+<ul>
+<li>center–表示旋转的中心点</li>
+<li>angle–表示旋转的角度degrees</li>
+<li>scale–图像缩放因子</li>
+</ul>
+<p>warpAffine:</p>
+<ul>
+<li>src – 输入的图像</li>
+<li>M – 2 X 3 的变换矩阵.</li>
+<li>dsize – 输出的图像的size大小</li>
+<li>dst – 输出的图像</li>
+<li>flags – 输出图像的插值方法</li>
+<li>borderMode – 图像边界的处理方式</li>
+<li>borderValue – 当图像边界处理方式为<code>BORDER_CONSTANT</code> 时的填充值</li>
+</ul>
+<pre><code class="python">import cv2
+import numpy as np
+
+img = cv2.imread(&#39;../imgs/pi.png&#39;, cv2.IMREAD_GRAYSCALE)
+height, width = img.shape
+M = cv2.getRotationMatrix2D((width / 2, height / 2), 270, 0.8)
+result = cv2.warpAffine(img, M, dsize=None, dst=None, flags=cv2.BORDER_CONSTANT, borderValue=1)
+
+while 1:
+    cv2.imshow(&#39;result&#39;, result)
+    cv2.imshow(&#39;image&#39;, img)
+    if cv2.waitKey(0) == ord(&#39;q&#39;):
+        break
+cv2.destroyAllWindows()
+</code></pre>
+<p>输出结果：</p>
+<p><img src="https://images.happy365.day/24/04/17225854.png" alt="运行结果"></p>
+<h2 id="仿射变换"><a href="#仿射变换" class="headerlink" title="仿射变换"></a>仿射变换</h2><p>在仿射变换中，原图中所有的平行线在结果图像中同样平行。为了创建这<br>个矩阵我们需要从原图像中找到三个点以及他们在输出图像中的位置。然后<br>cv2.getAffineTransform 会创建一个 2x3 的矩阵，最后这个矩阵会被传给<br>函数 cv2.warpAffine。</p>
+<pre><code class="python">import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+img = cv2.imread(&quot;../imgs/pi.png&quot;)
+rows, cols, ch = img.shape
+pts1 = np.float32([[50, 50], [200, 50], [50, 200]])
+pts2 = np.float32([[10, 100], [200, 50], [100, 250]])
+
+M = cv2.getAffineTransform(pts1, pts2)
+dst = cv2.warpAffine(img, M, (cols, rows))
+plt.subplot(121, plt.imshow(img), plt.title(&#39;Input&#39;))
+plt.subplot(121, plt.imshow(img), plt.title(&#39;Output&#39;))
+plt.show()
+</code></pre>
+<p>报错：</p>
+<pre><code>    cols = int(cols)
+TypeError: int() argument must be a string, a bytes-like object or a number, not &#39;AxesImage&#39;
+</code></pre>
+<h2 id="图像的翻转"><a href="#图像的翻转" class="headerlink" title="图像的翻转"></a>图像的翻转</h2><p><strong>参数说明</strong>：</p>
+<ul>
+<li>src – 输入的图像</li>
+<li>dst – 输出的图像</li>
+<li>flipCode – 翻转模式，flipCode&#x3D;&#x3D;0垂直翻转（沿X轴翻转），flipCode&gt;0水平翻转（沿Y轴翻转），flipCode&lt;0水平垂直翻转（先沿X轴翻转，再沿Y轴翻转，等价于旋转180°）</li>
+</ul>
+<pre><code class="python">import cv2
+import numpy as np
+
+img = cv2.imread(&quot;../imgs/pi.png&quot;)
+flip_img = cv2.flip(img, 0)
+
+while 1:
+    cv2.imshow(&#39;image&#39;, img)
+    cv2.imshow(&#39;flip_img&#39;, flip_img)
+    if cv2.waitKey(0) == ord(&#39;q&#39;):
+        break
+cv2.destroyAllWindows()
+</code></pre>
+<p>结果：</p>
+<p><img src="https://images.happy365.day/24/04/17225937.png" alt="结果"></p>
+<p>!</p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%92%8C%E7%BC%A9%E6%94%BE"><span class="toc-number">1.</span> <span class="toc-text">扩展和缩放</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#cv2-resize-%E5%87%BD%E6%95%B0%E7%94%A8%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">cv2.resize()函数用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.2.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B9%B3%E7%A7%BB"><span class="toc-number">2.</span> <span class="toc-text">图像的平移</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E6%97%8B%E8%BD%AC"><span class="toc-number">3.</span> <span class="toc-text">图像的旋转</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BF%E5%B0%84%E5%8F%98%E6%8D%A2"><span class="toc-number">4.</span> <span class="toc-text">仿射变换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E7%BF%BB%E8%BD%AC"><span class="toc-number">5.</span> <span class="toc-text">图像的翻转</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&text=OpenCV学习笔记（二）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&title=OpenCV学习笔记（二）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&is_video=false&description=OpenCV学习笔记（二）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=OpenCV学习笔记（二）&body=Check out this article: https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&title=OpenCV学习笔记（二）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&title=OpenCV学习笔记（二）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&title=OpenCV学习笔记（二）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&title=OpenCV学习笔记（二）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&name=OpenCV学习笔记（二）&description=&lt;ul&gt;
+&lt;li&gt;移动&lt;/li&gt;
+&lt;li&gt;旋转&lt;/li&gt;
+&lt;li&gt;仿射变换&lt;/li&gt;
+&lt;li&gt;用到的函数：cv2.getPerspectiveTransform()&lt;/li&gt;
+&lt;/ul&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2020/10/17/e48dcc0e58b1/&t=OpenCV学习笔记（二）"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2024
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

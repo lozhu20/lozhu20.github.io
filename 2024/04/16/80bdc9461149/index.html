@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="从 开往 进入到一个站点：若志随笔（https:&#x2F;&#x2F;rz.sb） 第一印象是这个域名很别致，4个字母加上弱智傻逼的首字母简写，简直是过目不忘的优质域名。 这个站点有个朋友圈的功能，就是定时更新别人发布的博客文章到自己的站点内，当然仅限于 title 和摘要内容。我也萌生了这样的想法，虽说很多人在交换友链，但是经常互相看看的应该少之又少。 说干就干，于是开始了新功能的开发计划。 方案设计首先要设计好">
+<meta property="og:type" content="article">
+<meta property="og:title" content="订阅RSS并自动更新到博客内展示">
+<meta property="og:url" content="https://lozhu.happy365.day/2024/04/16/80bdc9461149/index.html">
+<meta property="og:site_name" content="Lozhu&#39;s blog">
+<meta property="og:description" content="从 开往 进入到一个站点：若志随笔（https:&#x2F;&#x2F;rz.sb） 第一印象是这个域名很别致，4个字母加上弱智傻逼的首字母简写，简直是过目不忘的优质域名。 这个站点有个朋友圈的功能，就是定时更新别人发布的博客文章到自己的站点内，当然仅限于 title 和摘要内容。我也萌生了这样的想法，虽说很多人在交换友链，但是经常互相看看的应该少之又少。 说干就干，于是开始了新功能的开发计划。 方案设计首先要设计好">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.happy365.day/24/04/17220007.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17220118.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17220156.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17220255.png">
+<meta property="article:published_time" content="2024-04-16T13:18:45.000Z">
+<meta property="article:modified_time" content="2024-09-14T13:19:40.140Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="RSS订阅">
+<meta property="article:tag" content="自动更新">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.happy365.day/24/04/17220007.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>订阅RSS并自动更新到博客内展示</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Lozhu's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/04/20/9e7bd5f89727/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/04/16/3cae97c7d635/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2024/04/16/80bdc9461149/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&text=订阅RSS并自动更新到博客内展示"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&title=订阅RSS并自动更新到博客内展示"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&is_video=false&description=订阅RSS并自动更新到博客内展示"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=订阅RSS并自动更新到博客内展示&body=Check out this article: https://lozhu.happy365.day/2024/04/16/80bdc9461149/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&title=订阅RSS并自动更新到博客内展示"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&title=订阅RSS并自动更新到博客内展示"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&title=订阅RSS并自动更新到博客内展示"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&title=订阅RSS并自动更新到博客内展示"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&name=订阅RSS并自动更新到博客内展示&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&t=订阅RSS并自动更新到博客内展示"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">方案设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E8%A1%8C%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">可行性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">原型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSS-XML-%E8%A7%A3%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">RSS XML 解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python-%E8%84%9A%E6%9C%AC"><span class="toc-number">4.1.</span> <span class="toc-text">python 脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%981"><span class="toc-number">4.2.</span> <span class="toc-text">问题1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%982"><span class="toc-number">4.3.</span> <span class="toc-text">问题2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GitHub-Actions-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E9%85%8D%E7%BD%AE"><span class="toc-number">5.</span> <span class="toc-text">GitHub Actions 定时任务配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%A5%BD%E7%9A%84-RSS-%E8%A7%A3%E6%9E%90%E6%96%B9%E6%A1%88"><span class="toc-number">6.</span> <span class="toc-text">更好的 RSS 解析方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#feedparser"><span class="toc-number">6.1.</span> <span class="toc-text">feedparser</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96-RSS-%E8%AE%A2%E9%98%85%E5%99%A8%E5%AE%9E%E7%8E%B0"><span class="toc-number">7.</span> <span class="toc-text">其他 RSS 订阅器实现</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        订阅RSS并自动更新到博客内展示
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-04-16T13:18:45.000Z" class="dt-published" itemprop="datePublished">2024-04-16</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/">博客维护</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Hexo/" rel="tag">Hexo</a>, <a class="p-category" href="/tags/RSS%E8%AE%A2%E9%98%85/" rel="tag">RSS订阅</a>, <a class="p-category" href="/tags/%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/" rel="tag">自动更新</a> -->
+        <a class="category-link" href="/tags/Hexo/" rel="tag">Hexo</a>, <a class="category-link" href="/tags/RSS%E8%AE%A2%E9%98%85/" rel="tag">RSS订阅</a>, <a class="category-link" href="/tags/%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/" rel="tag">自动更新</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>从 <a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a> 进入到一个站点：若志随笔（<a target="_blank" rel="noopener" href="https://rz.sb)/">https://rz.sb）</a></p>
+<p>第一印象是这个域名很别致，4个字母加上弱智傻逼的首字母简写，简直是过目不忘的优质域名。</p>
+<p>这个站点有个朋友圈的功能，就是定时更新别人发布的博客文章到自己的站点内，当然仅限于 title 和摘要内容。我也萌生了这样的想法，虽说很多人在交换友链，但是经常互相看看的应该少之又少。</p>
+<p>说干就干，于是开始了新功能的开发计划。</p>
+<h2 id="方案设计"><a href="#方案设计" class="headerlink" title="方案设计"></a>方案设计</h2><p>首先要设计好数据链路：</p>
+<ol>
+<li>RSS 订阅（本想更新加了友链的这几个，但是很多都没有 RSS 订阅功能，只能订阅一些其他的订阅源）</li>
+<li>写一个定时任务，定时获取 RSS 的 xml 文件</li>
+<li>解析 RSS 的 xml 文件并加工成一个包含发布时间在前 n 的文章的 json 文件（moments.json）</li>
+<li>在主题内增加一个 page，用来解析 moments.json 文件并展示（包含作者、作者主页、发布时间、标题、摘要）</li>
+</ol>
+<p>定时任务根据配置好的 atom.xml 文件地址获取文件暂存到本地，然后进行解析，解析的数据覆盖跟新到 source&#x2F;_data&#x2F;moments.json 文件中，然后 push 到博客源文件仓库，并重新执行发布操作，这样就完成了一次状态更新。</p>
+<h2 id="可行性"><a href="#可行性" class="headerlink" title="可行性"></a>可行性</h2><p>仔细了解了 RSS ，文件格式统一，这样一来，解析就不是问题。</p>
+<p>刚刚学会使用 GitHub Actions 进行博客静态文件部署，只知道可以配置定时任务，不确定是否可以在 task 中执行 python 脚本，包括文件操作、os 命令等。</p>
+<p>后来网上找了一下，GitHub Actions 都支持，这产品体验确实没得说。</p>
+<p>剩下的都不是问题了。</p>
+<h2 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h2><p>先用静态的 moments.json 文件实现静态页面。</p>
+<pre><code class="json">[
+  &#123;
+    &quot;author&quot;: &quot;优世界&quot;,
+    &quot;homepage&quot;: &quot;http://www.xiaoliu.life/&quot;,
+    &quot;title&quot;: &quot;最近整理的主机配置清单&quot;,
+    &quot;momentUrl&quot;: &quot;http://www.xiaoliu.life/p/20240415a/&quot;,
+    &quot;publishTime&quot;: &quot;2024-04-05 20:02:00&quot;,
+    &quot;summary&quot;: &quot;上山曲径通幽处,禅房花木深。喝水不容呀。蝉蜕化的壳。发现了“灵芝”。到达了山顶的“罗汉祖殿”。对面的山是我们村最高的山，爬的这座山是第二高。土地公小庙。下山发现草药，摘了回去炖肉。......&quot;
+  &#125;,
+  &#123;
+    &quot;author&quot;: &quot;lozhu&quot;,
+    &quot;homepage&quot;: &quot;http://www.xiaoliu.life/&quot;,
+    &quot;title&quot;: &quot;最近整理的主机配置清单&quot;,
+    &quot;momentUrl&quot;: &quot;http://www.xiaoliu.life/p/20240414b/&quot;,
+    &quot;publishTime&quot;: &quot;2024-04-05 20:02:00&quot;,
+    &quot;summary&quot;: &quot;上山曲径通幽处,禅房花木深。喝水不容呀。蝉蜕化的壳。发现了“灵芝”。到达了山顶的“罗汉祖殿”。对面的山是我们村最高的山，爬的这座山是第二高。土地公小庙。下山发现草药，摘了回去炖肉。......&quot;
+  &#125;
+]
+</code></pre>
+<p><img src="https://images.happy365.day/24/04/17220007.png" alt="原型图"></p>
+<p>页面很简单。</p>
+<p>一直没有实现随机颜色的头像背景色。头像配合伪元素实现的，不知道怎么用 js 动态的改变伪元素的背景色。下面这种方式无法实现，而且就算实现了，改了一个伪类，所有的头像都会变成一个颜色，还是无法实现功能。</p>
+<pre><code class="javascript">(function() &#123;
+    var avatarNodes = document.getElementsByClassName(&quot;avatar&quot;);
+    if (!avatarNodes || avatarNodes.length === 0) &#123;
+        console.log(&quot;节点元素不存在&quot;);
+    &#125;
+    for (var i = 0; i&lt; avatarNodes.length; i++) &#123;
+        var avatarNode = avatarNodes[i];
+        var val = avatarNode.getAttribute(&quot;value&quot;);
+        var str = &#39;&#39;;
+        for (var j = 0; j &lt; val.length; j++) &#123;
+            str += parseInt(val[j].charCodeAt(0), 10).toString(16);
+        &#125;
+        var bgColor = &#39;#&#39; + str.slice(1, 4);
+        avatarNode.setAttribute(&quot;data-content&quot;, bgColor);
+
+        console.log(&#39;val: &#39;, avatarNode.getAttribute(&quot;data-content&quot;));
+    &#125;
+&#125;)();
+</code></pre>
+<h2 id="RSS-XML-解析"><a href="#RSS-XML-解析" class="headerlink" title="RSS XML 解析"></a>RSS XML 解析</h2><h3 id="python-脚本"><a href="#python-脚本" class="headerlink" title="python 脚本"></a>python 脚本</h3><p>因为 RSS xml 文件格式固定，使用 python xml.dom.minidom 库进行解析：</p>
+<pre><code class="python">import xml.dom.minidom
+import os
+import time
+import re
+
+
+
+class Moment:
+    author = &quot;&quot;
+    homepage = &quot;&quot;
+    title = &quot;&quot;
+    postUrl = &quot;&quot;
+    publishTime = &quot;&quot;
+    postSummary = &quot;&quot;
+
+    def __init__(self, author, homepage, title, postUrl, publishTime, postSummary):
+        self.author = author
+        self.homepage = homepage
+        self.title = title
+        self.postUrl = postUrl
+        self.publishTime = publishTime
+        self.postSummary = postSummary
+
+
+
+class Tool:
+    # 要订阅的网站
+    urls = []
+
+    # 处理指定日志之后更新的文章
+    moments = []
+
+    def __init__(self, urls, moments):
+        self.urls = urls
+        self.moments = moments
+
+    def parseInfo(self):
+        
+        for url in self.urls:
+
+            # os.system(&quot;curl https://lozhu.happy365.day/atom.xml &gt; tmp.xml&quot;)
+            os.system(&quot;curl &quot; + url + &quot; &gt; tmp.xml&quot;)
+
+
+            # 打开xml文档
+            dom = xml.dom.minidom.parse(&quot;tmp.xml&quot;)
+
+            # 得到文档元素对象
+            root = dom.documentElement
+
+
+            # 获取作者名称
+            authorNodes = root.getElementsByTagName(&quot;author&quot;)
+            author = authorNodes[0].getElementsByTagName(&quot;name&quot;)[0].firstChild.data
+
+            # author
+            print(&quot;作者: &quot;, author)
+
+
+            # 获取主页链接
+            linkNodes = root.getElementsByTagName(&quot;link&quot;)
+            homepage = linkNodes[1].getAttribute(&quot;href&quot;)
+
+            # homepage
+            print(&quot;主页: &quot;, homepage)
+
+
+            postNodes = root.getElementsByTagName(&quot;entry&quot;)
+            if (postNodes is None):
+                print(&quot;一篇文章也没有&quot;)
+
+            for postNode in postNodes:
+
+                print(&quot;========&quot;)
+
+                # 文章标题
+                title = postNode.getElementsByTagName(&quot;title&quot;)[0].firstChild.data
+                print(&quot;文章标题: &quot;, title)
+
+                # 文章链接
+                postLinkNode = postNode.getElementsByTagName(&quot;link&quot;)[0]
+                postUrl = postLinkNode.getAttribute(&quot;href&quot;)
+                print(&quot;文章链接: &quot;, postUrl)
+
+                # 发布时间
+                publishTimeStr = postNode.getElementsByTagName(&quot;published&quot;)[0].firstChild.data
+                publishTime = publishTimeStr[0:10] + &quot; &quot; + publishTimeStr[11:19]
+                print(&quot;发布时间&quot;, publishTime)
+
+                # 文章摘要
+                postSummary = &quot;暂无文章摘要&quot;
+                if (len(postNode.getElementsByTagName(&quot;summary&quot;)) &gt; 0):
+                    postSummary = postNode.getElementsByTagName(&quot;summary&quot;)[0].firstChild.data
+                    postSummary = re.sub(r&#39;&lt;.*?&gt;&#39;, &#39;&#39;, postSummary)
+                    postSummary = re.sub(r&#39;&lt;\r\n&gt;&#39;, &#39;&#39;, postSummary)
+                    postSummary = re.sub(r&#39;[\n\&quot;\\]*?&#39;, &#39;&#39;, postSummary)
+                    if len(postSummary) &gt; 200:
+                        postSummary = postSummary[0:150]
+                    postSummary = postSummary + &quot;...&quot;
+                    print(&quot;文章摘要: &quot;, postSummary)
+
+                moment = Moment(author, homepage, title, postUrl, publishTime, postSummary)
+
+                self.moments.append(moment)
+
+    def writeContent(self, fullFilePath: str):
+
+        jsonStrs = []
+
+        sortedMoments = sorted(self.moments, key=lambda Moment: time.strptime(Moment.publishTime, &quot;%Y-%m-%d %H:%M:%S&quot;))
+
+        # 按发布时间倒序
+        sortedMoments.reverse()
+
+        # 如果有超过 50 篇的话，只展示前 50 篇
+        if (len(sortedMoments) &gt; 100):
+            sortedMoments = sortedMoments[0:100]	
+
+        for moment in sortedMoments:
+            json = (&quot;  &#123;\n&quot;
+                        &quot;    \&quot;author\&quot;: \&quot;&quot; + moment.author + &quot;\&quot;,\n&quot;
+                        &quot;    \&quot;homepage\&quot;: \&quot;&quot; + moment.homepage + &quot;\&quot;,\n&quot;
+                        &quot;    \&quot;title\&quot;: \&quot;&quot; + moment.title + &quot;\&quot;,\n&quot;
+                        &quot;    \&quot;momentUrl\&quot;: \&quot;&quot; + moment.postUrl + &quot;\&quot;,\n&quot;
+                        &quot;    \&quot;publishTime\&quot;: \&quot;&quot; + moment.publishTime +&quot;\&quot;, \n&quot;
+                        &quot;    \&quot;summary\&quot;: \&quot;&quot; + moment.postSummary + &quot;\&quot;\n&quot;
+                    &quot;  &#125;&quot;)
+
+            jsonStrs.append(json)
+
+        momentContent = &quot;[\n&quot; + &#39;,\n&#39;.join(jsonStrs) + &quot;\n]\n&quot;
+
+        print(&quot;准备写入文件\n&quot;)
+
+        with open(fullFilePath, &quot;w&quot;) as f:
+            f.write(momentContent)
+            f.close()
+
+        print(&quot;写入文件完成\n&quot;)
+
+
+if __name__ == &#39;__main__&#39;:
+    urls = [&quot;https://www.xiaoliu.life/atom.xml&quot;, &quot;https://blog.bxzdyg.cn/atom.xml&quot;,
+    &quot;https://blog.liukuan.cc/atom.xml&quot;, &quot;https://www.xwsclub.top/atom.xml&quot;,
+    &quot;https://b.leonus.cn/atom.xml&quot;, &quot;https://liheyuting.github.io/atom.xml&quot;,
+    &quot;https://aciano.top/atom.xml&quot;, &quot;https://z.arlmy.me/atom.xml&quot;,
+    &quot;https://blog.starsharbor.com/atom.xml&quot;]
+    moments = []
+    tool = Tool(urls, moments)
+    tool.parseInfo()
+    tool.writeContent(&quot;source/_data/moments.json&quot;)
+    print(&quot;主函数处理完成\n&quot;)
+</code></pre>
+<p>将脚本放在博客根目录下，定时执行：<code>python parse_feed.py</code>。</p>
+<h3 id="问题1"><a href="#问题1" class="headerlink" title="问题1"></a>问题1</h3><p>这里发现一个问题，atom.xml 里的摘要 summary 字段存放的是 html 源码，有些还带有样式，展示到摘要里观感很不好。这里使用了简单的正则表达式去除了部分标签，但是会有残留，不太好处理。</p>
+<h3 id="问题2"><a href="#问题2" class="headerlink" title="问题2"></a>问题2</h3><p>只支持 atom.xml 这样的 RSS 源。</p>
+<h2 id="GitHub-Actions-定时任务配置"><a href="#GitHub-Actions-定时任务配置" class="headerlink" title="GitHub Actions 定时任务配置"></a>GitHub Actions 定时任务配置</h2><p>脚本内容如下：</p>
+<pre><code class="yaml">name: update blog
+
+env:
+  TZ: Asia/Shanghai
+
+on:
+  push:
+    branches:
+    - main
+  schedule:
+  - cron: &#39;0 0/2 * * *&#39;
+
+jobs:
+  fetch:
+    name: fetch rss post
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout actions
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+        
+    - name: fetch post list
+      run: |
+        python feed_parse.py
+        
+    - name: commit
+      env:
+        GITHUB_REPO: github.com/lozhu20/blogsource
+      run: |
+        git config --global user.name lozhu20
+        git config --global user.email lozhu@icloud.com
+        git pull --rebase
+        git add .
+        git commit -m &quot;feed parse schedule task&quot; &amp;&amp; git push &quot;https://$&#123;&#123; secrets.DEPLOY_KEY &#125;&#125;@$GITHUB_REPO&quot; main:main || echo &quot;Nothing to cmomit&quot;
+
+  blog-cicd:
+    name: Hexo blog build &amp; deploy
+    needs: fetch
+    runs-on: ubuntu-latest # 使用最新的 Ubuntu 系统作为编译部署的环境
+
+    steps:
+    - name: Checkout codes
+      uses: actions/checkout@v4
+
+    - name: Setup node
+      # 设置 node.js 环境
+      uses: actions/setup-node@v1
+      with:
+        node-version: &#39;18.x&#39;
+
+    - name: Cache node modules
+      # 设置包缓存目录，避免每次下载
+      uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: $&#123;&#123; runner.os &#125;&#125;-node-$&#123;&#123; hashFiles('**/package-lock.json') &#125;&#125;
+
+    - name: Install hexo dependencies
+      # 下载 hexo-cli 脚手架及相关安装包
+      run: |
+        npm install -g hexo-cli
+        npm install
+
+    - name: Generate files
+      # 编译 markdown 文件
+      run: |
+        hexo clean
+        hexo generate
+
+    - name: Deploy hexo blog
+      env: 
+        # Github 仓库
+        GITHUB_REPO: github.com/lozhu20/lozhu20.github.io
+      # 将编译后的博客文件推送到指定仓库
+      run: |
+        cd ./public &amp;&amp; git init &amp;&amp; git add .
+        git config user.name &quot;lozhu20&quot;
+        git config user.email &quot;lozhu@icloud.com&quot;
+        git add .
+        git commit -m &quot;GitHub Actions Auto Builder at $(date +&#39;%Y-%m-%d %H:%M:%S&#39;)&quot; &amp;&amp; git push --force &quot;https://$&#123;&#123; secrets.DEPLOY_KEY &#125;&#125;@$GITHUB_REPO&quot; master:main || echo &quot;Nothing to commit&quot;
+ 
+</code></pre>
+<p>遇到一个报错卡了好久：</p>
+<pre><code>[main 7686805] feed parse schedule task
+ 2 files changed, 1823 insertions(+), 47 deletions(-)
+ create mode 100644 tmp.xml
+Current branch main is up to date.
+remote: Write access to repository not granted.
+fatal: unable to access &#39;https://github.com/lozhu20/my-blog-source/&#39;: The requested URL returned error: 403
+</code></pre>
+<p><img src="https://images.happy365.day/24/04/17220118.png" alt="报错"></p>
+<p>仓库默认只给 Actions 读取权限，需要手动设置写权限：<a href="https://lozhu.happy365.day/2024/04/16/3cae97c7d635/">解决:github actions remote: Write access to repository not granted</a></p>
+<p><img src="https://images.happy365.day/24/04/17220156.png" alt="修改配置"></p>
+<p>至此，整体功能已经实现。</p>
+<p><img src="https://images.happy365.day/24/04/17220255.png" alt="初步效果"></p>
+<h2 id="更好的-RSS-解析方案"><a href="#更好的-RSS-解析方案" class="headerlink" title="更好的 RSS 解析方案"></a>更好的 RSS 解析方案</h2><h3 id="feedparser"><a href="#feedparser" class="headerlink" title="feedparser"></a>feedparser</h3><p>网上看到有专门解析 RSS 的第三方 python 库：feedparser</p>
+<p>安装：</p>
+<pre><code class="sh">pip3 install feedparser
+</code></pre>
+<p>安装完成直接就能用了。</p>
+<pre><code class="python">&gt;&gt;&gt; import feedparser
+
+# 美团技术团队
+&gt;&gt;&gt; d = feedparser.parse(&quot;https://tech.meituan.com&quot;)
+
+&gt;&gt;&gt; d.feed.author
+&#39;tech@meituan.com (美团技术团队)&#39;
+&gt;&gt;&gt; d.feed.title
+&#39;美团技术团队&#39;
+&gt;&gt;&gt; d.feed.subtitle
+&#39;美团技术团队最近更新内容。&#39;
+&gt;&gt;&gt; d.feed.link
+&#39;https://tech.meituan.com/feed/&#39;
+</code></pre>
+<p>这可比自己写的 python 脚本管用多了，还能处理各种格式的订阅源，真的很方便！</p>
+<h2 id="其他-RSS-订阅器实现"><a href="#其他-RSS-订阅器实现" class="headerlink" title="其他 RSS 订阅器实现"></a>其他 RSS 订阅器实现</h2><ul>
+<li>参考 <strong>若志随笔</strong> 大佬的 freshrss 实现</li>
+</ul>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">方案设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E8%A1%8C%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">可行性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">原型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSS-XML-%E8%A7%A3%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">RSS XML 解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python-%E8%84%9A%E6%9C%AC"><span class="toc-number">4.1.</span> <span class="toc-text">python 脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%981"><span class="toc-number">4.2.</span> <span class="toc-text">问题1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%982"><span class="toc-number">4.3.</span> <span class="toc-text">问题2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GitHub-Actions-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E9%85%8D%E7%BD%AE"><span class="toc-number">5.</span> <span class="toc-text">GitHub Actions 定时任务配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%A5%BD%E7%9A%84-RSS-%E8%A7%A3%E6%9E%90%E6%96%B9%E6%A1%88"><span class="toc-number">6.</span> <span class="toc-text">更好的 RSS 解析方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#feedparser"><span class="toc-number">6.1.</span> <span class="toc-text">feedparser</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96-RSS-%E8%AE%A2%E9%98%85%E5%99%A8%E5%AE%9E%E7%8E%B0"><span class="toc-number">7.</span> <span class="toc-text">其他 RSS 订阅器实现</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2024/04/16/80bdc9461149/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&text=订阅RSS并自动更新到博客内展示"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&title=订阅RSS并自动更新到博客内展示"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&is_video=false&description=订阅RSS并自动更新到博客内展示"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=订阅RSS并自动更新到博客内展示&body=Check out this article: https://lozhu.happy365.day/2024/04/16/80bdc9461149/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&title=订阅RSS并自动更新到博客内展示"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&title=订阅RSS并自动更新到博客内展示"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&title=订阅RSS并自动更新到博客内展示"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&title=订阅RSS并自动更新到博客内展示"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&name=订阅RSS并自动更新到博客内展示&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2024/04/16/80bdc9461149/&t=订阅RSS并自动更新到博客内展示"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2024
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

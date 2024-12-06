@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="将YouTube直播转播到bilibili的想法及尝试 周末的时候本来在学习Swift的，不经意间打开Youtube直播，看到 大阪伊丹国际机场的 live camera 直播，出于对民航的兴趣，觉得直播里的陆空对话可以很好的打发时间，于是产生了能否24小时将Youtube的直播转播到墙内的疑问，带着这个疑问折腾了两天。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="将YouTube直播转播到bilibili的想法及尝试">
+<meta property="og:url" content="https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/index.html">
+<meta property="og:site_name" content="Lozhu&#39;s blog">
+<meta property="og:description" content="将YouTube直播转播到bilibili的想法及尝试 周末的时候本来在学习Swift的，不经意间打开Youtube直播，看到 大阪伊丹国际机场的 live camera 直播，出于对民航的兴趣，觉得直播里的陆空对话可以很好的打发时间，于是产生了能否24小时将Youtube的直播转播到墙内的疑问，带着这个疑问折腾了两天。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-12-17T15:39:27.000Z">
+<meta property="article:modified_time" content="2024-12-06T13:23:55.068Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="YouTube">
+<meta property="article:tag" content="转播">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>将YouTube直播转播到bilibili的想法及尝试</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Lozhu's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2019/12/29/b463591ba3aa/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2019/11/10/f4be4362a6d4/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&text=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&title=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&is_video=false&description=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=将YouTube直播转播到bilibili的想法及尝试&body=Check out this article: https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&title=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&title=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&title=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&title=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&name=将YouTube直播转播到bilibili的想法及尝试&description=&lt;p&gt;将YouTube直播转播到bilibili的想法及尝试&lt;/p&gt;
+&lt;p&gt;周末的时候本来在学习Swift的，不经意间打开Youtube直播，看到 大阪伊丹国际机场的 live camera 直播，出于对民航的兴趣，觉得直播里的陆空对话可以很好的打发时间，于是产生了能否24小时将Youtube的直播转播到墙内的疑问，带着这个疑问折腾了两天。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&t=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        将YouTube直播转播到bilibili的想法及尝试
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-17T15:39:27.000Z" class="dt-published" itemprop="datePublished">2019-12-17</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%9B%A0%E4%B8%BA%E5%A5%BD%E7%8E%A9/">因为好玩</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/YouTube/" rel="tag">YouTube</a>, <a class="p-category" href="/tags/%E8%BD%AC%E6%92%AD/" rel="tag">转播</a> -->
+        <a class="category-link" href="/tags/YouTube/" rel="tag">YouTube</a>, <a class="category-link" href="/tags/%E8%BD%AC%E6%92%AD/" rel="tag">转播</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>将YouTube直播转播到bilibili的想法及尝试</p>
+<p>周末的时候本来在学习Swift的，不经意间打开Youtube直播，看到 大阪伊丹国际机场的 live camera 直播，出于对民航的兴趣，觉得直播里的陆空对话可以很好的打发时间，于是产生了能否24小时将Youtube的直播转播到墙内的疑问，带着这个疑问折腾了两天。</p>
+<span id="more"></span>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pV2RaaoxyF8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<大阪国际机场live camera含陆空对话>(需要梯子)
+
+
+
+<p>在往上搜了一些资料，发现已经有很多人实现了我的想法，而且做法也超级简单：</p>
+<ul>
+<li>YouTube 直播地址</li>
+<li>一个海外vps</li>
+<li>youtube-dl</li>
+<li>ffmpeg</li>
+<li>bilibili直播地址</li>
+</ul>
+<p>用youtube-dl获取直播m3u8文件，然后用ffmpeg不断读取流数据，然后推流到bilibili直播：</p>
+<pre><code class="bash">ffmpeg -re -i &quot;$(youtube-dl -f 95 -g &quot;https://www.youtube.com/watch?v=pV2RaaoxyF8&quot;)&quot; -c:v copy -c:a aac -b:v 5000k -ar 44100 -ab 320k -ac 2 -strict -2 -flags +global_header -bsf:a aac_adtstoasc -bufsize 3000k -f flv &quot;rtmp://txy.live-send.acg.tv/live-txy/?streamname=xxxx&amp;key=yyyy&quot;
+</code></pre>
+<p>用这个命令就可以实现上面的功能。</p>
+<p>但是在实际使用操作过程中，总是在发送了100帧数据左右开始报错：</p>
+<pre><code class="bash">[tls @ 0x5566d890ffe0] The TLS connection was non-properly terminated.
+[tls @ 0x5566d8fd25a0] The TLS connection was non-properly terminated.
+[tls @ 0x5566d8fd25a0] The specified session has been invalidated for some reason.
+
+av_interleaved_write_frame(): Broken pipe
+Error writing trailer of rtmp://txy.live-send.acg.tv/live-txy/?streamname=xxxx
+[aac @ 0x5566d8cf45e0] Qavg: 65536.000
+Conversion failed!
+</code></pre>
+<p>TLS连接被关闭，在搜了一大堆资料后我依然怀疑是youtube没有正确的关闭连接，导致报错。还做了很多其他的验证：</p>
+<ul>
+<li>尝试在树莓派上安装ffmpeg往bilibili推流，直播了一个网上将近十来个小时，没有任何问题。</li>
+<li>在香港vps上将一段已经下载好的视频推流到bilibili，有问题。</li>
+<li>在美国vps上将一段已经下载好的视频推到bilibili，有问题。</li>
+<li>在香港vps上将一段已经下载好的视频推流到YouTube，没有问题。</li>
+<li>在美国vps上将一段已经下载好的视频推流到YouTube，没有问题。</li>
+<li>在香港和美国vps上换了和树莓派相同版本的v4.1.1 ffmpeg重复上述操作，结果不变。</li>
+</ul>
+<p>将google搜索到的结果几乎都看了一遍，也没找到多少有价值的信息。</p>
+<p>今天晚上在思考其他解决方案的时候，看到bilibili专栏的文章，尝试了作者用java写的jar包，也报相同的错误，于是联系了作者，才得知，原来这个方法已经失效了。</p>
+<blockquote>
+<p> <strong>这个脚本早就报废了的，现在B站只有官方py或者报备了的才可以从海外推。目前转播man已经失业，有更好转播的方案。爱丽丝</strong></p>
+</blockquote>
+<p>原来上面的报错是因为bilibili掐断了连接导致的。不过这也打消了我最初的疑虑：侵权问题。</p>
+<p>这个想法可能要先放一段时间了，目前的想法是想尝试一下用 OpenCV 和 ffmpeg 能不能实现，不知道什么时候才能重新捡起来（逃）。</p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&text=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&title=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&is_video=false&description=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=将YouTube直播转播到bilibili的想法及尝试&body=Check out this article: https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&title=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&title=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&title=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&title=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&name=将YouTube直播转播到bilibili的想法及尝试&description=&lt;p&gt;将YouTube直播转播到bilibili的想法及尝试&lt;/p&gt;
+&lt;p&gt;周末的时候本来在学习Swift的，不经意间打开Youtube直播，看到 大阪伊丹国际机场的 live camera 直播，出于对民航的兴趣，觉得直播里的陆空对话可以很好的打发时间，于是产生了能否24小时将Youtube的直播转播到墙内的疑问，带着这个疑问折腾了两天。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2019/12/17/50aa8cdba5d5/&t=将YouTube直播转播到bilibili的想法及尝试"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2024
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

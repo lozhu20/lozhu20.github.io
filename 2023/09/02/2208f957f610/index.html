@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="Kubernetes 概述Kubernetes 是一个可移植、可扩展的开源平台，用于管理容器化的工作负载和服务，可促进声明式配置和自动化。 Kubernetes 拥有一个庞大且快速增长的生态，其服务、支持和工具的使用范围相当广泛。Kubernetes 这个名字源于希腊语，意为“舵手”或“飞行员”。k8s 这个缩写是因为 k 和 s 之间有八个字符的关系。 Google 在 2014 年开源了 Ku">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Debian12上安装Kubernetes">
+<meta property="og:url" content="https://lozhu.happy365.day/2023/09/02/2208f957f610/index.html">
+<meta property="og:site_name" content="Lozhu&#39;s blog">
+<meta property="og:description" content="Kubernetes 概述Kubernetes 是一个可移植、可扩展的开源平台，用于管理容器化的工作负载和服务，可促进声明式配置和自动化。 Kubernetes 拥有一个庞大且快速增长的生态，其服务、支持和工具的使用范围相当广泛。Kubernetes 这个名字源于希腊语，意为“舵手”或“飞行员”。k8s 这个缩写是因为 k 和 s 之间有八个字符的关系。 Google 在 2014 年开源了 Ku">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-02T11:03:38.000Z">
+<meta property="article:modified_time" content="2024-12-06T13:23:55.068Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="Debian12">
+<meta property="article:tag" content="k8s">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>在Debian12上安装Kubernetes</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Lozhu's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/09/14/a3e4269ebef9/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/09/02/5157cf948645/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2023/09/02/2208f957f610/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&text=在Debian12上安装Kubernetes"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&title=在Debian12上安装Kubernetes"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&is_video=false&description=在Debian12上安装Kubernetes"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=在Debian12上安装Kubernetes&body=Check out this article: https://lozhu.happy365.day/2023/09/02/2208f957f610/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&title=在Debian12上安装Kubernetes"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&title=在Debian12上安装Kubernetes"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&title=在Debian12上安装Kubernetes"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&title=在Debian12上安装Kubernetes"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&name=在Debian12上安装Kubernetes&description=&lt;h2 id=&#34;Kubernetes-概述&#34;&gt;&lt;a href=&#34;#Kubernetes-概述&#34; class=&#34;headerlink&#34; title=&#34;Kubernetes 概述&#34;&gt;&lt;/a&gt;Kubernetes 概述&lt;/h2&gt;&lt;p&gt;Kubernetes 是一个可移植、可扩展的开源平台，用于管理容器化的工作负载和服务，可促进声明式配置和自动化。 Kubernetes 拥有一个庞大且快速增长的生态，其服务、支持和工具的使用范围相当广泛。&lt;strong&gt;Kubernetes&lt;/strong&gt; 这个名字源于希腊语，意为“舵手”或“飞行员”。k8s 这个缩写是因为 k 和 s 之间有八个字符的关系。 Google 在 2014 年开源了 Kubernetes 项目。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2023/09/02/2208f957f610/&t=在Debian12上安装Kubernetes"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes 概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">1.1.</span> <span class="toc-text">容器化部署的优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes-%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">1.2.</span> <span class="toc-text">Kubernetes 能做什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes-%E4%B8%8D%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">1.3.</span> <span class="toc-text">Kubernetes 不做什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">Kubernetes 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD-Debian-%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA"><span class="toc-number">2.1.</span> <span class="toc-text">关闭 Debian 交换分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-etc-daemon-json"><span class="toc-number">2.2.</span> <span class="toc-text">修改 &#x2F;etc&#x2F;daemon.json</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E6%BA%90%E5%B9%B6%E5%AE%89%E8%A3%85%EF%BC%88%E6%89%80%E6%9C%89%E8%8A%82%E7%82%B9%E9%83%BD%E8%A6%81%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">添加软件源并安装（所有节点都要操作）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%EF%BC%88%E4%BB%85%E5%9C%A8-Master-%E8%8A%82%E7%82%B9%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="toc-number">2.4.</span> <span class="toc-text">初始化（仅在 Master 节点操作）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%85%A5%E8%8A%82%E7%82%B9"><span class="toc-number">2.5.</span> <span class="toc-text">加入节点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Flannel%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6%EF%BC%88%E9%9C%80%E8%A6%81%E4%B8%8Agithub%E4%B8%8B%E8%BD%BDflanneld%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">安装Flannel网络插件（需要上github下载flanneld）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-calico"><span class="toc-number">4.</span> <span class="toc-text">安装 calico</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        在Debian12上安装Kubernetes
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-09-02T11:03:38.000Z" class="dt-published" itemprop="datePublished">2023-09-02</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Debian12/" rel="tag">Debian12</a>, <a class="p-category" href="/tags/k8s/" rel="tag">k8s</a> -->
+        <a class="category-link" href="/tags/Debian12/" rel="tag">Debian12</a>, <a class="category-link" href="/tags/k8s/" rel="tag">k8s</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="Kubernetes-概述"><a href="#Kubernetes-概述" class="headerlink" title="Kubernetes 概述"></a>Kubernetes 概述</h2><p>Kubernetes 是一个可移植、可扩展的开源平台，用于管理容器化的工作负载和服务，可促进声明式配置和自动化。 Kubernetes 拥有一个庞大且快速增长的生态，其服务、支持和工具的使用范围相当广泛。<strong>Kubernetes</strong> 这个名字源于希腊语，意为“舵手”或“飞行员”。k8s 这个缩写是因为 k 和 s 之间有八个字符的关系。 Google 在 2014 年开源了 Kubernetes 项目。</p>
+<span id="more"></span>
+
+<h3 id="容器化部署的优势"><a href="#容器化部署的优势" class="headerlink" title="容器化部署的优势"></a>容器化部署的优势</h3><p>应用程序经历了 传统部署 &gt; 虚拟化部署 &gt; 容器部署。容器化部署的优势：</p>
+<ul>
+<li>敏捷应用程序的创建和部署：与使用 VM 镜像相比，提高了容器镜像创建的简便性和效率。</li>
+<li>持续开发、集成和部署：通过快速简单的回滚（由于镜像不可变性）， 提供可靠且频繁的容器镜像构建和部署。</li>
+<li>关注开发与运维的分离：在构建、发布时创建应用程序容器镜像，而不是在部署时， 从而将应用程序与基础架构分离。</li>
+<li>可观察性：不仅可以显示 OS 级别的信息和指标，还可以显示应用程序的运行状况和其他指标信号。</li>
+<li>跨开发、测试和生产的环境一致性：在笔记本计算机上也可以和在云中运行一样的应用程序。</li>
+<li>跨云和操作系统发行版本的可移植性：可在 Ubuntu、RHEL、CoreOS、本地、 Google Kubernetes Engine 和其他任何地方运行。</li>
+<li>以应用程序为中心的管理：提高抽象级别，从在虚拟硬件上运行 OS 到使用逻辑资源在 OS 上运行应用程序。</li>
+<li>松散耦合、分布式、弹性、解放的微服务：应用程序被分解成较小的独立部分， 并且可以动态部署和管理 - 而不是在一台大型单机上整体运行。</li>
+<li>资源隔离：可预测的应用程序性能。</li>
+<li>资源利用：高效率和高密度。</li>
+</ul>
+<p>容器是打包和运行应用程序的好方式。在生产环境中， 你需要管理运行着应用程序的容器，并确保服务不会下线。 例如，如果一个容器发生故障，则你需要启动另一个容器。 如果此行为交由给系统处理，是不是会更容易一些？这就是 Kubernetes 要来做的事情！Kubernetes 为你提供了一个可弹性运行分布式系统的框架。 Kubernetes 会满足你的扩展要求、故障转移你的应用、提供部署模式等。</p>
+<h3 id="Kubernetes-能做什么"><a href="#Kubernetes-能做什么" class="headerlink" title="Kubernetes 能做什么"></a>Kubernetes 能做什么</h3><p>Kubernetes 为你提供：</p>
+<ul>
+<li><p><strong>服务发现和负载均衡</strong></p>
+<p>  Kubernetes 可以使用 DNS 名称或自己的 IP 地址来暴露容器。 如果进入容器的流量很大， Kubernetes 可以负载均衡并分配网络流量，从而使部署稳定。</p>
+</li>
+<li><p><strong>存储编排</strong></p>
+<p>  Kubernetes 允许你自动挂载你选择的存储系统，例如本地存储、公共云提供商等。</p>
+</li>
+<li><p><strong>自动部署和回滚</strong></p>
+<p>  你可以使用 Kubernetes 描述已部署容器的所需状态， 它可以以受控的速率将实际状态更改为期望状态。 例如，你可以自动化 Kubernetes 来为你的部署创建新容器， 删除现有容器并将它们的所有资源用于新容器。</p>
+</li>
+<li><p><strong>自动完成装箱计算</strong></p>
+<p>  你为 Kubernetes 提供许多节点组成的集群，在这个集群上运行容器化的任务。 你告诉 Kubernetes 每个容器需要多少 CPU 和内存 (RAM)。 Kubernetes 可以将这些容器按实际情况调度到你的节点上，以最佳方式利用你的资源。</p>
+</li>
+<li><p><strong>自我修复</strong></p>
+<p>  Kubernetes 将重新启动失败的容器、替换容器、杀死不响应用户定义的运行状况检查的容器， 并且在准备好服务之前不将其通告给客户端。</p>
+</li>
+<li><p><strong>密钥与配置管理</strong></p>
+<p>  Kubernetes 允许你存储和管理敏感信息，例如密码、OAuth 令牌和 SSH 密钥。 你可以在不重建容器镜像的情况下部署和更新密钥和应用程序配置，也无需在堆栈配置中暴露密钥。</p>
+</li>
+</ul>
+<h3 id="Kubernetes-不做什么"><a href="#Kubernetes-不做什么" class="headerlink" title="Kubernetes 不做什么"></a>Kubernetes 不做什么</h3><p>Kubernetes：</p>
+<ul>
+<li><strong>不限制支持的应用程序类型。</strong> Kubernetes 旨在支持极其多种多样的工作负载，包括无状态、有状态和数据处理工作负载。 如果应用程序可以在容器中运行，那么它应该可以在 Kubernetes 上很好地运行。</li>
+<li><strong>不部署源代码，也不构建你的应用程序。</strong> 持续集成（CI）、交付和部署（CI&#x2F;CD）工作流取决于组织的文化和偏好以及技术要求。</li>
+<li><strong>不提供应用程序级别的服务作为内置服务，</strong>例如中间件（例如消息中间件）、 数据处理框架（例如 Spark）、数据库（例如 MySQL）、缓存、集群存储系统 （例如 Ceph）。这样的组件可以在 Kubernetes 上运行，并且&#x2F;或者可以由运行在 Kubernetes 上的应用程序通过可移植机制（例如<a target="_blank" rel="noopener" href="https://openservicebrokerapi.org/">开放服务代理</a>）来访问。</li>
+<li>**不是日志记录、监视或警报的解决方案。 **它集成了一些功能作为概念证明，并提供了收集和导出指标的机制。</li>
+<li>不提供也不要求配置用的语言、系统（例如 jsonnet），它提供了声明性 API， 该声明性 API 可以由任意形式的声明性规范所构成。</li>
+<li><strong>不提供也不采用任何全面的机器配置、维护、管理或自我修复系统。</strong></li>
+<li>此外，Kubernetes 不仅仅是一个编排系统，实际上它消除了编排的需要。 编排的技术定义是执行已定义的工作流程：首先执行 A，然后执行 B，再执行 C。 而 Kubernetes 包含了一组独立可组合的控制过程，可以持续地将当前状态驱动到所提供的预期状态。 你不需要在乎如何从 A 移动到 C，也不需要集中控制，这使得系统更易于使用且功能更强大、 系统更健壮，更为弹性和可扩展。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/overview/">Kubernetes 概述</a></p>
+<h2 id="Kubernetes-安装"><a href="#Kubernetes-安装" class="headerlink" title="Kubernetes 安装"></a>Kubernetes 安装</h2><h3 id="关闭-Debian-交换分区"><a href="#关闭-Debian-交换分区" class="headerlink" title="关闭 Debian 交换分区"></a>关闭 Debian 交换分区</h3><p>先准备3台虚拟机，关闭交换分区（一个是性能问题，开启swap会严重影响性能（包括内存和I&#x2F;O）；另一个是管理问题，开启swap后通过cgroups设置的内存上限就会失效。有的时候可用内存很多也会swap，这时候关闭是为了避免swap带来的性能问题）。</p>
+<ol>
+<li>编辑 &#x2F;etc&#x2F;fstab 文件，注释掉 swap 分区</li>
+<li>修改 systemd 相关配置</li>
+</ol>
+<pre><code class="sh"># 查看与 swap 分区相关的 systemd 项
+sudo systemctl --type swap --all
+
+# 关闭相关项，保证重启之后 swap 分区不会被重新挂载
+sudo systemctl mask dev-xxx.swap
+</code></pre>
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Elko_265/article/details/126342412">Debian 11 关闭 swap 遇到的问题和解决方案 - CSDN</a></p>
+<h3 id="修改-etc-daemon-json"><a href="#修改-etc-daemon-json" class="headerlink" title="修改 &#x2F;etc&#x2F;daemon.json"></a>修改 &#x2F;etc&#x2F;daemon.json</h3><pre><code class="json">&#123;
+    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],
+    &quot;storage-driver&quot;: &quot;overlay2&quot;,
+    &quot;log-driver&quot;: &quot;json-file&quot;,
+    &quot;log-opts&quot;: &#123;
+        &quot;max-size&quot;: &quot;100m&quot;
+    &#125;,
+    &quot;ip-forward&quot;: true,
+    &quot;registry-mirrors&quot;: [
+   &quot;https://mirror.ccs.tencentyun.com&quot;
+  ]
+&#125;
+</code></pre>
+<h3 id="添加软件源并安装（所有节点都要操作）"><a href="#添加软件源并安装（所有节点都要操作）" class="headerlink" title="添加软件源并安装（所有节点都要操作）"></a>添加软件源并安装（所有节点都要操作）</h3><pre><code class="sh">sudo apt-get update &amp;&amp; apt-get install -y apt-transport-https
+
+sudo curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add -
+
+sudo cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list
+deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
+EOF
+
+sudo apt update
+
+sudo apt install -y kubelet=1.23.0-00 kubeadm=1.23.0-00 kubectl=1.23.0-00
+</code></pre>
+<h3 id="初始化（仅在-Master-节点操作）"><a href="#初始化（仅在-Master-节点操作）" class="headerlink" title="初始化（仅在 Master 节点操作）"></a>初始化（仅在 Master 节点操作）</h3><pre><code class="sh"># --apiserver-advertise-address: apiserver监听的IP地址
+# --control-plane-endpoint: 控制平面的IP或域名
+# --pod-network-cidr: 指定pod网络可以使用的IP地址段
+# --service-cidr: 指定service的虚拟网络IP段
+# --token-ttl: 令牌过期时间，默认24小时，0表示永不过期。生产环境中最好设置一定的过期时间
+kubeadm init \
+--apiserver-advertise-address=192.168.31.150 \
+--image-repository registry.aliyuncs.com/google_containers \
+--kubernetes-version v1.23.0 \
+--control-plane-endpoint 192.168.31.150 \
+--service-cidr=10.100.0.0/16 \
+--token-ttl 0 \
+--pod-network-cidr=10.244.0.0/16
+</code></pre>
+<pre><code class="sh">mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
+</code></pre>
+<p>开机自启动 master</p>
+<pre><code class="sh">sudo systemctl enable kubelet
+</code></pre>
+<p>查看 kubelet 节点信息</p>
+<pre><code class="sh">sudo kubectl get nodes
+
+# 只能看到 master 节点，状态为 NotReady
+
+NAME      STATUS     ROLES                  AGE    VERSION
+satur01   NotReady   control-plane,master   2d3h   v1.23.0
+</code></pre>
+<h3 id="加入节点"><a href="#加入节点" class="headerlink" title="加入节点"></a>加入节点</h3><ol>
+<li>在工作节点执行初始化完成后的提示操作（注意替换为实际的提示操作）</li>
+</ol>
+<pre><code class="sh"># 获取 token
+sudo kubeadm token list
+-- bes778.t843utru84j9mxnw
+
+# 获取 sha
+openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2&gt;/dev/null | openssl dgst -sha256 -hex | sed &#39;s/^.* //&#39;
+-- 1ec9fabfa84ef1f3f3a4c024720632b6af1d3085fcaa80fd4608792051f431f9
+--sha256:1ec9fabfa84ef1f3f3a4c024720632b6af1d3085fcaa80fd4608792051f431f9
+
+sudo kubeadm join 192.168.31.150:6443 --token bes778.t843utru84j9mxnw --discovery-token-ca-cert-hash sha256:1ec9fabfa84ef1f3f3a4c024720632b6af1d3085fcaa80fd4608792051f431f9
+</code></pre>
+<ol start="2">
+<li>查看节点列表</li>
+</ol>
+<pre><code class="sh">sudo kubectl get nodes
+# 因为网络插件没装，所以NotReady
+
+kubectl get componentstatus
+kubectl get cs
+
+kubectl get pods -n kube-system
+</code></pre>
+<h2 id="安装Flannel网络插件（需要上github下载flanneld）"><a href="#安装Flannel网络插件（需要上github下载flanneld）" class="headerlink" title="安装Flannel网络插件（需要上github下载flanneld）"></a>安装Flannel网络插件（需要上github下载flanneld）</h2><pre><code class="sh"># 访问https://github.com/flannel-io/flannel#deploying-flannel-manually下载flanneld
+# 将下载后的flanneld二进制文件放到/opt/bin目录，没可执行权限的话记得授权
+# 执行以下命令，kube-flannel.yml内容见“附录 -&gt; kube-flannel.yml”
+sudo kubectl apply -f kube-flannel.yml
+# 安装完成后再执行一遍kubectl get nodes，查看状态是否为Ready
+</code></pre>
+<h2 id="安装-calico"><a href="#安装-calico" class="headerlink" title="安装 calico"></a>安装 calico</h2><p><a target="_blank" rel="noopener" href="https://docs.projectcalico.org/manifets/calico.yaml">获取 calico.yaml</a> 到 &#x2F;opt&#x2F;k8s 下 : calico.yaml 并修改 docker.io 为 calico，使用 <code>grep image calico.yaml</code>查看并下载镜像。</p>
+<pre><code class="sh">再查看应该没有 Pending 状态的容器
+kubectl get pods -n kube-system
+</code></pre>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/XY-Heruo/p/16369023.html">debian11使用kubeadm安装k8s</a></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes 概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">1.1.</span> <span class="toc-text">容器化部署的优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes-%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">1.2.</span> <span class="toc-text">Kubernetes 能做什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes-%E4%B8%8D%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">1.3.</span> <span class="toc-text">Kubernetes 不做什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">Kubernetes 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD-Debian-%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA"><span class="toc-number">2.1.</span> <span class="toc-text">关闭 Debian 交换分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-etc-daemon-json"><span class="toc-number">2.2.</span> <span class="toc-text">修改 &#x2F;etc&#x2F;daemon.json</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E6%BA%90%E5%B9%B6%E5%AE%89%E8%A3%85%EF%BC%88%E6%89%80%E6%9C%89%E8%8A%82%E7%82%B9%E9%83%BD%E8%A6%81%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">添加软件源并安装（所有节点都要操作）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%EF%BC%88%E4%BB%85%E5%9C%A8-Master-%E8%8A%82%E7%82%B9%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="toc-number">2.4.</span> <span class="toc-text">初始化（仅在 Master 节点操作）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%85%A5%E8%8A%82%E7%82%B9"><span class="toc-number">2.5.</span> <span class="toc-text">加入节点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Flannel%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6%EF%BC%88%E9%9C%80%E8%A6%81%E4%B8%8Agithub%E4%B8%8B%E8%BD%BDflanneld%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">安装Flannel网络插件（需要上github下载flanneld）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-calico"><span class="toc-number">4.</span> <span class="toc-text">安装 calico</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2023/09/02/2208f957f610/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&text=在Debian12上安装Kubernetes"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&title=在Debian12上安装Kubernetes"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&is_video=false&description=在Debian12上安装Kubernetes"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=在Debian12上安装Kubernetes&body=Check out this article: https://lozhu.happy365.day/2023/09/02/2208f957f610/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&title=在Debian12上安装Kubernetes"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&title=在Debian12上安装Kubernetes"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&title=在Debian12上安装Kubernetes"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&title=在Debian12上安装Kubernetes"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2023/09/02/2208f957f610/&name=在Debian12上安装Kubernetes&description=&lt;h2 id=&#34;Kubernetes-概述&#34;&gt;&lt;a href=&#34;#Kubernetes-概述&#34; class=&#34;headerlink&#34; title=&#34;Kubernetes 概述&#34;&gt;&lt;/a&gt;Kubernetes 概述&lt;/h2&gt;&lt;p&gt;Kubernetes 是一个可移植、可扩展的开源平台，用于管理容器化的工作负载和服务，可促进声明式配置和自动化。 Kubernetes 拥有一个庞大且快速增长的生态，其服务、支持和工具的使用范围相当广泛。&lt;strong&gt;Kubernetes&lt;/strong&gt; 这个名字源于希腊语，意为“舵手”或“飞行员”。k8s 这个缩写是因为 k 和 s 之间有八个字符的关系。 Google 在 2014 年开源了 Kubernetes 项目。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2023/09/02/2208f957f610/&t=在Debian12上安装Kubernetes"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2024
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

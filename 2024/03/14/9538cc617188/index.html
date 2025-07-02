@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="前置准备创建 Docker 网络因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。 主库地址：172.12.0.2 从库地址：172.12.0.3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker部署PostgreSQL主从">
+<meta property="og:url" content="https://lozhu.happy365.day/2024/03/14/9538cc617188/index.html">
+<meta property="og:site_name" content="🐷&#39;s 部落格">
+<meta property="og:description" content="前置准备创建 Docker 网络因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。 主库地址：172.12.0.2 从库地址：172.12.0.3">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-13T16:25:40.000Z">
+<meta property="article:modified_time" content="2025-07-02T15:29:26.365Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="Postgresql">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Docker部署PostgreSQL主从</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="🐷's 部落格" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/04/04/12612b16a42c/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/12/22/8f8f5be5738d/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2024/03/14/9538cc617188/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&text=Docker部署PostgreSQL主从"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&title=Docker部署PostgreSQL主从"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&is_video=false&description=Docker部署PostgreSQL主从"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Docker部署PostgreSQL主从&body=Check out this article: https://lozhu.happy365.day/2024/03/14/9538cc617188/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&title=Docker部署PostgreSQL主从"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&title=Docker部署PostgreSQL主从"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&title=Docker部署PostgreSQL主从"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&title=Docker部署PostgreSQL主从"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&name=Docker部署PostgreSQL主从&description=&lt;h2 id=&#34;前置准备&#34;&gt;&lt;a href=&#34;#前置准备&#34; class=&#34;headerlink&#34; title=&#34;前置准备&#34;&gt;&lt;/a&gt;前置准备&lt;/h2&gt;&lt;h3 id=&#34;创建-Docker-网络&#34;&gt;&lt;a href=&#34;#创建-Docker-网络&#34; class=&#34;headerlink&#34; title=&#34;创建 Docker 网络&#34;&gt;&lt;/a&gt;创建 Docker 网络&lt;/h3&gt;&lt;p&gt;因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。&lt;/p&gt;
+&lt;p&gt;主库地址：172.12.0.2&lt;/p&gt;
+&lt;p&gt;从库地址：172.12.0.3&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2024/03/14/9538cc617188/&t=Docker部署PostgreSQL主从"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">前置准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-Docker-%E7%BD%91%E7%BB%9C"><span class="toc-number">1.1.</span> <span class="toc-text">创建 Docker 网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">数据库安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E5%BA%93%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">主库配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E5%BA%93%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">从库配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-number">5.</span> <span class="toc-text">踩坑记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%BA%93%E5%90%AF%E5%8A%A8%E6%8A%A5%E9%94%99"><span class="toc-number">5.1.</span> <span class="toc-text">从库启动报错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E5%BA%93%E4%BB%8E%E5%BA%93%E6%95%B0%E6%8D%AE%E7%89%88%E6%9C%AC%E4%B8%8D%E4%B8%80%E8%87%B4"><span class="toc-number">5.2.</span> <span class="toc-text">主库从库数据版本不一致</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Docker部署PostgreSQL主从
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-03-13T16:25:40.000Z" class="dt-published" itemprop="datePublished">2024-03-14</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Docker/" rel="tag">Docker</a>, <a class="p-category" href="/tags/Postgresql/" rel="tag">Postgresql</a>, <a class="p-category" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a> -->
+        <a class="category-link" href="/tags/Docker/" rel="tag">Docker</a>, <a class="category-link" href="/tags/Postgresql/" rel="tag">Postgresql</a>, <a class="category-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h2><h3 id="创建-Docker-网络"><a href="#创建-Docker-网络" class="headerlink" title="创建 Docker 网络"></a>创建 Docker 网络</h3><p>因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。</p>
+<p>主库地址：172.12.0.2</p>
+<p>从库地址：172.12.0.3</p>
+<span id="more"></span>
+
+<p>创建 Docker 网络：</p>
+<pre><code class="sh"># 创建
+docker network create --driver bridge --subnet 172.12.0.0/16 --gateway 172.12.0.1 postgresqlnet
+
+# 查看
+docker network ls
+docker network inspect postgresqlnet
+</code></pre>
+<h3 id="数据库安装"><a href="#数据库安装" class="headerlink" title="数据库安装"></a>数据库安装</h3><p>拉取最新版 pg  docker镜像：</p>
+<pre><code class="sh">docker pull postgres
+</code></pre>
+<p>启动容器：</p>
+<pre><code class="sh"># 主库
+docker run -id --name=shorturl00 --network postgresqlnet --network-alias shorturl00 --ip 172.12.0.2 -v shorturl00:/var/lib/postgresql/data -p 5440:5440 -e POSTGRES_PASSWORD=12345678 -e LANG=C.UTF-8 postgres
+
+# 从库
+docker run -id --name=shorturl01 --network postgresqlnet --network-alias shorturl01 --ip 172.12.0.3 -v shorturl01:/var/lib/postgresql/data -p 5441:5441 -e POSTGRES_PASSWORD=12345678 -e LANG=C.UTF-8 postgres
+</code></pre>
+<p>查看容器运行情况：</p>
+<pre><code class="sh">docker ps -a
+</code></pre>
+<h2 id="主库配置"><a href="#主库配置" class="headerlink" title="主库配置"></a>主库配置</h2><p>因为没有使用默认的5432端口，先修改主库的连接端口为5440。进入主库容器，编辑 <code>/var/lib/postgresql/data/postgresql.conf</code> 文件：</p>
+<pre><code>port=5440
+</code></pre>
+<p>进入主库创建同步用户：</p>
+<pre><code class="sh">create role replicate with login password &#39;12345678&#39; replication;
+</code></pre>
+<p>返回 “CREATE ROLE” 表示创建成功。</p>
+<p>修改文件 <code>/var/lib/postgresql/data/pg_hba.conf</code> 文件，修改 IPv4 和 replication 部分：</p>
+<pre><code># IPv4 local connections:
+host    all             all             0.0.0.0/0               trust
+
+# replication privilege.
+host    replication     all             0.0.0.0/0               trust
+</code></pre>
+<p>trust 表示不需要密码即可连接，不可用于生产环境！！</p>
+<p>主库开启归档模式，在数据库中执行：</p>
+<pre><code class="sh">ALTER SYSTEM SET archive_command = ON ;
+ALTER SYSTEM SET archive_command = &#39;cp -i %p /home/%f &lt;/dev/null&#39;;
+</code></pre>
+<p>完成以上配置，重启主库。</p>
+<h2 id="从库配置"><a href="#从库配置" class="headerlink" title="从库配置"></a>从库配置</h2><p>进入从库容器先删除 <code>/var/lib/postgresql/data</code> 目录，然后进行首次同步，在终端执行：</p>
+<pre><code class="sh">pg_basebackup -h 172.12.0.2 -p 5440 -U replicate -w -Fp -Xs -Pv -R -D /var/lib/postgresql/data/ -l postgresqlbackup20240313
+</code></pre>
+<p>成功执行完之后，编辑从库 <code>/var/lib/postgresql/data/postgresql.conf</code> 文件，修改启动端口：</p>
+<pre><code>port=5441
+</code></pre>
+<p>设置从库 primary_conninfo：</p>
+<pre><code class="sh">ALTER SYSTEM SET  primary_conninfo = &#39;user=replicate host=172.12.0.2 port=5440 sslmode=prefer sslcompression=0 gssencmode=prefer krbsrvname=postgres target_session_attrs=any&#39;;
+
+ALTER SYSTEM SET max_connections =&#39;300&#39;;
+</code></pre>
+<p>配置完之后重启从库。</p>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>在主库中增删数据，在从库中可以查询到数据变化。</p>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="从库启动报错"><a href="#从库启动报错" class="headerlink" title="从库启动报错"></a>从库启动报错</h3><p>报错信息：</p>
+<pre><code>2024-03-13 15:09:52.321 UTC [47] FATAL:  could not connect to the primary server: connection to server at &quot;172.12.0.2&quot;, port 5400 failed: Connection refused
+        Is the server running on that host and accepting TCP/IP connections?
+</code></pre>
+<p>配置完从库 primary_conninfo 信息之后，从库重启报错提示无法连接 172.12.0.2:5400 ，后来排查发现是端口写错了，应该是5440才对，可以到 &#x2F;var&#x2F;lib&#x2F;postgresql&#x2F;data&#x2F;postgresql.auto.conf 中修改这个配置，修改为正确的端口重启，该错误消失。</p>
+<h3 id="主库从库数据版本不一致"><a href="#主库从库数据版本不一致" class="headerlink" title="主库从库数据版本不一致"></a>主库从库数据版本不一致</h3><p>从库配置完之后重启报错：</p>
+<pre><code>2024-03-13 15:30:09.331 UTC [31] FATAL:  database system identifier differs between the primary and standby
+2024-03-13 15:30:09.331 UTC [31] DETAIL:  The primary&#39;s identifier is 7344380814831386663, the standby&#39;s identifier is 7344385460223520808.
+</code></pre>
+<p>网上查资料发现是主库数据与从库数据不一致导致，<strong>从库初始化时删除 &#x2F;var&#x2F;lib&#x2F;postgresql&#x2F;data 目录</strong>。参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/fct2001140269/article/details/102782442">docker搭建postgresql9.4主从同步复制集群</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zspwf/p/16130201.html">Docker部署PostgreSQL主从</a></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">前置准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-Docker-%E7%BD%91%E7%BB%9C"><span class="toc-number">1.1.</span> <span class="toc-text">创建 Docker 网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">数据库安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E5%BA%93%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">主库配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E5%BA%93%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">从库配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-number">5.</span> <span class="toc-text">踩坑记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%BA%93%E5%90%AF%E5%8A%A8%E6%8A%A5%E9%94%99"><span class="toc-number">5.1.</span> <span class="toc-text">从库启动报错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E5%BA%93%E4%BB%8E%E5%BA%93%E6%95%B0%E6%8D%AE%E7%89%88%E6%9C%AC%E4%B8%8D%E4%B8%80%E8%87%B4"><span class="toc-number">5.2.</span> <span class="toc-text">主库从库数据版本不一致</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2024/03/14/9538cc617188/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&text=Docker部署PostgreSQL主从"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&title=Docker部署PostgreSQL主从"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&is_video=false&description=Docker部署PostgreSQL主从"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Docker部署PostgreSQL主从&body=Check out this article: https://lozhu.happy365.day/2024/03/14/9538cc617188/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&title=Docker部署PostgreSQL主从"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&title=Docker部署PostgreSQL主从"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&title=Docker部署PostgreSQL主从"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&title=Docker部署PostgreSQL主从"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2024/03/14/9538cc617188/&name=Docker部署PostgreSQL主从&description=&lt;h2 id=&#34;前置准备&#34;&gt;&lt;a href=&#34;#前置准备&#34; class=&#34;headerlink&#34; title=&#34;前置准备&#34;&gt;&lt;/a&gt;前置准备&lt;/h2&gt;&lt;h3 id=&#34;创建-Docker-网络&#34;&gt;&lt;a href=&#34;#创建-Docker-网络&#34; class=&#34;headerlink&#34; title=&#34;创建 Docker 网络&#34;&gt;&lt;/a&gt;创建 Docker 网络&lt;/h3&gt;&lt;p&gt;因为只有一台机器，本例中主库和从库都部署在同一个机器中，为了主库和从库之间能通信，需要在同一个网络中固定主库和从库容器的 IP。&lt;/p&gt;
+&lt;p&gt;主库地址：172.12.0.2&lt;/p&gt;
+&lt;p&gt;从库地址：172.12.0.3&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2024/03/14/9538cc617188/&t=Docker部署PostgreSQL主从"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

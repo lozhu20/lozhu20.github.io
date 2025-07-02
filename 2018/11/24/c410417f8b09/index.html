@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="第三章：高级装配 本章内容：  Spring profile 条件化的bean声明 自动装配与歧义性 bean的作用域 Spring表达式语言   3.1 环境与profile在软件开发的不同阶段需要不同的环境和配置。 @Bean(destroyMethod &#x3D; &quot;shutdown&quot;) public DataSource dataSource() &amp;#123;     retu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring学习笔记-第三章-高级装配">
+<meta property="og:url" content="https://lozhu.happy365.day/2018/11/24/c410417f8b09/index.html">
+<meta property="og:site_name" content="🐷&#39;s 部落格">
+<meta property="og:description" content="第三章：高级装配 本章内容：  Spring profile 条件化的bean声明 自动装配与歧义性 bean的作用域 Spring表达式语言   3.1 环境与profile在软件开发的不同阶段需要不同的环境和配置。 @Bean(destroyMethod &#x3D; &quot;shutdown&quot;) public DataSource dataSource() &amp;#123;     retu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-11-24T04:09:31.000Z">
+<meta property="article:modified_time" content="2025-07-02T15:29:26.368Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="bean装配">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Spring学习笔记-第三章-高级装配</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="🐷's 部落格" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2018/12/02/12e1cf33dc16/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2018/11/24/68e2f352944a/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2018/11/24/c410417f8b09/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&text=Spring学习笔记-第三章-高级装配"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&title=Spring学习笔记-第三章-高级装配"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&is_video=false&description=Spring学习笔记-第三章-高级装配"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Spring学习笔记-第三章-高级装配&body=Check out this article: https://lozhu.happy365.day/2018/11/24/c410417f8b09/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&title=Spring学习笔记-第三章-高级装配"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&title=Spring学习笔记-第三章-高级装配"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&title=Spring学习笔记-第三章-高级装配"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&title=Spring学习笔记-第三章-高级装配"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&name=Spring学习笔记-第三章-高级装配&description=&lt;p&gt;第三章：高级装配&lt;/p&gt;
+&lt;p&gt;本章内容：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Spring profile&lt;/li&gt;
+&lt;li&gt;条件化的bean声明&lt;/li&gt;
+&lt;li&gt;自动装配与歧义性&lt;/li&gt;
+&lt;li&gt;bean的作用域&lt;/li&gt;
+&lt;li&gt;Spring表达式语言&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;3-1-环境与profile&#34;&gt;&lt;a href=&#34;#3-1-环境与profile&#34; class=&#34;headerlink&#34; title=&#34;3.1 环境与profile&#34;&gt;&lt;/a&gt;3.1 环境与profile&lt;/h3&gt;&lt;p&gt;在软件开发的不同阶段需要不同的环境和配置。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;@Bean(destroyMethod = &amp;quot;shutdown&amp;quot;)
+public DataSource dataSource() &amp;#123;
+    return new EmbeddedDatabaseBuilder()
+        .addScript(&amp;quot;classpath:ch3.sql&amp;quot;)
+        .addScript(&amp;quot;classpath:ch3.1.sql&amp;quot;)
+        .build();
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&t=Spring学习笔记-第三章-高级装配"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E7%8E%AF%E5%A2%83%E4%B8%8Eprofile"><span class="toc-number">1.</span> <span class="toc-text">3.1 环境与profile</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1-%E9%85%8D%E7%BD%AEprofile-bean"><span class="toc-number">1.1.</span> <span class="toc-text">3.1.1 配置profile bean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2-%E6%BF%80%E6%B4%BBprofile"><span class="toc-number">1.2.</span> <span class="toc-text">3.1.2 激活profile</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%9D%A1%E4%BB%B6%E5%8C%96%E7%9A%84bean"><span class="toc-number">2.</span> <span class="toc-text">3.2 条件化的bean</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%A4%84%E7%90%86%E5%90%AF%E5%8A%A8%E8%A3%85%E9%85%8D%E7%9A%84%E6%AD%A7%E4%B9%89%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">3.3 处理启动装配的歧义性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-1-%E6%A0%87%E7%A4%BA%E9%A6%96%E9%80%89%E7%9A%84bean"><span class="toc-number">3.1.</span> <span class="toc-text">3.3.1 标示首选的bean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-2-%E9%99%90%E5%AE%9A%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E7%9A%84bean"><span class="toc-number">3.2.</span> <span class="toc-text">3.3.2 限定自动装配的bean</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-bean%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">4.</span> <span class="toc-text">3.4 bean的作用域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E8%BF%90%E8%A1%8C%E6%97%B6%E5%80%BC%E6%B3%A8%E5%85%A5"><span class="toc-number">5.</span> <span class="toc-text">3.5 运行时值注入</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Spring学习笔记-第三章-高级装配
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-11-24T04:09:31.000Z" class="dt-published" itemprop="datePublished">2018-11-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Spring/" rel="tag">Spring</a>, <a class="p-category" href="/tags/bean%E8%A3%85%E9%85%8D/" rel="tag">bean装配</a> -->
+        <a class="category-link" href="/tags/Spring/" rel="tag">Spring</a>, <a class="category-link" href="/tags/bean%E8%A3%85%E9%85%8D/" rel="tag">bean装配</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>第三章：高级装配</p>
+<p>本章内容：</p>
+<ul>
+<li>Spring profile</li>
+<li>条件化的bean声明</li>
+<li>自动装配与歧义性</li>
+<li>bean的作用域</li>
+<li>Spring表达式语言</li>
+</ul>
+<hr>
+<h3 id="3-1-环境与profile"><a href="#3-1-环境与profile" class="headerlink" title="3.1 环境与profile"></a>3.1 环境与profile</h3><p>在软件开发的不同阶段需要不同的环境和配置。</p>
+<pre><code class="java">@Bean(destroyMethod = &quot;shutdown&quot;)
+public DataSource dataSource() &#123;
+    return new EmbeddedDatabaseBuilder()
+        .addScript(&quot;classpath:ch3.sql&quot;)
+        .addScript(&quot;classpath:ch3.1.sql&quot;)
+        .build();
+&#125;
+</code></pre>
+<span id="more"></span>
+
+
+
+<p>为了适应环境更换的需求，可以将所需要的所有的配置类配置到每个bean中，然后在构建阶段选择需要使用的bean，但是从开发环境切换到生产环境时可能会发生问题。</p>
+<h4 id="3-1-1-配置profile-bean"><a href="#3-1-1-配置profile-bean" class="headerlink" title="3.1.1 配置profile bean"></a>3.1.1 配置profile bean</h4><p>Spring为此种场景提供了profile功能。</p>
+<p>使用profile注解来声明在合适的阶段使用合适的bean。将所有的bean整理到一个profile中，确保在需要的时候active相应的bean。</p>
+<pre><code class="java">package com.ch3;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jndi.JndiObjectFactoryBean;
+
+import javax.sql.DataSource;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018/11/24 下午1:00
+ */
+@Configuration
+public class DataSourceConfig &#123;
+    @Bean(destroyMethod = &quot;shutdown&quot;)
+    @Profile(&quot;dev&quot;)
+    public DataSource embeddedDataSource() &#123;
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .addScript(&quot;classpath:test.sql&quot;)
+                .addScript(&quot;classpath:test1.sql&quot;)
+                .build();
+    &#125;
+
+    @Bean
+    @Profile(&quot;prod&quot;)
+    public DataSource jndiDataSource() &#123;
+        JndiObjectFactoryBean jndiObjectFactoryBean =
+                new JndiObjectFactoryBean();
+        jndiObjectFactoryBean.setJndiName(&quot;jndi/myDS&quot;);
+        jndiObjectFactoryBean.setResourceRef(true);
+        jndiObjectFactoryBean.setProxyInterface(javax.sql.DataSource.class);
+        return (DataSource) jndiObjectFactoryBean.getObject();
+    &#125;
+&#125;
+</code></pre>
+<p><strong>虽然所有的bean都被声明在一个profile里，但是只有当指定的profile被激活时，相应的bean才会被创建，没有指定profile的bean始终都会被创建，与激活的profile没有关系。</strong></p>
+<p>在XML中配置profile：</p>
+<p>可以通过beans元素的profile属性，在xml中配置profile。</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:jdbc=&quot;http://www.springframework.org/schema/jdbc&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd&quot;
+        profile=&quot;dev&quot;&gt;
+
+    &lt;jdbc:embedded-database id=&quot;dataSource&quot;&gt;
+        &lt;jdbc:script location=&quot;classpath:test.sql&quot;/&gt;
+        &lt;jdbc:script location=&quot;classpath:test1.sql&quot;/&gt;
+    &lt;/jdbc:embedded-database&gt;
+&lt;/beans&gt;
+</code></pre>
+<p><strong>只有profile属性与当前激活的profile相匹配的配置文件才会被用到。</strong></p>
+<p>重复使用beans属性指定多个profile：</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:jdbc=&quot;http://www.springframework.org/schema/jdbc&quot;
+       xmlns:jee=&quot;http://www.springframework.org/schema/jee&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd&quot;&gt;
+
+    &lt;beans profile=&quot;dev&quot;&gt;
+        &lt;jdbc:embedded-database id=&quot;dataSource&quot;&gt;
+            &lt;jdbc:script location=&quot;classpath:test.sql&quot;/&gt;
+            &lt;jdbc:script location=&quot;classpath:test1.sql&quot;/&gt;
+        &lt;/jdbc:embedded-database&gt;
+    &lt;/beans&gt;
+    
+    &lt;beans profile=&quot;prod&quot;&gt;
+        &lt;jee:jndi-lookup jndi-name=&quot;jdbc/MyDatabase&quot; id=&quot;dataSource&quot; resource-ref=&quot;true&quot; proxy-interface=&quot;javax.sql.DataSource&quot;/&gt;
+    &lt;/beans&gt;
+&lt;/beans&gt;
+</code></pre>
+<p><strong>虽然id都一样，类型都是javax.sql.dataSource，但是只会创建指定profile的bean。</strong></p>
+<h4 id="3-1-2-激活profile"><a href="#3-1-2-激活profile" class="headerlink" title="3.1.2 激活profile"></a>3.1.2 激活profile</h4><p>Spring在确定处于激活状态的profile时，依赖于两个独立的属性：</p>
+<ul>
+<li>spring.profiles.active</li>
+<li>spring.profiles.default</li>
+</ul>
+<p>优先级从上到下，如果spring.profiles.active没有设置，则看spring.profiles.default，否则只会创建没有定义在profiles中的bean。</p>
+<p>有多种方式设置这两个属性：</p>
+<ul>
+<li>作为DispatcherServlet的初始化参数</li>
+<li>作为web应用的上下文参数</li>
+<li>作为JNDI条目</li>
+<li>作为环境变量</li>
+<li>作为JVM属性</li>
+<li>在集成测试类上使用@ActiveProfiles属性</li>
+</ul>
+<p>在web.xml配置文件中设置默认的profile：</p>
+<pre><code class="xml">&lt;context-param&gt;
+    &lt;param-name&gt;spring.profiles.default&lt;/param-name&gt;
+    &lt;param-value&gt;dev&lt;/param-value&gt;
+&lt;/context-param&gt;
+
+&lt;servlet&gt;
+    &lt;servlet-name&gt;appServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;spring.profiles.default&lt;/param-name&gt;
+        &lt;param-value&gt;dev&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+</code></pre>
+<p><strong>可以同时激活多个profile，以逗号分隔。</strong></p>
+<p>使用profile进行测试：</p>
+<p>Spring提供了@ActiveProfiles注解，用来指定测试时使用的profile。</p>
+<pre><code class="java">@RunWith(SpringJunit4ClassRunner.class)
+@ContextConfiguration(classes=&#123;PersistenceTestConfig.class&#125;)
+@ActiveProfiles(&quot;dev&quot;)
+public class PersistenceTest &#123;
+    
+&#125;
+</code></pre>
+<hr>
+<h3 id="3-2-条件化的bean"><a href="#3-2-条件化的bean" class="headerlink" title="3.2 条件化的bean"></a>3.2 条件化的bean</h3><p>需求：</p>
+<ol>
+<li>希望一个或多个bean只有在类路径下包含某个特定的库时才创建</li>
+<li>希望某个bean在特定的bean声明之后再创建</li>
+</ol>
+<p>Spring 4引入了@Conditional注解，只有条件计算结果为true才会创建bean，否则不创建。</p>
+<pre><code class="java">package com.ch3;
+
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.env.Environment;
+import org.springframework.core.type.AnnotatedTypeMetadata;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018/11/24 下午2:07
+ */
+public class MagicExistsCondition implements Condition &#123;
+    @Override
+    public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) &#123;
+        Environment environment = conditionContext.getEnvironment();
+        return environment.containsProperty(&quot;magic&quot;);
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="java">@Bean
+@Conditional(MagicExistsCondition.class)   //条件化创建bean
+public MagicBean magicBean() &#123;
+    return new MagicBean();
+&#125;
+</code></pre>
+<p>ConditionContext接口：</p>
+<pre><code class="java">public interface ConditionContext &#123;
+    BeanDefinitionRegistry getRegistry();
+
+    ConfigurableListableBeanFactory getBeanFactory();
+
+    Environment getEnvironment();
+
+    ResourceLoader getResourceLoader();
+
+    ClassLoader getClassLoader();
+&#125;
+</code></pre>
+<ul>
+<li>getRegistry：根据返回值可以检查bean定义</li>
+<li>getEnvirnment：检查环境变量</li>
+<li>getResourceLoader：读取加载的资源</li>
+<li>getClassLoader：加载并检查类是否存在</li>
+</ul>
+<p>AnnotatedTypeMetadata接口：</p>
+<pre><code class="java">public interface AnnotatedTypeMetadata &#123;
+    boolean isAnnotated(String var1);
+
+    Map&lt;String, Object&gt; getAnnotationAttributes(String var1);
+
+    Map&lt;String, Object&gt; getAnnotationAttributes(String var1, boolean var2);
+
+    MultiValueMap&lt;String, Object&gt; getAllAnnotationAttributes(String var1);
+
+    MultiValueMap&lt;String, Object&gt; getAllAnnotationAttributes(String var1, boolean var2);
+&#125;
+</code></pre>
+<hr>
+<h3 id="3-3-处理启动装配的歧义性"><a href="#3-3-处理启动装配的歧义性" class="headerlink" title="3.3 处理启动装配的歧义性"></a>3.3 处理启动装配的歧义性</h3><p>仅有一个bean匹配所需结果时，自动装配才是有效的，如果有多个bean能够匹配结果的话，这种歧义性会阻碍Spring自动装配属性、构造器参数和方法参数。</p>
+<p>Spring提供的解决方案：</p>
+<ul>
+<li>将可选bean中的其中一个声明为首选（primary）</li>
+<li>使用限定符（qualifier）缩小可选范围</li>
+</ul>
+<h4 id="3-3-1-标示首选的bean"><a href="#3-3-1-标示首选的bean" class="headerlink" title="3.3.1 标示首选的bean"></a>3.3.1 标示首选的bean</h4><p>将其中一个可选的bean声明为首选可以避免自动装配的歧义性。</p>
+<pre><code class="java">@Autowired
+public void setDessert(Dessert dessert) &#123;
+    this.dessert = dessert;
+&#125;
+
+@Component
+@Primary
+public class IceCream implements Dessert &#123;
+    //...
+&#125;
+
+@Bean
+@Primary
+public Dessert dessert() &#123;
+    return new IceCream();
+&#125;
+</code></pre>
+<p>xml配置：</p>
+<pre><code class="xml">&lt;bean id=&quot;iceCream&quot; class=&quot;com.test.dessert.IceCream&quot; primary=&quot;true&quot;/&gt;
+</code></pre>
+<h4 id="3-3-2-限定自动装配的bean"><a href="#3-3-2-限定自动装配的bean" class="headerlink" title="3.3.2 限定自动装配的bean"></a>3.3.2 限定自动装配的bean</h4><p>设置首选bean的局限性在于 <strong>@Primary无法将可选方案范围限定到一个无歧义性的选项中</strong> ，当首选bean的数量超过一个时，无法进一步缩小限定范围。</p>
+<p>@Qualifier注解是使用限定符的主要方式，与@Autowired协同使用，在注入时指定要注入的bean。</p>
+<pre><code class="java">@Autowired
+@Qualifier(&quot;iceCream&quot;)
+public void setDessert(Dessert dessert) &#123;
+    this.dessert = dessert;
+&#125;
+</code></pre>
+<p>@Qualifier注解的参数就是想要注入的bean的id，所有使用@Component注解的类都会创建为bean，且id为首字母小写的类名。</p>
+<p>基于默认id作为限定符是简单的，但是当类名被更改之后会使限定符失效。</p>
+<p>创建自定义的限定符：</p>
+<p>可以设置自己的限定符，而不依赖于bean id作为限定符。</p>
+<pre><code class="java">@Component
+@Qualifier(&quot;cold&quot;)
+public class IceCream implements Dessert &#123;
+    
+&#125;
+</code></pre>
+<p>此时cold限定符分配给了IceCream bean，只需要在合适的地方引入cold限定符即可自动装配。</p>
+<pre><code class="java">@Bean
+@Qualifier(&quot;cold&quot;)
+public Dessert iceCream() &#123;
+    return new IceCream();
+&#125;
+</code></pre>
+<p>此时类限定名的变更不会影响到自动装配。但是当应用中出现同名的注解@Qualifier(“cold”)时，歧义性又会再次出现。</p>
+<p>这时需要多个@Qualifier注解来进一步缩小限定范围。</p>
+<hr>
+<h3 id="3-4-bean的作用域"><a href="#3-4-bean的作用域" class="headerlink" title="3.4 bean的作用域"></a>3.4 bean的作用域</h3><p><strong>默认情况下，Spring应用上下文中的所有bean都是以单例模式创建的。不管给定的bean被注入到其他bean多少次，每次注入的都是同一个实例。</strong></p>
+<p>如果一个类是可变（mutable）的，那么对其进行重用时可能会遇到意想不到的问题。</p>
+<p>Spring定义的bean作用域：</p>
+<ul>
+<li>单例（Singleton）：在整个应用中，只创建一个bean；</li>
+<li>原型（Prototype）：每次注入或者通过上下文获取bean时都创建一个新的bean；</li>
+<li>会话（Session）：在Web应用中，为每个回话创建一个bean；</li>
+<li>请求（Request）：在Web应用中，为每个请求创建一个bean。</li>
+</ul>
+<p>@Scope注解：</p>
+<p>用来指定bean的作用域：</p>
+<pre><code class="java">@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+//或者 @Scope(&quot;prototype&quot;)
+public class Notepad &#123;
+    //something
+&#125;
+</code></pre>
+<p>XML配置：</p>
+<pre><code class="xml">&lt;bean id=&quot;notepad&quot; class=&quot;com.app.Notepad&quot; scope=&quot;prototype&quot; /&gt;
+</code></pre>
+<hr>
+<h3 id="3-5-运行时值注入"><a href="#3-5-运行时值注入" class="headerlink" title="3.5 运行时值注入"></a>3.5 运行时值注入</h3><p>Spring提供了两种运行时求值的方式：</p>
+<ul>
+<li>属性占位符（Property placeholder）；</li>
+<li>Spring表达式语言（S片EL）。</li>
+</ul>
+<pre><code class="java">@Configuration
+@PropertySource(&quot;classpath:/com/soundsys/app.properties&quot;)
+public class ExpressiveConfig &#123;
+    @Autowired
+    Environment env;
+    
+    @Bean
+    public BlankDisc disc() &#123;
+        return new BlankDisc(env.getProperty(&quot;disc.title&quot;), env.getProperty(&quot;disc.artist&quot;));
+    &#125;
+&#125;
+</code></pre>
+<p>Spring的Environment：</p>
+<p>getProperty()方法的四种重载方式：</p>
+<ul>
+<li>String getProperty(String key)；</li>
+<li>String getProperty(String key, String defaultValue)；</li>
+<li>T getProperty(String key, Class<T> type)；</li>
+<li>T getProperty(String key, Class<T> type, T defaultValue)；</li>
+</ul>
+<p>使用重载形式的getProperty()方法可以避免类型转换：</p>
+<pre><code class="java">int connectionCount = env.getProperty(&quot;db.connection.count&quot;, Integer.class, 10);
+</code></pre>
+<p>Environment常见方法：</p>
+<ul>
+<li>boolean containsProperty(String property)；</li>
+<li>String[] getActiveProfiles()；</li>
+<li>String[] getDefaultProfiles()；</li>
+<li>boolean acceptsProfiles(String… profiles)。</li>
+</ul>
+<p>解析属性占位符：</p>
+<p>Spring支持将属性定义到外部的属性文件中，并使用占位符将其值插入到Spring bean中。在Spring装配中，占位符的形式为使用 “${…}” 的形式包装的属性名称。</p>
+<pre><code class="xml">&lt;bean id=&quot;sgtPeppers&quot; class=&quot;soundsystem.BlankDisc&quot; c:_title=&quot;$&#123;disc.title&#125;&quot; c:_artist=&quot;$&#123;disc.artist&#125;&quot; /&gt;
+</code></pre>
+<p>使用组件扫描和自动装配时：</p>
+<pre><code class="java">public BlankDisc(@Value(&quot;$&#123;disc.title&#125;&quot; String title, @Value(&quot;$&#123;disc.artist&#125;&quot;) String artist) &#123;
+    this.title = title;
+    this.artist = artist;
+&#125;
+</code></pre>
+<p>SpEL表达式语言：</p>
+<p>将表达式语言放到 “#{…}” 之中。</p>
+<ul>
+<li>“#{1 + 1}”</li>
+<li>“#{T(System).currentMillis()}”</li>
+<li>“#{sgtPeppers.artist}”</li>
+<li>“#{false}”</li>
+<li>“#{artistSelector.selectArtists().toUpperCase()}”</li>
+</ul>
+<p>SpEL运算符：</p>
+<table>
+<thead>
+<tr>
+<th>运算符类型</th>
+<th>运算符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>算术运算符</td>
+<td>+、-、*、&#x2F;、%、</td>
+</tr>
+<tr>
+<td>比较运算符</td>
+<td>&lt;、&gt;、&#x3D;&#x3D;、&lt;&#x3D;、&gt;&#x3D;、lt、gt、eq、le、ge</td>
+</tr>
+<tr>
+<td>逻辑运算符</td>
+<td>and、or、not、|</td>
+</tr>
+<tr>
+<td>条件运算符</td>
+<td>?:(ternary)、?:()</td>
+</tr>
+<tr>
+<td>正则表达式</td>
+<td>matches</td>
+</tr>
+</tbody></table>
+<p>计算正则表达式：</p>
+<pre><code class="xml">#&#123;admin.email matches &#39;[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com&#39;&#125;
+</code></pre>
+<p>计算集合：</p>
+<pre><code class="xml">#&#123;jukebox.songs[4].title&#125;
+#&#123;jukebox.songs[T(java.lang.Math).random()*jukebox.songs.size()].title&#125;
+#&#123;jukebox.songs.?[artist eq &#39;Aerosmith&#39;]&#125;  //.?[]得到集合的一个子集
+#&#123;jukebox.songs.^[artist eq &#39;Areosmith&#39;]&#125;  //.^[]查询集合中的第一个匹配项
+#&#123;jukebox.songs.$[artist eq &#39;Areosmith&#39;].![title]&#125;  //.$[]查询集合中的最后一个匹配项，.![]从集合的每个成员中选择特定的属性放到另外一个集合中
+</code></pre>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E7%8E%AF%E5%A2%83%E4%B8%8Eprofile"><span class="toc-number">1.</span> <span class="toc-text">3.1 环境与profile</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1-%E9%85%8D%E7%BD%AEprofile-bean"><span class="toc-number">1.1.</span> <span class="toc-text">3.1.1 配置profile bean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2-%E6%BF%80%E6%B4%BBprofile"><span class="toc-number">1.2.</span> <span class="toc-text">3.1.2 激活profile</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%9D%A1%E4%BB%B6%E5%8C%96%E7%9A%84bean"><span class="toc-number">2.</span> <span class="toc-text">3.2 条件化的bean</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%A4%84%E7%90%86%E5%90%AF%E5%8A%A8%E8%A3%85%E9%85%8D%E7%9A%84%E6%AD%A7%E4%B9%89%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">3.3 处理启动装配的歧义性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-1-%E6%A0%87%E7%A4%BA%E9%A6%96%E9%80%89%E7%9A%84bean"><span class="toc-number">3.1.</span> <span class="toc-text">3.3.1 标示首选的bean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-2-%E9%99%90%E5%AE%9A%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E7%9A%84bean"><span class="toc-number">3.2.</span> <span class="toc-text">3.3.2 限定自动装配的bean</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-bean%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">4.</span> <span class="toc-text">3.4 bean的作用域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E8%BF%90%E8%A1%8C%E6%97%B6%E5%80%BC%E6%B3%A8%E5%85%A5"><span class="toc-number">5.</span> <span class="toc-text">3.5 运行时值注入</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2018/11/24/c410417f8b09/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&text=Spring学习笔记-第三章-高级装配"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&title=Spring学习笔记-第三章-高级装配"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&is_video=false&description=Spring学习笔记-第三章-高级装配"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Spring学习笔记-第三章-高级装配&body=Check out this article: https://lozhu.happy365.day/2018/11/24/c410417f8b09/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&title=Spring学习笔记-第三章-高级装配"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&title=Spring学习笔记-第三章-高级装配"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&title=Spring学习笔记-第三章-高级装配"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&title=Spring学习笔记-第三章-高级装配"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&name=Spring学习笔记-第三章-高级装配&description=&lt;p&gt;第三章：高级装配&lt;/p&gt;
+&lt;p&gt;本章内容：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Spring profile&lt;/li&gt;
+&lt;li&gt;条件化的bean声明&lt;/li&gt;
+&lt;li&gt;自动装配与歧义性&lt;/li&gt;
+&lt;li&gt;bean的作用域&lt;/li&gt;
+&lt;li&gt;Spring表达式语言&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;3-1-环境与profile&#34;&gt;&lt;a href=&#34;#3-1-环境与profile&#34; class=&#34;headerlink&#34; title=&#34;3.1 环境与profile&#34;&gt;&lt;/a&gt;3.1 环境与profile&lt;/h3&gt;&lt;p&gt;在软件开发的不同阶段需要不同的环境和配置。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;@Bean(destroyMethod = &amp;quot;shutdown&amp;quot;)
+public DataSource dataSource() &amp;#123;
+    return new EmbeddedDatabaseBuilder()
+        .addScript(&amp;quot;classpath:ch3.sql&amp;quot;)
+        .addScript(&amp;quot;classpath:ch3.1.sql&amp;quot;)
+        .build();
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2018/11/24/c410417f8b09/&t=Spring学习笔记-第三章-高级装配"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

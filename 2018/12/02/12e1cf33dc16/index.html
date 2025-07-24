@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="dubbo中文官方网站 dubbo官方文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dubbo学习笔记">
+<meta property="og:url" content="https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/index.html">
+<meta property="og:site_name" content="🐷&#39;s 部落格">
+<meta property="og:description" content="dubbo中文官方网站 dubbo官方文档">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://dubbo.apache.org/img/architecture.png">
+<meta property="article:published_time" content="2018-12-02T13:17:18.000Z">
+<meta property="article:modified_time" content="2025-07-24T16:39:25.794Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="dubbo">
+<meta property="article:tag" content="分布式系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://dubbo.apache.org/img/architecture.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>dubbo学习笔记</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="🐷's 部落格" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2018/12/02/e664f0e2c371/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2018/11/24/c410417f8b09/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&text=dubbo学习笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&title=dubbo学习笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&is_video=false&description=dubbo学习笔记"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=dubbo学习笔记&body=Check out this article: https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&title=dubbo学习笔记"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&title=dubbo学习笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&title=dubbo学习笔记"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&title=dubbo学习笔记"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&name=dubbo学习笔记&description=&lt;p&gt;&lt;a href=&#34;http://dubbo.apache.org/zh-cn/index.html&#34;&gt;dubbo中文官方网站&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://dubbo.apache.org/zh-cn/docs/user/quick-start.html&#34;&gt;dubbo官方文档&lt;/a&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&t=dubbo学习笔记"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8A%E5%85%B6%E6%BC%94%E5%8F%98%E5%8E%86%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">分布式系统及其演变历程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RPC"><span class="toc-number">2.</span> <span class="toc-text">RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%80%A7%E4%B8%80%E8%A7%88"><span class="toc-number">3.</span> <span class="toc-text">特性一览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dubbo%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84"><span class="toc-number">4.</span> <span class="toc-text">dubbo应用架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dubbo%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8"><span class="toc-number">5.</span> <span class="toc-text">dubbo快速启动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dubbo%E5%AE%9E%E4%BE%8B"><span class="toc-number">5.1.</span> <span class="toc-text">dubbo实例</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        dubbo学习笔记
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-12-02T13:17:18.000Z" class="dt-published" itemprop="datePublished">2018-12-02</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/dubbo/" rel="tag">dubbo</a>, <a class="p-category" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" rel="tag">分布式系统</a> -->
+        <a class="category-link" href="/tags/dubbo/" rel="tag">dubbo</a>, <a class="category-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" rel="tag">分布式系统</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><a target="_blank" rel="noopener" href="http://dubbo.apache.org/zh-cn/index.html">dubbo中文官方网站</a></p>
+<p><a target="_blank" rel="noopener" href="http://dubbo.apache.org/zh-cn/docs/user/quick-start.html">dubbo官方文档</a></p>
+<span id="more"></span>
+
+
+
+<h2 id="分布式系统及其演变历程"><a href="#分布式系统及其演变历程" class="headerlink" title="分布式系统及其演变历程"></a>分布式系统及其演变历程</h2><p>单一应用架构：</p>
+<p>当网站流量很小时，只需一个应用，将所有功能都部署在一起，以减少部署节点和成本。此时，用于简化增删改查工作量的数据访问框架(ORM)是关键。</p>
+<p>垂直应用架构：</p>
+<p>当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用拆成互不相干的几个应用，以提升效率。此时，用于加速前端页面开发的Web框架(MVC)是关键。</p>
+<p>分布式服务架构：</p>
+<p>当垂直应用越来越多，应用之间交互不可避免，将核心业务抽取出来，作为独立的服务，逐渐形成稳定的服务中心，使前端应用能更快速的响应多变的市场需求。此时，用于提高业务复用及整合的分布式服务框架(RPC)是关键。</p>
+<p>流动计算架构：</p>
+<p>当服务越来越多，容量的评估，小服务资源的浪费等问题逐渐显现，此时需增加一个调度中心基于访问压力实时管理集群容量，提高集群利用率。此时，用于提高机器利用率的资源调度和治理中心(SOA)是关键。</p>
+<h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2><p>RPC（Remote Procedure Call）—<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8/7854346">远程过程调用</a>，它是一种通过<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C/143243">网络</a>从远程计算机程序上请求服务，而不需要了解底层网络技术的协议。<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/RPC%E5%8D%8F%E8%AE%AE">RPC协议</a>假定某些<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE/8048821">传输协议</a>的存在，如TCP或UDP，为通信程序之间携带信息数据。在OSI<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/9636548">网络通信</a>模型中，RPC跨越了<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BC%A0%E8%BE%93%E5%B1%82/4329536">传输层</a>和<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%BA%94%E7%94%A8%E5%B1%82/4329788">应用层</a>。RPC使得开发包括网络<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%88%86%E5%B8%83%E5%BC%8F">分布式</a>多程序在内的应用程序更加容易。</p>
+<p>远程过程调用：序列化和网络通信。</p>
+<h2 id="特性一览"><a href="#特性一览" class="headerlink" title="特性一览"></a>特性一览</h2><ul>
+<li>面向接口代理的高性能RPC调用</li>
+<li>智能负载均衡</li>
+<li>服务自动注册与发现</li>
+<li>高度可扩展能力</li>
+<li>运行期流量调度</li>
+<li>可视化的服务治理与运维</li>
+</ul>
+<h2 id="dubbo应用架构"><a href="#dubbo应用架构" class="headerlink" title="dubbo应用架构"></a>dubbo应用架构</h2><p><img src="http://dubbo.apache.org/img/architecture.png" alt="高性能Java RPC框架"></p>
+<h2 id="dubbo快速启动"><a href="#dubbo快速启动" class="headerlink" title="dubbo快速启动"></a>dubbo快速启动</h2><p><a target="_blank" rel="noopener" href="http://dubbo.apache.org/zh-cn/docs/user/quick-start.html">dubbo快速启动</a></p>
+<h3 id="dubbo实例"><a href="#dubbo实例" class="headerlink" title="dubbo实例"></a>dubbo实例</h3><pre><code class="java">package bean;
+
+import java.io.Serializable;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018/12/2 下午7:45
+ */
+public class UserAddress implements Serializable &#123;
+    private Integer id;
+    private String userId;
+    private String userAddress;
+    private String consignee;
+    private String phoneNum;
+    private boolean isDefault;
+
+    public UserAddress(Integer id, String userId, String userAddress, String consignee, String phoneNum,
+                       boolean isDefault) &#123;
+        this.id = id;
+        this.userId = userId;
+        this.userAddress = userAddress;
+        this.consignee = consignee;
+        this.phoneNum = phoneNum;
+        this.isDefault = isDefault;
+    &#125;
+
+    @Override
+    public String toString() &#123;
+        return &quot;UserAddress&#123;&quot; +
+                &quot;id=&quot; + id +
+                &quot;, userId=&#39;&quot; + userId + &#39;\&#39;&#39; +
+                &quot;, userAddress=&#39;&quot; + userAddress + &#39;\&#39;&#39; +
+                &quot;, consignee=&#39;&quot; + consignee + &#39;\&#39;&#39; +
+                &quot;, phoneNum=&#39;&quot; + phoneNum + &#39;\&#39;&#39; +
+                &quot;, isDefault=&quot; + isDefault +
+                &#39;&#125;&#39;;
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="java">package service;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018/12/2 下午7:46
+ */
+public interface OrderService &#123;
+    String initOrder(String userId);
+&#125;
+</code></pre>
+<pre><code class="java">package service;
+
+import bean.UserAddress;
+
+import java.util.List;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018/12/2 下午7:46
+ */
+public interface UserService &#123;
+    List&lt;UserAddress&gt; getUserAddressList(String userId);
+&#125;
+</code></pre>
+<pre><code class="java">package service.impl;
+
+import bean.UserAddress;
+import com.alibaba.dubbo.config.annotation.Service;
+import org.springframework.stereotype.Component;
+import service.UserService;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018/12/2 下午7:49
+ */
+@Service
+@Component
+public class UserServiceImpl implements UserService &#123;
+    public List&lt;UserAddress&gt; getUserAddressList(String userId) &#123;
+        UserAddress userAddress1 = new UserAddress(1, &quot;001&quot;, &quot;人民广场&quot;, &quot;100&quot;, &quot;230189&quot;, true);
+        UserAddress userAddress2 = new UserAddress(2, &quot;002&quot;, &quot;文化公园&quot;, &quot;101&quot;, &quot;230190&quot;, false);
+        return Arrays.asList(userAddress1, userAddress2);
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="java">package com.dubbo.service.consumer.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018/12/2 下午8:43
+ */
+@Service
+public class OrderServiceImpl implements OrderService &#123;
+    @Autowired
+    private UserService userService;
+
+    public String initOrder(String userId) &#123;
+        return userService.getUserAddressList(userId);
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="java">package com.dubbo.service.consumer.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+/**
+ * @author zhulongkun20@163.com
+ * @since 2018/12/2 下午9:00
+ */
+@Controller
+public class OrderController &#123;
+    @Autowired
+    private OrderService orderService;
+
+    @ResponseBody
+    @RequestMapping(&quot;/initOrder.do&quot;)
+    public String initOrder(@RequestParam(&quot;userId&quot;) String userId) &#123;
+        return orderService.initOrder(userId);
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="java">package com.dubbo.service.consumer;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@EnableDubbo
+@SpringBootApplication
+public class DubboDemoApplication &#123;
+
+    public static void main(String[] args) &#123;
+        SpringApplication.run(DubboDemoApplication.class, args);
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="properties"># Spring boot application
+spring.application.name = dubbo-provider-demo
+server.port = 9090
+management.port = 9091
+
+# Base packages to scan Dubbo Components (e.g., @Service, @Reference)
+dubbo.scan.basePackages  = com.alibaba.boot.dubbo.demo.provider.service
+
+# Dubbo Config properties
+## ApplicationConfig Bean
+dubbo.application.id = dubbo-provider-demo
+dubbo.application.name = dubbo-provider-demo
+
+## ProtocolConfig Bean
+dubbo.protocol.id = dubbo
+dubbo.protocol.name = dubbo
+dubbo.protocol.port = 12345
+
+## RegistryConfig Bean
+dubbo.registry.id = my-registry
+dubbo.registry.address = N/A
+</code></pre>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8F%8A%E5%85%B6%E6%BC%94%E5%8F%98%E5%8E%86%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">分布式系统及其演变历程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RPC"><span class="toc-number">2.</span> <span class="toc-text">RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%80%A7%E4%B8%80%E8%A7%88"><span class="toc-number">3.</span> <span class="toc-text">特性一览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dubbo%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84"><span class="toc-number">4.</span> <span class="toc-text">dubbo应用架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dubbo%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8"><span class="toc-number">5.</span> <span class="toc-text">dubbo快速启动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dubbo%E5%AE%9E%E4%BE%8B"><span class="toc-number">5.1.</span> <span class="toc-text">dubbo实例</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&text=dubbo学习笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&title=dubbo学习笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&is_video=false&description=dubbo学习笔记"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=dubbo学习笔记&body=Check out this article: https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&title=dubbo学习笔记"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&title=dubbo学习笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&title=dubbo学习笔记"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&title=dubbo学习笔记"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&name=dubbo学习笔记&description=&lt;p&gt;&lt;a href=&#34;http://dubbo.apache.org/zh-cn/index.html&#34;&gt;dubbo中文官方网站&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://dubbo.apache.org/zh-cn/docs/user/quick-start.html&#34;&gt;dubbo官方文档&lt;/a&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2018/12/02/12e1cf33dc16/&t=dubbo学习笔记"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

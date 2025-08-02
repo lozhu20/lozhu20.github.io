@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="Docker 学习笔记Docker 是一个为开发、分发、运行应用程序而生的开放平台，Docker 可以让我们将基础环境和应用程序分离开来，以便可以快速交付软件。有了 Docker，我们可以在管理软件的同时管理基础环境。基于 Docker 分发、测试、部署的方法论，可以极大的降低编码与交付运行之间的延迟。 使用 Docker 可以很轻松的保证程序运行环境的一致性，减少因环境不一致导致的各种问题。各个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker学习笔记">
+<meta property="og:url" content="https://lozhu.happy365.day/2023/09/02/5157cf948645/index.html">
+<meta property="og:site_name" content="🐷&#39;s 部落格">
+<meta property="og:description" content="Docker 学习笔记Docker 是一个为开发、分发、运行应用程序而生的开放平台，Docker 可以让我们将基础环境和应用程序分离开来，以便可以快速交付软件。有了 Docker，我们可以在管理软件的同时管理基础环境。基于 Docker 分发、测试、部署的方法论，可以极大的降低编码与交付运行之间的延迟。 使用 Docker 可以很轻松的保证程序运行环境的一致性，减少因环境不一致导致的各种问题。各个">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-02T04:14:51.000Z">
+<meta property="article:modified_time" content="2025-08-02T13:26:44.706Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Docker学习笔记</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="🐷's 部落格" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/09/02/2208f957f610/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/09/01/832a97d93df3/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2023/09/02/5157cf948645/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&text=Docker学习笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&title=Docker学习笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&is_video=false&description=Docker学习笔记"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Docker学习笔记&body=Check out this article: https://lozhu.happy365.day/2023/09/02/5157cf948645/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&title=Docker学习笔记"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&title=Docker学习笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&title=Docker学习笔记"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&title=Docker学习笔记"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&name=Docker学习笔记&description=&lt;h2 id=&#34;Docker-学习笔记&#34;&gt;&lt;a href=&#34;#Docker-学习笔记&#34; class=&#34;headerlink&#34; title=&#34;Docker 学习笔记&#34;&gt;&lt;/a&gt;Docker 学习笔记&lt;/h2&gt;&lt;p&gt;Docker 是一个为开发、分发、运行应用程序而生的开放平台，Docker 可以让我们将基础环境和应用程序分离开来，以便可以快速交付软件。有了 Docker，我们可以在管理软件的同时管理基础环境。基于 Docker 分发、测试、部署的方法论，可以极大的降低编码与交付运行之间的延迟。&lt;/p&gt;
+&lt;p&gt;使用 Docker 可以很轻松的保证程序运行环境的一致性，减少因环境不一致导致的各种问题。各个 Docker 容器之间相互隔离，可以在一个宿主机上运行多个容器，各个容器都包含了应用程序需要的所有资源，可以很轻松的保证同一个容器在每个地方运行的结果都一致。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2023/09/02/5157cf948645/&t=Docker学习笔记"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="toc-number">1.</span> <span class="toc-text">Docker 学习笔记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debian12-%E5%AE%89%E8%A3%85-Docker"><span class="toc-number">2.</span> <span class="toc-text">Debian12 安装 Docker</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dockerfile-%E7%94%9F%E6%88%90%E9%95%9C%E5%83%8F"><span class="toc-number">3.</span> <span class="toc-text">Dockerfile 生成镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-Hub-%E5%85%B1%E4%BA%AB%E9%95%9C%E5%83%8F"><span class="toc-number">4.</span> <span class="toc-text">Docker Hub 共享镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DB-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">DB 持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#volume-%E6%8C%81%E4%B9%85%E5%8C%96%E6%95%B0%E6%8D%AE"><span class="toc-number">5.1.</span> <span class="toc-text">volume 持久化数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bind-%E6%8C%81%E4%B9%85%E5%8C%96%E6%95%B0%E6%8D%AE"><span class="toc-number">5.2.</span> <span class="toc-text">bind 持久化数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%AE%B9%E5%99%A8%E5%BA%94%E7%94%A8"><span class="toc-number">6.</span> <span class="toc-text">多容器应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-%E6%9F%A5%E7%9C%8B-%E5%88%A0%E9%99%A4-Docker-%E7%BD%91%E7%BB%9C"><span class="toc-number">6.1.</span> <span class="toc-text">创建&#x2F;查看&#x2F;删除 Docker 网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nicolaka-netshoot"><span class="toc-number">6.2.</span> <span class="toc-text">nicolaka&#x2F;netshoot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker-compose"><span class="toc-number">6.3.</span> <span class="toc-text">Docker compose</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">7.</span> <span class="toc-text">镜像构建最佳实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AA%E5%83%8F%E9%95%9C%E5%83%8F%E4%B8%AD%E5%A4%8D%E5%88%B6%E5%BF%85%E8%A6%81%E7%9A%84%E6%96%87%E4%BB%B6%E6%9C%89%E5%8A%A9%E4%BA%8E%E7%BC%A9%E5%B0%8F%E9%95%9C%E5%83%8F%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="toc-number">7.1.</span> <span class="toc-text">只像镜像中复制必要的文件有助于缩小镜像的大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-stage-builds"><span class="toc-number">7.2.</span> <span class="toc-text">Multi-stage builds</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E5%AE%9A%E5%9C%BA%E6%99%AF%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">8.</span> <span class="toc-text">特定场景最佳实践</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Docker学习笔记
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-09-02T04:14:51.000Z" class="dt-published" itemprop="datePublished">2023-09-02</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Docker/" rel="tag">Docker</a> -->
+        <a class="category-link" href="/tags/Docker/" rel="tag">Docker</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="Docker-学习笔记"><a href="#Docker-学习笔记" class="headerlink" title="Docker 学习笔记"></a>Docker 学习笔记</h2><p>Docker 是一个为开发、分发、运行应用程序而生的开放平台，Docker 可以让我们将基础环境和应用程序分离开来，以便可以快速交付软件。有了 Docker，我们可以在管理软件的同时管理基础环境。基于 Docker 分发、测试、部署的方法论，可以极大的降低编码与交付运行之间的延迟。</p>
+<p>使用 Docker 可以很轻松的保证程序运行环境的一致性，减少因环境不一致导致的各种问题。各个 Docker 容器之间相互隔离，可以在一个宿主机上运行多个容器，各个容器都包含了应用程序需要的所有资源，可以很轻松的保证同一个容器在每个地方运行的结果都一致。</p>
+<span id="more"></span>
+
+
+
+<h2 id="Debian12-安装-Docker"><a href="#Debian12-安装-Docker" class="headerlink" title="Debian12 安装 Docker"></a>Debian12 安装 Docker</h2><p>卸载旧版本</p>
+<pre><code class="sh">sudo apt remove docker docker-engine docker.io
+</code></pre>
+<p>安装 gpg 并添加 gpg 密钥</p>
+<pre><code class="sh">sudo apt install gnupg
+curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+</code></pre>
+<p>添加软件源并更新</p>
+<pre><code class="sh">echo &quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+sudo apt update
+</code></pre>
+<p>安装</p>
+<pre><code class="sh">sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+</code></pre>
+<p>设置开机自启动并启动</p>
+<pre><code class="sh">sudo systemctl enable docker
+sudo systemctl start docker
+</code></pre>
+<p>验证</p>
+<pre><code class="sh">sudo docker run --rm hello-world
+</code></pre>
+<p>输出下面的内容则表示安装成功</p>
+<pre><code>Unable to find image &#39;hello-world:latest&#39; locally
+latest: Pulling from library/hello-world
+719385e32844: Pull complete
+Digest: sha256:dcba6daec718f547568c562956fa47e1b03673dd010fe6ee58ca806767031d1c
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the &quot;hello-world&quot; image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+</code></pre>
+<p>使用国内 docker 镜像源，创建 &#x2F;etc&#x2F;daemon.json 文件并写入下面的内容：</p>
+<pre><code class="json">&#123;
+   &quot;registry-mirrors&quot;: [
+   &quot;https://mirror.ccs.tencentyun.com&quot;
+  ]
+&#125;
+</code></pre>
+<p>参考：<a target="_blank" rel="noopener" href="https://docker-practice.github.io/zh-cn/install/debian.html#">Debian 安装 Docker</a></p>
+<h2 id="Dockerfile-生成镜像"><a href="#Dockerfile-生成镜像" class="headerlink" title="Dockerfile 生成镜像"></a>Dockerfile 生成镜像</h2><p>Docker 入门文档中的 Dockerfile：</p>
+<pre><code class="dockerfile"># syntax=docker/dockerfile:1
+
+FROM node:18-alpine # 构建镜像时使用的基础镜像
+WORKDIR /app
+COPY . . # 复制当前路径下的文件到 WORKDIR
+RUN yarn install --production
+CMD [&quot;node&quot;, &quot;src/index.js&quot;] # 从镜像启动容器时默认执行的命令
+EXPOSE 3000
+</code></pre>
+<p>镜像构建命令：</p>
+<pre><code class="sh"># . 代表 Dockerfile 文件所在路径
+# -t 构建出来的镜像的可读名称
+docker build -t getting-started .
+</code></pre>
+<p>从镜像启动容器：</p>
+<pre><code class="sh"># -d 后台运行
+# -p 指定容器端口与宿主机端口的映射，宿主机端口:容器端口
+docker run -dp 3000:3000 getting-started
+</code></pre>
+<p>查看容器的日志：</p>
+<pre><code class="sh">docker logs &lt;container id&gt;
+</code></pre>
+<p>查看所有的镜像：</p>
+<pre><code class="sh">docker image ls
+docker images
+</code></pre>
+<p>查看所有的容器：</p>
+<pre><code class="sh">docker ps -a
+</code></pre>
+<p>停止容器：</p>
+<pre><code class="sh">docker stop &lt;container-id-1&gt; &lt;container-id-2&gt;
+</code></pre>
+<p>删除容器：</p>
+<pre><code class="sh">docker rm [-f] &lt;container-id-1&gt; &lt;container-id-2&gt;
+</code></pre>
+<h2 id="Docker-Hub-共享镜像"><a href="#Docker-Hub-共享镜像" class="headerlink" title="Docker Hub 共享镜像"></a>Docker Hub 共享镜像</h2><p>Docker Hub 是一个 Docker 镜像仓库，可以通过 Docker Hub注册 Docker 账号：<a target="_blank" rel="noopener" href="https://hub.docker.com/">docker hub</a>，获取 Docker ID 并创建 Docker Repository（Public 类型） 后将自己生成的镜像推送到 Docker Hub 从而与他人共享镜像。</p>
+<p>CLI 登陆 Docker Hub：</p>
+<pre><code class="sh">docker login -u &lt;docker id&gt;
+</code></pre>
+<p>生成镜像：</p>
+<pre><code class="sh">docker build -t &lt;docker id&gt;/&lt;image name&gt;:[tag name] .
+</code></pre>
+<p>将镜像推送到 Docker Hub：</p>
+<pre><code class="sh"># docker push &lt;docker id&gt;/&lt;image-name&gt;:[tag name]
+docker push chenxii81/getting-started:v1.1.0
+</code></pre>
+<p>问题记录：</p>
+<pre><code>The push refers to repository [docker.io/library/getting-started]
+cdc22a9416c1: Preparing
+1455e46f1ebf: Preparing
+b81bc62fafca: Preparing
+885a5d40fc11: Preparing
+1b6c3782871e: Preparing
+b0e46d71a47b: Waiting
+f1417ff83b31: Waiting
+denied: requested access to the resource is denied
+</code></pre>
+<blockquote>
+<p>因为 build image 的时候镜像名未添加 docker id。参考： <a target="_blank" rel="noopener" href="https://qiita.com/shundayo/items/4ae35930fe9f85f535b0">【備忘録】docker pushしたら拒否された</a></p>
+</blockquote>
+<p>运行容器：</p>
+<pre><code class="sh">docker run -dp 0.0.0.0:3000:3000 &lt;docker id&gt;/getting-started
+</code></pre>
+<p>映射到 0.0.0.0:3000 可以从外部网络访问，如果写成 <code>-p 3000:3000</code> 也是相同的效果。</p>
+<p>访问：<a target="_blank" rel="noopener" href="http://localhost:3000/">http://localhost:3000</a> 可以看到 todo list.</p>
+<h2 id="DB-持久化"><a href="#DB-持久化" class="headerlink" title="DB 持久化"></a>DB 持久化</h2><h3 id="volume-持久化数据"><a href="#volume-持久化数据" class="headerlink" title="volume 持久化数据"></a>volume 持久化数据</h3><p>在一个容器中创建&#x2F;更新&#x2F;删除的文件，对于从同一个镜像来的容器是不可见的。Volumes 可以实现将宿主机文件系统和容器文件系统的关联，容器对挂载的文件所做的操作会保存在宿主机文件系统中，如果将宿主机文件系统挂载到多个容器，那么各个容器可以看到相同的数据。</p>
+<pre><code class="sh">docker volume create &lt;volume name&gt;
+</code></pre>
+<p>查看卷：</p>
+<pre><code class="sh">docker volume ls
+</code></pre>
+<p>查看卷详细信息：</p>
+<pre><code class="sh">docker volume inspect &lt;volume name&gt;
+</code></pre>
+<p>删除卷：</p>
+<pre><code class="sh">docker volume rm &lt;volume name&gt;
+</code></pre>
+<p>启动容器时使用 <code>--mount</code> 指定挂载的卷：</p>
+<pre><code class="sh">docker run -dp 0.0.0.0:3000:3000 --mount type=volume,src=todo-db,target=/etc/todos chenxii81/getting-started
+</code></pre>
+<ul>
+<li>type: volume</li>
+<li>src: volume name</li>
+<li>target: 挂载到容器的位置</li>
+</ul>
+<p>查看 volume 中的数据存储位置：</p>
+<pre><code class="sh">docker volume inspect &lt;volume name&gt;
+</code></pre>
+<pre><code class="json">[
+    &#123;
+        &quot;CreatedAt&quot;: &quot;2023-09-02T11:29:50+08:00&quot;,
+        &quot;Driver&quot;: &quot;local&quot;,
+        &quot;Labels&quot;: &#123;&#125;,
+        &quot;Mountpoint&quot;: &quot;/var/lib/docker/volumes/todo-db/_data&quot;,  // 数据存储位置
+        &quot;Name&quot;: &quot;todo-db&quot;,
+        &quot;Options&quot;: &#123;&#125;,
+        &quot;Scope&quot;: &quot;local&quot;
+    &#125;
+]
+</code></pre>
+<p><strong>如果 volume 为空，docker 会将容器中的文件拷贝至 volume，如果 volume不为空，则将 volume 中的内容拷贝至容器中。</strong></p>
+<h3 id="bind-持久化数据"><a href="#bind-持久化数据" class="headerlink" title="bind 持久化数据"></a>bind 持久化数据</h3><p>bind 挂载是除 volume 之外将宿主机文件系统共享到容器的另一种方式。</p>
+<p><strong>如果宿主机中为空，则会清空容器中的目录。如果宿主机有文件，不要使用 bind，容器目录会被清空。</strong></p>
+<p>bind 和 volume 的区别：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Named volumes</th>
+<th>Bind mounts</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Host location</td>
+<td>Docker chooses</td>
+<td>You decide</td>
+</tr>
+<tr>
+<td>Mount example (using <code>--mount</code>)</td>
+<td>type&#x3D;volume,src&#x3D;my-volume,target&#x3D;&#x2F;usr&#x2F;local&#x2F;data</td>
+<td>type&#x3D;bind,src&#x3D;&#x2F;path&#x2F;to&#x2F;data,target&#x3D;&#x2F;usr&#x2F;local&#x2F;data</td>
+</tr>
+<tr>
+<td>Populates new volume with container contents</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Supports Volume Drivers</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<p>bind 使用：</p>
+<pre><code class="sh">docker run -it --mount type=bind,src=&quot;$(pwd)&quot;,target=/src/getting-started ubuntu bash
+</code></pre>
+<p>在宿主机目录中创建&#x2F;删除文件，docker 容器中能即时看到文件变化。</p>
+<p>Using bind mounts is common for local development setups. The advantage is that the development machine doesn’t need to have all of the build tools and environments installed. With a single docker run command, Docker pulls dependencies and tools.</p>
+<p>将本地源码挂载到 Docker 开发环境中：</p>
+<pre><code class="sh">docker run -dp 127.0.0.1:3000:3000 \
+-w /app \
+--mount type=bind,src=&quot;$(pwd)&quot;,target=/app \
+node:18-alpine \
+sh c &quot;yarn install &amp;&amp; yarn run dev&quot;
+</code></pre>
+<p>-w: 指定指定容器工作路径。</p>
+<p>当挂载目录文件有变化时 nodemon 进程会自动重启容器内应用，修改源码可以在应用中即使看到。</p>
+<h2 id="多容器应用"><a href="#多容器应用" class="headerlink" title="多容器应用"></a>多容器应用</h2><h3 id="创建-查看-删除-Docker-网络"><a href="#创建-查看-删除-Docker-网络" class="headerlink" title="创建&#x2F;查看&#x2F;删除 Docker 网络"></a>创建&#x2F;查看&#x2F;删除 Docker 网络</h3><p>考虑到系统的可扩展性、组件隔离、降低容器复杂度，最好在一个容器中只运行一个应用。多个容器之间通过 Docker 网络进行通信。</p>
+<p>创建 Docker 网络</p>
+<pre><code class="sh">docker network create todo-app
+</code></pre>
+<p>查看 Docker 网络</p>
+<pre><code class="sh">docker network ls
+</code></pre>
+<p>查看具体的网络详情</p>
+<pre><code class="sh">docker network inspect todo-app
+</code></pre>
+<p>删除网络</p>
+<pre><code class="sh">docker network rm todo-app
+</code></pre>
+<p>启动容器时创建网络</p>
+<pre><code class="sh">docker run -d --network todo-app --network-alias mysql -v todo-mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_DATABASE=todos mysql
+</code></pre>
+<h3 id="nicolaka-netshoot"><a href="#nicolaka-netshoot" class="headerlink" title="nicolaka&#x2F;netshoot"></a>nicolaka&#x2F;netshoot</h3><p>nicolaka&#x2F;netshoot 实际上是一个工具集提供了很多方便的网络问题解决工具，可以加速我们对于日常docker 以及k8s 网络问题的解决。</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://github.com/nicolaka/netshoot">nicolaka&#x2F;netshoot - GitHub</a></p>
+<p>运行 nicolaka&#x2F;netshoot 容器</p>
+<pre><code class="sh">docker run -it --network todo-app nicolaka/netshoot
+</code></pre>
+<p>使用 DNS 工具 dig 命令查看具体容器的网络信息</p>
+<pre><code class="sh">dig mysql
+</code></pre>
+<pre><code>; &lt;&lt;&gt;&gt; DiG 9.18.13 &lt;&lt;&gt;&gt; mysql
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 64589
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;mysql.				IN	A
+
+;; ANSWER SECTION:
+mysql.			600	IN	A	172.18.0.2 # 容器 IP
+
+;; Query time: 16 msec
+;; SERVER: 127.0.0.11#53(127.0.0.11) (UDP)
+;; WHEN: Sun Sep 03 03:13:12 UTC 2023
+;; MSG SIZE  rcvd: 44
+</code></pre>
+<p>将应用加入网络</p>
+<pre><code class="sh">docker run -dp 0.0.0.0:3000:3000 -w /app --mount type=bind,src=&quot;$(pwd)&quot;,target=/app --network todo-app -e MYSQL_HOST=mysql -e MYSQL_USER=root -e MYSQL_PASSWORD=secret -e MYSQL_DB=todos node:18-alpine sh -c &quot;yarn install &amp;&amp; yarn run dev&quot;
+</code></pre>
+<h3 id="Docker-compose"><a href="#Docker-compose" class="headerlink" title="Docker compose"></a>Docker compose</h3><p>docker compose 是一个用 YAML 文件来定义和分享多容器应用的工具。</p>
+<p>启动单个容器时</p>
+<pre><code class="sh"># node
+docker run -dp 0.0.0.0:3000:3000 -w /app -v &quot;$(pwd)&quot;:/app --network mysql -e MYSQL_HOST=mysql -e MYSQL_DB=todos -e MYSQL_USER=root -e MYSQL_PASSWORD=secret sh -c &quot;yarn install &amp;&amp; yarn run dev&quot; node:18-alpine
+
+# mysql
+docker run -d --network todo-app --network-alias mysql -v todo-mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_DB=todos mysql:8.0
+</code></pre>
+<p>在 compose.yaml 文件中定义</p>
+<pre><code class="yaml">services:
+  app:
+    image: node:18-alpine
+    command: sh -c &quot;yarn install &amp;&amp; yarn run dev&quot;
+    ports: 
+      - 0.0.0.0:3000:3000
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      MYSQL_DB: todos
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_HOST: mysql
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - todo-mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: todos
+volumes:
+  todo-mysql-data: 
+</code></pre>
+<p>按照 compose.yaml 定义启动容器（<em>不能按照依赖关系顺序启动，可能导致部分容器启动失败</em>）</p>
+<pre><code class="sh">docker compose up -d
+</code></pre>
+<p>查看日志</p>
+<pre><code class="sh">docker compose logs -f
+</code></pre>
+<p>docker 会自动创建 network 和 volume。</p>
+<p>删除相关的容器（不会删除创建的 volume，如果要删除 volume，需要加 –volumes）</p>
+<pre><code class="sh">docker compose down --volumes
+</code></pre>
+<h2 id="镜像构建最佳实践"><a href="#镜像构建最佳实践" class="headerlink" title="镜像构建最佳实践"></a>镜像构建最佳实践</h2><h3 id="只像镜像中复制必要的文件有助于缩小镜像的大小"><a href="#只像镜像中复制必要的文件有助于缩小镜像的大小" class="headerlink" title="只像镜像中复制必要的文件有助于缩小镜像的大小"></a>只像镜像中复制必要的文件有助于缩小镜像的大小</h3><pre><code class="dockerfile"># syntax=docker/dockerfile:1
+FROM node:18-alpine
+WORKDIR /app
+# 仅复制必要的文件
+COPY package.json yarn.lock ./
+RUN yarn install --production
+COPY . .
+CMD [&quot;node&quot;, &quot;src/index.js&quot;]
+</code></pre>
+<p>可以使用 .dockerignore 文件</p>
+<h3 id="Multi-stage-builds"><a href="#Multi-stage-builds" class="headerlink" title="Multi-stage builds"></a>Multi-stage builds</h3><p>Multi-stage builds are an incredibly powerful tool to help use multiple stages to create an image. There are several advantages for them:</p>
+<ul>
+<li>Separate build-time dependencies from runtime dependencies</li>
+<li>Reduce overall image size by shipping only what your app needs to run</li>
+</ul>
+<p>构建 Maven&#x2F;Tomcat 应用时，分离编译文件和运行时文件</p>
+<pre><code class="dockerfile"># syntax=docker/dockerfile:1
+
+FROM maven AS build
+WORKDIR /app
+COPY . .
+RUN mvn package
+
+FROM tomcat
+COPY --from=build /app/target/file.war /usr/local/tomcat/webapps
+</code></pre>
+<p>分两个阶段构建，build 阶段打包，第二阶段复制第一阶段 build 中需要的文件，最终的镜像中不会包含 build 阶段。</p>
+<h2 id="特定场景最佳实践"><a href="#特定场景最佳实践" class="headerlink" title="特定场景最佳实践"></a>特定场景最佳实践</h2><p><a target="_blank" rel="noopener" href="https://docs.docker.com/language/nodejs/">Node.js 使用 Docker</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/language/java/">Java 使用 Docker</a></p>
+<p>参考资料：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.docker.com/get-started/">Getting started - Docker</a></li>
+<li><a href="%5Bhttps://cn.bing.com/search?q=docker%E5%AE%B9%E5%99%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8&search=&form=QBLH&sp=-1&lq=0&pq=docker%E5%AE%B9%E5%99%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8&sc=10-12&qs=n&sk=&cvid=EE8D6718F27C4A828C93F5E48222F419&ghsh=0&ghacc=0&ghpl=">Docker 常用操作-知乎</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="toc-number">1.</span> <span class="toc-text">Docker 学习笔记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debian12-%E5%AE%89%E8%A3%85-Docker"><span class="toc-number">2.</span> <span class="toc-text">Debian12 安装 Docker</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dockerfile-%E7%94%9F%E6%88%90%E9%95%9C%E5%83%8F"><span class="toc-number">3.</span> <span class="toc-text">Dockerfile 生成镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-Hub-%E5%85%B1%E4%BA%AB%E9%95%9C%E5%83%8F"><span class="toc-number">4.</span> <span class="toc-text">Docker Hub 共享镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DB-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">DB 持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#volume-%E6%8C%81%E4%B9%85%E5%8C%96%E6%95%B0%E6%8D%AE"><span class="toc-number">5.1.</span> <span class="toc-text">volume 持久化数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bind-%E6%8C%81%E4%B9%85%E5%8C%96%E6%95%B0%E6%8D%AE"><span class="toc-number">5.2.</span> <span class="toc-text">bind 持久化数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%AE%B9%E5%99%A8%E5%BA%94%E7%94%A8"><span class="toc-number">6.</span> <span class="toc-text">多容器应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-%E6%9F%A5%E7%9C%8B-%E5%88%A0%E9%99%A4-Docker-%E7%BD%91%E7%BB%9C"><span class="toc-number">6.1.</span> <span class="toc-text">创建&#x2F;查看&#x2F;删除 Docker 网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nicolaka-netshoot"><span class="toc-number">6.2.</span> <span class="toc-text">nicolaka&#x2F;netshoot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker-compose"><span class="toc-number">6.3.</span> <span class="toc-text">Docker compose</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">7.</span> <span class="toc-text">镜像构建最佳实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AA%E5%83%8F%E9%95%9C%E5%83%8F%E4%B8%AD%E5%A4%8D%E5%88%B6%E5%BF%85%E8%A6%81%E7%9A%84%E6%96%87%E4%BB%B6%E6%9C%89%E5%8A%A9%E4%BA%8E%E7%BC%A9%E5%B0%8F%E9%95%9C%E5%83%8F%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="toc-number">7.1.</span> <span class="toc-text">只像镜像中复制必要的文件有助于缩小镜像的大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-stage-builds"><span class="toc-number">7.2.</span> <span class="toc-text">Multi-stage builds</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E5%AE%9A%E5%9C%BA%E6%99%AF%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">8.</span> <span class="toc-text">特定场景最佳实践</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2023/09/02/5157cf948645/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&text=Docker学习笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&title=Docker学习笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&is_video=false&description=Docker学习笔记"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Docker学习笔记&body=Check out this article: https://lozhu.happy365.day/2023/09/02/5157cf948645/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&title=Docker学习笔记"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&title=Docker学习笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&title=Docker学习笔记"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&title=Docker学习笔记"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2023/09/02/5157cf948645/&name=Docker学习笔记&description=&lt;h2 id=&#34;Docker-学习笔记&#34;&gt;&lt;a href=&#34;#Docker-学习笔记&#34; class=&#34;headerlink&#34; title=&#34;Docker 学习笔记&#34;&gt;&lt;/a&gt;Docker 学习笔记&lt;/h2&gt;&lt;p&gt;Docker 是一个为开发、分发、运行应用程序而生的开放平台，Docker 可以让我们将基础环境和应用程序分离开来，以便可以快速交付软件。有了 Docker，我们可以在管理软件的同时管理基础环境。基于 Docker 分发、测试、部署的方法论，可以极大的降低编码与交付运行之间的延迟。&lt;/p&gt;
+&lt;p&gt;使用 Docker 可以很轻松的保证程序运行环境的一致性，减少因环境不一致导致的各种问题。各个 Docker 容器之间相互隔离，可以在一个宿主机上运行多个容器，各个容器都包含了应用程序需要的所有资源，可以很轻松的保证同一个容器在每个地方运行的结果都一致。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2023/09/02/5157cf948645/&t=Docker学习笔记"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

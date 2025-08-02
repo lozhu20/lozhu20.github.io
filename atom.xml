@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>🐷&#39;s 部落格</title>
+  
+  
+  <link href="https://lozhu.happy365.day/atom.xml" rel="self"/>
+  
+  <link href="https://lozhu.happy365.day/"/>
+  <updated>2025-08-02T13:26:44.715Z</updated>
+  <id>https://lozhu.happy365.day/</id>
+  
+  <author>
+    <name>lozhu</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>在macOS上编译OpenJDK8</title>
+    <link href="https://lozhu.happy365.day/2025/08/02/1e117267d714/"/>
+    <id>https://lozhu.happy365.day/2025/08/02/1e117267d714/</id>
+    <published>2025-08-02T12:14:00.000Z</published>
+    <updated>2025-08-02T13:26:44.715Z</updated>
+    
+    <content type="html"><![CDATA[<p>在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。</p><span id="more"></span><h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>1、Mac 上安装 Mercurial 总是报错，没找到什么原因，所以用不了 <code>hg clone <a href="http://hg.openjdk.java.net/jdk8">http://hg.openjdk.java.net/jdk8</a></code> 这种方式。</p><p>jdk8 源码地址：<a href="http://jdk.java.net/java-se-ri/8-MR3">jdk8u41源码下载</a>  <a href="https://download.java.net/openjdk/openjdk/jdk8/promoted/b132/openjdk-8-src-b132-03_mar_2014.zip">zip文件下载</a></p><p>2、安装 freetype 和 ccache：</p><p><code>brew install freetype</code></p><p><code>brew install ccache</code></p><h1 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h1><p>运行 configure：</p><pre><code class="bash">./configure --with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/ --disable-warnings-as-errors --with-debug-level=slowdebug --with-jvm-variants=server --enable-ccache</code></pre><p><em>遇到的报错及解决方案</em></p><p>1、The C compiler (located as &#x2F;usr&#x2F;bin&#x2F;gcc) does not seem to be the required GCC compiler.</p><pre><code>打开文件common/autoconf/generated-configure.sh，搜索compiler is required注释或把报错命令改为echo即可。</code></pre><br><p>比较顺利，只遇到上面一个错误。</p><p>成功输出：</p><pre><code>........config.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/spec.shconfig.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/Makefileconfig.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/config.h====================================================A new configuration has been successfully created in/Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-releaseusing configure arguments &#39;--with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/&#39;.Configuration summary:* Debug level:    release* JDK variant:    normal* JVM variants:   server* OpenJDK target: OS: macosx, CPU architecture: x86, address length: 64Tools summary:* Boot JDK:       openjdk version &quot;1.8.0_292&quot; OpenJDK Runtime Environment (Zulu 8.54.0.21-CA-macosx) (build 1.8.0_292-b10) OpenJDK 64-Bit Server VM (Zulu 8.54.0.21-CA-macosx) (build 25.292-b10, mixed mode)  (at /opt/java/zulu8.54.0.21-ca-jdk8.0.292-macosx_x64)* C Compiler:      version  (at /usr/bin/gcc)* C++ Compiler:    version  (at /usr/bin/g++)Build performance summary:* Cores to use:   4* Memory limit:   16384 MB* ccache status:  installed, but disabled (version older than 3.1.4)Build performance tip: ccache gives a tremendous speedup for C++ recompilations.You have ccache installed, but it is a version prior to 3.1.4. Try upgrading.</code></pre><br><p>运行 <code>make all</code></p><p>报错及解决：</p><p>1、clang: error: include path for libstdc++ headers not found; pass ‘-stdlib&#x3D;libc++’ on the command line to use the libc++ standard library instead [-Werror,-Wstdlibcxx-not-found]</p><p><a href="https://blog.csdn.net/quantum7/article/details/108466760">MAC编译OpenJDK8：clang: error: include path for libstdc++ headers not found</a></p><p><a href="https://github.com/quantum6/xcode-missing-libstdcpp.git">The missing libstdc++ headers and libraries for Xcode 10 or above.</a></p><p>2、</p><pre><code>l-op-parentheses]    if ( instr-&gt;is_ideal_branch() &amp;&amp; instr-&gt;label_position() == -1 ||         ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~/Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/hotspot/src/share/vm/adlc/archDesc.cpp:336:35: note: place parentheses around the &#39;&amp;&amp;&#39; expression to silence this warning    if ( instr-&gt;is_ideal_branch() &amp;&amp; instr-&gt;label_position() == -1 ||                                  ^         (                                                        )</code></pre><h1 id="其他可能遇到的错误"><a href="#其他可能遇到的错误" class="headerlink" title="其他可能遇到的错误"></a>其他可能遇到的错误</h1><p>&#x2F;Users&#x2F;lozhu&#x2F;Documents&#x2F;projects&#x2F;jdk12-06222165c35f&#x2F;src&#x2F;java.base&#x2F;macosx&#x2F;native&#x2F;libosxsecurity&#x2F;KeystoreImpl.m note: did not find header ‘JavaNativeFoundation.h’ in framework ‘JavaNativeFoundation’ (loaded from ‘&#x2F;Applications&#x2F;Xcode.app&#x2F;Contents&#x2F;Developer&#x2F;Platforms&#x2F;MacOSX.platform&#x2F;Developer&#x2F;SDKs&#x2F;MacOSX14.0.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks’)</p><p>现在的位置：&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX14.sdk</p><p>编辑 .&#x2F;make&#x2F;test&#x2F;JtregNativeJdk.gmk</p><p>BUILD_JDK_JTREG_LIBRARIES_LIBS_libTestMainKeyWindow :&#x3D; -framework JavaVM <br>      -framework Cocoa -framework JavaNativeFoundation</p><p>修改为</p><p>BUILD_JDK_JTREG_LIBRARIES_LIBS_libTestMainKeyWindow :&#x3D; -framework Cocoa -framework JavaNativeFoundation</p><p>编辑 .&#x2F;build&#x2F;macosx-x86_64-server-slowdebug&#x2F;spec.gmk</p><p>删除 -F &#x2F;Applications&#x2F;Xcode.app&#x2F;Contents&#x2F;Developer&#x2F;Platforms&#x2F;MacOSX.platform&#x2F;Developer&#x2F;SDKs&#x2F;MacOSX11.1.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Frameworks</p><p>编辑 .&#x2F;build&#x2F;macosx-x86_64-server-slowdebug&#x2F;buildjdk-spec.gmk</p><p>参考: <a href="https://www.jianshu.com/p/885c718df9de">macOS Catalina + Xcode 12 编译OpenJDK 14 错误解决</a></p><hr><p>.&#x2F;configure –with-freetype-include&#x3D;&#x2F;usr&#x2F;local&#x2F;include&#x2F;freetype2 –with-freetype-lib&#x3D;&#x2F;usr&#x2F;local&#x2F;lib&#x2F;</p><p>报错：The C compiler (located as &#x2F;usr&#x2F;bin&#x2F;gcc) does not seem to be the required GCC compiler.<br>打开文件common&#x2F;autoconf&#x2F;generated-configure.sh，搜索compiler is required<br>注释或把报错命令改为echo即可。</p><hr><p>(base) ➜  jdk8 make<br>Building OpenJDK for target ‘default’ in configuration ‘macosx-x86_64-normal-server-release’</p><p>Starting langtools</p><p>&#x2F;bin&#x2F;sh: line 0: cd: &#x2F;Users&#x2F;chenxii&#x2F;Documents&#x2F;Java&#x2F;jdk8&#x2F;jdk8&#x2F;langtools&#x2F;make: No such file or directory<br>make: *** [langtools-only] Error 1</p><p>解决方案参考：<a href="https://stackoverflow.com/questions/34703703/jdk8-build-error-langtools">https://stackoverflow.com/questions/34703703/jdk8-build-error-langtools</a></p><hr><p>执行：.&#x2F;get_source.sh</p><p>(base) ➜  jdk8 .&#x2F;get_source.sh</p><p>Repositories:  corba jaxp jaxws langtools jdk hotspot nashorn</p><pre><code>            corba:   hg clone http://hg.openjdk.java.net/jdk8/jdk8/corba corba             jaxp:   hg clone http://hg.openjdk.java.net/jdk8/jdk8/jaxp jaxp            corba:   requesting all changes</code></pre><p>Waiting 5 secs before spawning next background command.</p><p>lcm.cpp:52:35: error: ordered comparison between pointer and zero (‘address’ (aka ‘unsigned char *’) and ‘int’) </p><p>解决：编辑&#x2F;hotspot&#x2F;src&#x2F;share&#x2F;vm&#x2F;opto&#x2F;lcm.cpp:52 原：if (Universe::narrow_oop_base() &gt; 0) 修改后： if (Universe::narrow_oop_base()!&#x3D; NULL) { &#x2F;&#x2F; Implies UseCompressedOops.</p><hr><p>error: ordered comparison between pointer and zero</p><p>修改openjdk&#x2F;hotspot&#x2F;src&#x2F;share&#x2F;vm&#x2F;runtime&#x2F;virtualspace.cpp<br>　　修改331行为<br>　　if (base() !&#x3D; 0) {</p><hr><p>fatal error: ‘JavaNativeFoundation&#x2F;JavaNativeFoundation.h’ file not found<br>#import &lt;JavaNativeFoundation&#x2F;JavaNativeFoundation.h&gt;</p><p>(base) ➜  openjdk  sudo find &#x2F; -name “<em>JavaNativeFoundation.h</em>“<br>Password:<br>find: &#x2F;Library&#x2F;Application Support&#x2F;com.apple.TCC: Operation not permitted<br>&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX11.1.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaNativeFoundation.framework&#x2F;Versions&#x2F;A&#x2F;Headers&#x2F;JavaNativeFoundation.h<br>&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Versions&#x2F;A&#x2F;Frameworks&#x2F;JavaNativeFoundation.framework&#x2F;Versions&#x2F;A&#x2F;Headers&#x2F;JavaNativeFoundation.h</p><p>编辑：<br>vim hotspot&#x2F;make&#x2F;bsd&#x2F;makefiles&#x2F;saproc.make 61行：<br>SALIBS &#x3D; -g -framework Foundation -F&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Frameworks -framework JavaNativeFoundation -framework Security -framework CoreFoundation</p><p>105行：<br>-I&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Headers</p><hr><p>执行：make CONF&#x3D;macosx-x86_64-normal-server-release clean<br>make CONF&#x3D;macosx-x86_64-normal-server-release install</p><p>—– Build times ——-<br>Start 2021-07-11 10:50:45<br>End   2021-07-11 10:59:52<br>00:00:16 corba<br>00:00:50 demos<br>00:01:24 docs<br>00:02:10 hotspot<br>00:01:01 images<br>00:00:09 jaxp<br>00:00:14 jaxws<br>00:02:35 jdk<br>00:00:18 langtools<br>00:00:08 nashorn</p><p>00:09:07 TOTAL</p><p>Finished building OpenJDK for target ‘all’</p><p>WARNING: You have the following ALT_ variables set:<br>ALT_PARALLEL_COMPILE_JOBS&#x3D;2<br>ALT_ variables are deprecated and will be ignored. Please clean your environment.</p><p>[1]    90140 bus error  build&#x2F;macosx-x86_64-normal-server-release&#x2F;jdk&#x2F;bin&#x2F;java -version</p><p>&#x2F;Users&#x2F;chenxii&#x2F;Documents&#x2F;Java&#x2F;jdk8&#x2F;openjdk&#x2F;build&#x2F;macosx-x86_64-normal-server-release&#x2F;jdk&#x2F;bin</p><p>？</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://lozhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="Java" scheme="https://lozhu.happy365.day/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Debian12主机无法被ping通的问题</title>
+    <link href="https://lozhu.happy365.day/2025/07/28/174112c250b1/"/>
+    <id>https://lozhu.happy365.day/2025/07/28/174112c250b1/</id>
+    <published>2025-07-28T13:14:02.000Z</published>
+    <updated>2025-08-02T13:26:44.705Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>给 mini 主机安装了 Debian12 做为服务器使用，配置好 ssh 之后从 Mac 上进行远程登录，虽然连接的都是同一个Wi-Fi，但是一直连接失败。<br>ping 了一下延迟非常高，接近 100% 的丢包率。从 debian 系统 ping Mac 又是正常的，平均延迟在 10 秒左右，非常奇怪。</p><p>参考了网上很多资料这个问题都没有解决，前后浪费了好几个小时的时间。最后还是看到网上提到了 Docker，Docker 网络可能会对宿主机的网络产生影响，然后去问了 AI，根据 AI 的提示 <strong>修改 nftables 配置</strong> 解决了这个问题。</p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>允许 ICMP（ping）通过 nftables</p><pre><code class="bash"># 临时允许ICMP（立即生效，重启nftables后失效）sudo nft add rule inet filter input meta l4proto icmp accept# 若需永久生效，需写入nft配置文件sudo vim /etc/nftables.conf# 在&quot;input&quot;链中添加（确保在&quot;drop&quot;规则之前）：# chain input &#123;#   ...#   meta l4proto icmp accept  # 允许ICMP#   ...# &#125;# 重启nftables生效sudo systemctl restart nftables</code></pre><p>修改 &#x2F;etc&#x2F;nftables.conf，在 input 部分添加 <code>meta l4proto icmp accept</code>，然后重启 nftables，就能正常 ping 通了。</p><p>更早之前看到一篇博客说在 &#x2F;etc&#x2F;sysctl.conf 配置最下面新增配置 <code>net.ipv4.icmp_echo_ignore_all = 0</code>，但是在我这里没有效果。</p><h2 id="其他可能的原因"><a href="#其他可能的原因" class="headerlink" title="其他可能的原因"></a>其他可能的原因</h2><p>其他可能导致此类的问题的原因及排查方向：</p><ul><li>服务端和客户端没有连接同一个网络</li><li>服务端配置了防火墙</li><li>服务端配置忽略 ICMP 请求，就是我这种情况</li><li>服务端配置了静态 IP，IP 的网段、子网掩码长度、网关地址配置可能有误</li><li>服务端安装了 docker，服务端宿主机 IP 网段和 docker 默认配置的网络的网段有冲突，类似 172.12.0.1&#x2F;16</li><li>客户端路由表可能指向了错误的地址或者存在缓存，使用 <code>arp -a</code>查看本机路由表</li><li>客户端 DNS 配置可能有误，检查下是否可以访问百度等网站</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;给 mini 主机安装了 Debian12 做为服务器使用，配置好 ssh 之后从 Mac 上进行远程登录，虽然连接的都是同一个Wi-Fi，</summary>
+      
+    
+    
+    
+    <category term="解决方案" scheme="https://lozhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="Debian" scheme="https://lozhu.happy365.day/tags/Debian/"/>
+    
+    <category term="网络" scheme="https://lozhu.happy365.day/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Debian12配置Clash代理拉取docker镜像</title>
+    <link href="https://lozhu.happy365.day/2025/07/28/3bf22fba5636/"/>
+    <id>https://lozhu.happy365.day/2025/07/28/3bf22fba5636/</id>
+    <published>2025-07-28T12:58:48.000Z</published>
+    <updated>2025-08-02T13:26:44.705Z</updated>
+    
+    <content type="html"><![CDATA[<p>debian12 中安装了 docker，由于一些为你好的原因，死活拉取不了镜像，一直超时。第一次在 Linux 环境下配置 clash，踩了一些坑，记录一下，供遇到相同问题的参考。</p><p>项目地址：<a href="https://github.com/wnlen/clash-for-linux">wnlen&#x2F;clash-for-linux</a></p><p>拉取项目</p><pre><code class="bash">git clone https://github.com/wnlen/clash-for-linux.git clash-for-linux</code></pre><p>编辑 .env 文件，将 CLASH_URL 变量替换为订阅链接，将 CLASH_SECRET 替换为自定义的密码。</p><p>运行启动脚本</p><pre><code class="bash">chmod +x start.sh./start.sh</code></pre><p>开启代理</p><pre><code class="bash">source /etc/profile.d/clash.shproxy_on</code></pre><p>检查环境变量</p><pre><code class="bash">env | grep -E &#39;http_proxy|https_proxy&#39;http_proxy=http://127.0.0.1:7890https_proxy=http://127.0.0.1:7890</code></pre><p>以上步鄹如果正常，说明服务clash程序启动成功。</p><p>重启程序</p><p>如果需要对Clash配置进行修改，请修改 <code>conf/config.yaml</code> 文件。然后运行 <code>restart.sh</code> 脚本进行重启。</p><p><strong>注意：</strong> 重启脚本 <code>restart.sh</code> 不会更新订阅信息。</p><p>关闭服务</p><pre><code class="bash">sudo bash shutdown.sh</code></pre><p>关闭代理</p><pre><code class="bash">proxy_off</code></pre><p>访问 <a href="http://ip:9090/ui">http://ip:9090/ui</a> 登录管理界面，可以选择节点等。</p><p>配置好代理之后，发现还是连不上 docker hub，拉取镜像还是超时。虽然在 clash 管理界面中配置了全局代理，但是还需要在 docker 中单独配置一下。</p><p>配置 docker 优先使用 ipv4，修改 &#x2F;etc&#x2F;daemon.json 如下：</p><pre><code class="json">&#123;  &quot;ipv6&quot;: false,  &quot;fixed-cidr-v6&quot;: &quot;2001:db8:1::/64&quot;,  # 值不影响  &quot;experimental&quot;: false&#125;</code></pre><p>然后配置 systemd：</p><pre><code class="bash">sudo mkdir -p /etc/systemd/system/docker.service.dsudo vim /etc/systemd/system/docker.service.d/http-proxy.conf</code></pre><p>文件内容如下：</p><pre><code>[Service]Environment=&quot;HTTP_PROXY=http://127.0.0.1:7890&quot;Environment=&quot;HTTPS_PROXY=http://127.0.0.1:7890&quot;</code></pre><p>重启服务</p><pre><code class="bash">sudo systemctl daemon-reloadsudo systemctl restart docker</code></pre><p>执行 <code>docker search hello-world</code> 测试一下吧！</p><p>参考：</p><ul><li><a href="https://neucrack.com/p/286">docker 设置代理，以及国内加速镜像设置</a></li><li><a href="https://github.com/wnlen/clash-for-linux">wnlen&#x2F;clash-for-linux</a></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;debian12 中安装了 docker，由于一些为你好的原因，死活拉取不了镜像，一直超时。第一次在 Linux 环境下配置 clash，踩了一些坑，记录一下，供遇到相同问题的参考。&lt;/p&gt;
+&lt;p&gt;项目地址：&lt;a href=&quot;https://github.com/wnlen</summary>
+      
+    
+    
+    
+    <category term="学习笔记" scheme="https://lozhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="Debian" scheme="https://lozhu.happy365.day/tags/Debian/"/>
+    
+    <category term="clash" scheme="https://lozhu.happy365.day/tags/clash/"/>
+    
+    <category term="网络代理" scheme="https://lozhu.happy365.day/tags/%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Debian12中SSH免密登录不生效问题</title>
+    <link href="https://lozhu.happy365.day/2025/07/24/ea31e94b21c0/"/>
+    <id>https://lozhu.happy365.day/2025/07/24/ea31e94b21c0/</id>
+    <published>2025-07-23T17:04:00.000Z</published>
+    <updated>2025-08-02T13:26:44.705Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题和原因"><a href="#问题和原因" class="headerlink" title="问题和原因"></a>问题和原因</h2><p>最近有碎片化笔记的需求，比较了 Flomo 和 Memos，flomo 的免费图片存储空间只有 500M，不适合长期使用，最后选择自己部署 Memos。据说 Memos 功能增删很随意，打算部署网上比较推荐的 0.24.0。正好可以将去年买的迷你主机利用起来。</p><p>安装了 Debian12（Debian13 8 月9 日发布，必定是要第一时间升级的），配置免密登录的时候一直不成功，复制了 ssh id 还是需要输入密码，网上看到的可能的原因：.ssh 目录、authorized_keys 文件的权限等等都确认无误，在这里卡了一个小时，记录一下。</p><p>网上看到的可能的原因都确认了一遍之后，我突然想着把服务端复制过去的 ssh id 输出来对比一下，果然问题就出在这里。服务端的 authorized_keys 文件中的内容最后的邮箱地址和我现在用的邮箱地址不一致，然后查看我本机的 .ssh 目录，里面有两份 ssh key，貌似是很久之前连接 GitHub 有问题所以生成了两个 key 分开用。我用 ssh-copy-id 复制到服务端的密钥不是我本机默认的 id_rsa.pub。</p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>搞明白问题出在哪里之后就很简单了，先删除服务端之前传过去的 key，复制 ssh id 的时候指定密钥文件就好了：<code>ssh-copy-id -i ~/.ssh/id_rsa.pub</code> 。复制完之后再尝试登录，就直接进入系统了。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;问题和原因&quot;&gt;&lt;a href=&quot;#问题和原因&quot; class=&quot;headerlink&quot; title=&quot;问题和原因&quot;&gt;&lt;/a&gt;问题和原因&lt;/h2&gt;&lt;p&gt;最近有碎片化笔记的需求，比较了 Flomo 和 Memos，flomo 的免费图片存储空间只有 500M，不适合长期</summary>
+      
+    
+    
+    
+    <category term="解决方案" scheme="https://lozhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="SSH" scheme="https://lozhu.happy365.day/tags/SSH/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nuphy AIR 60 机械键盘 F 功能键问题</title>
+    <link href="https://lozhu.happy365.day/2025/07/20/2e53ac6e1a64/"/>
+    <id>https://lozhu.happy365.day/2025/07/20/2e53ac6e1a64/</id>
+    <published>2025-07-20T11:29:00.000Z</published>
+    <updated>2025-08-02T13:26:44.709Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>目前给 Mac mini 配的是 Nuphy AIR 60 二代矮轴机械键盘，这个键盘只有 60 个键位，当初就是看中了它小巧精致的外观才选的这个键盘。最近调试程序的频率比较高，需要使用到 F 功能键，这个键盘 F1 到 F12 默认是媒体功能。认为 FN 组合对应的 F 功能键就能使用 F 功能本来是一件自然而然的事情，没想到我还是高估了这个键盘的易用性。</p><h2 id="可尝试的方法"><a href="#可尝试的方法" class="headerlink" title="可尝试的方法"></a>可尝试的方法</h2><p>在 Reddit 上看到 3 年前一位老哥也遇到了同样的问题：<a href="https://www.reddit.com/r/NuPhy/comments/w58nmi/function_keys_on_mac/">Function keys on mac</a> ，下面有好几个回答，大概有下面这几种方案。</p><h3 id="FN-Tab-F-功能键"><a href="#FN-Tab-F-功能键" class="headerlink" title="FN + Tab + F 功能键"></a>FN + Tab + F 功能键</h3><p>用 FN + Tab + F 功能键组合来实现 F 功能键（开始我还以为是 FN + Tab + F 键可以在功能键和媒体功能之间切换），但是我试了几次，没有生效，FN + Tab + F12 还是增加音量。</p><h3 id="FN-X-F-功能键"><a href="#FN-X-F-功能键" class="headerlink" title="FN + X + F 功能键"></a>FN + X + F 功能键</h3><p>这个组合键需要先在 系统设置 &gt; 键盘 &gt; 快捷键 &gt; 功能键 中开启选项“使用 F1… 功能键“选项。不过我试了这个组合键在我这里也不生效。</p><h3 id="FN-Shift-F-功能键"><a href="#FN-Shift-F-功能键" class="headerlink" title="FN + Shift + F 功能键"></a>FN + Shift + F 功能键</h3><p>这个组合键终于能用了，不过测试了几下感觉键位太多了，使用起来比较累，还是没有直接 FN + F 使用起来方便。</p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>Reddit 上的方案都尝试了一遍，没找到理想的解决方案。</p><p>在 V2EX 上看到几个月前的一个帖子：<a href="https://www.v2ex.com/t/1094555">macOS 如何使用 标准 F1~F12 的功能</a> ，很多号称支持 Mac 的键盘，FN 功能键是残废的。不过帖子里有人提供了一个简单的方法：将键盘改回 win 模式，然后在 系统设置 &gt; 键盘 &gt; 键盘快捷键 &gt; 修饰键 中，将 Command 键映射成 Option 键，将 Option 键映射为 Command 键，至此这个问题完美解决。</p><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="关闭显示桌面快捷键"><a href="#关闭显示桌面快捷键" class="headerlink" title="关闭显示桌面快捷键"></a>关闭显示桌面快捷键</h3><p>系统设置中默认 F11 是显示桌面的快捷键，在这里关闭：系统设置 &gt; 键盘 &gt; 快捷键 &gt; 调度中心，取消勾选显示桌面。</p><h3 id="工具网站推荐"><a href="#工具网站推荐" class="headerlink" title="工具网站推荐"></a>工具网站推荐</h3><p>在线键盘测试网站：因为尝试各种方案的时候，不知道 FN 键生效没生效，在 <a href="https://www.zfrontier.com/lab/keyboardTester">在线键盘测试</a> 这个网站中，可以实时看到自己按下了哪个键，很实用。</p><p>快捷键网：这个机械键盘的灯效、亮度、设备切换等功能需要使用 FN 加上某些快捷键来实现，又不常用，常常用到的时候需要临时翻下说明书，很麻烦。终于发现个网站：<a href="http://www.kjjw.cc/nuphy-air60/">快捷键网</a> ，这里可以查到常见厂家的机械键盘的快捷键，很实用。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;目前给 Mac mini 配的是 Nuphy AIR 60 二代矮轴机械键盘，这个键盘只有 60 个键位，当初就是看中了它小巧精致的外观才选</summary>
+      
+    
+    
+    
+    <category term="解决方案" scheme="https://lozhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="机械键盘" scheme="https://lozhu.happy365.day/tags/%E6%9C%BA%E6%A2%B0%E9%94%AE%E7%9B%98/"/>
+    
+    <category term="F功能键" scheme="https://lozhu.happy365.day/tags/F%E5%8A%9F%E8%83%BD%E9%94%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>curl 学习笔记</title>
+    <link href="https://lozhu.happy365.day/2025/07/19/b0a04d6723ef/"/>
+    <id>https://lozhu.happy365.day/2025/07/19/b0a04d6723ef/</id>
+    <published>2025-07-19T14:24:00.000Z</published>
+    <updated>2025-08-02T13:26:44.712Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>平时接口调试都是 postman 用得比较多，图形界面，操作简单，缺点就是要多开一个软件，切换窗口。于是就想着学习一下 curl 的使用，直接在终端里调试接口。记录一下常用的请求方式及相关参数。</p><h2 id="常用的参数"><a href="#常用的参数" class="headerlink" title="常用的参数"></a>常用的参数</h2><h3 id="GET"><a href="#GET" class="headerlink" title="GET"></a>GET</h3><p>GET 比较简单，不需要额外的参数。</p><pre><code class="sh">curl http://localhost:8000/api/mall/users?userId=1752938209629</code></pre><h3 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h3><ul><li>-X 指定请求方式</li><li>-d 指定 POST 数据，默认 Content-Type 为 application&#x2F;x-www-form-urlencoded</li><li>– json 发送 json 数据，自动设置 Content-Type 为 application&#x2F;json</li></ul><pre><code class="sh">curl -X POST --json &#39;&#123;    &quot;username&quot;: &quot;比六&quot;,    &quot;gender&quot;: &quot;F&quot;&#125;&#39; http://localhost:8000/api/mall/users</code></pre><h3 id="PUT"><a href="#PUT" class="headerlink" title="PUT"></a>PUT</h3><p>PUT 请求和 POST 请求类似</p><pre><code class="sh">curl -X PUT --json &#39;&#123;    &quot;userId&quot;: 1752938209629,    &quot;username&quot;: &quot;比六1&quot;&#125;&#39; http://localhost:8000/api/mall/users</code></pre><h3 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h3><p>DELETE 请求和 GET 请求类似</p><pre><code class="sh">curl -X DELETE http://localhost:8000/api/mall/users?userId=1752938209629</code></pre><h3 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h3><ul><li>-F 发送表单，可用来上传文件</li></ul><pre><code class="sh">curl -F &quot;file=@/file&quot; http://localhost:8000/api/mall/upload</code></pre><h3 id="文件下载"><a href="#文件下载" class="headerlink" title="文件下载"></a>文件下载</h3><ul><li>-O 使用远程文件名保存文件到本地</li><li>-o 下载文件并重命名</li></ul><pre><code class="sh">curl -O http://localhost:8000/api/mall/downloadcurl -o myfile.zip http://localhost:8000/api/mall/download</code></pre><h3 id="其他常用参数"><a href="#其他常用参数" class="headerlink" title="其他常用参数"></a>其他常用参数</h3><ul><li>-v 输出详细信息</li><li>-H 指定请求头，如 <code>-H &quot;Content-Type: application/json&quot;</code></li><li>-i 输出响应头信息</li></ul><h2 id="终端-JSON-格式化"><a href="#终端-JSON-格式化" class="headerlink" title="终端 JSON 格式化"></a>终端 JSON 格式化</h2><p>请求之后调用 python json 进行格式化：</p><pre><code class="sh">curl http://localhost:8000/api/mall/users | python3 -m json.tool</code></pre><p>如果遇到中文乱码问题，需要修改 python&#x2F;tool.py 文件： <code>/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/tool.py</code></p><p>将 <code>dump_args</code> 修改如下：</p><pre><code class="python">dump_args = &#123;  &#39;sort_keys&#39;: options.sort_keys,  &#39;indent&#39;: options.indent,  # &#39;ensure_ascii&#39;: options.ensure_ascii,  &#39;ensure_ascii&#39;: False  # 修改后的配置项&#125;</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;平时接口调试都是 postman 用得比较多，图形界面，操作简单，缺点就是要多开一个软件，切换窗口。于是就想着学习一下 curl 的使用，直</summary>
+      
+    
+    
+    
+    <category term="学习笔记" scheme="https://lozhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="curl" scheme="https://lozhu.happy365.day/tags/curl/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>操作系统的圆角内卷</title>
+    <link href="https://lozhu.happy365.day/2025/07/13/492061bb9bbc/"/>
+    <id>https://lozhu.happy365.day/2025/07/13/492061bb9bbc/</id>
+    <published>2025-07-13T07:36:22.000Z</published>
+    <updated>2025-08-02T13:26:44.716Z</updated>
+    
+    <content type="html"><![CDATA[<p>操作系统的圆角内卷，真的有必要吗？</p><p>很早之前，苹果首先使用圆角矩形，带来了很不一样的视觉效果和使用体验。直到最近两年之前，圆角矩形还比较保守，整个矩形只是将直角部分的很小一部分做成了圆润的弧线。使用了很多年的苹果手机，这套 UI 始终给人很舒服的感觉，既简约又大气。</p><p>大概两三年前，某一次更新 iOS 之后，发现通知栏的通知相比之前圆了很多，变得相当违和。本来整个通知就 3 行文字，高度非常小，配上一个超级大的圆角，真是丑出天际。每次下拉通知栏都要提前硬着头皮，捂着鼻子，转眼好几年过去了，也没有完全适应。</p><p>到如今，macOS 、Windows、某些 Linux 发行版、某些手机厂家的安卓等各种操作系统对这违和感满满的大圆角趋之若鹜，大圆角似乎成了现代操作系统设计的万能钥匙。我不禁要问：各种现代操作系统对大圆角的执着追求，真的有必要吗？</p><p>最近我的 mini 主机每次开机都不定期弹出提醒，让我尽快升级到 Win11。21 年就发布的 Win11，我甚至都还没在虚拟机里装了体验一下。去年公司发了一个笔记本，里面装的是 Win11，才有机会体验一下这个新操作系统。相比 Win10，我都不知道微软是不是在搞反向升级，实用、美观、特色荡然无存。Win11 上窗口、图标乃至任务栏都使用了大圆角。有些人解释说大圆角匹配了移动设备的屏幕边框，带来了更柔和、更友好的视觉体验，消解了传统直角界面的冰冷和僵硬，让 Windows 系统终于跟上了时代审美。但我只觉得这不过是盲目跟风，丢掉了自身硬朗、高效的风格。所有窗口都被圆润化，Windows 棱角分明、简洁直接的操作逻辑也被一并磨平。大圆角没让我的注意力更集中于元素的内容，而是将我的注意力吸引到了这个丑陋的大圆角上。</p><p>以前总是将 Win10 和 macOS 对比，只看到 Win10 的缺点，使用了一段时间的 Win11 之后，才开始体会到原来 Win10 是这么好用，Win 主机的开机频率都变高了许多。要是 Win12 依然是 Win11 这套 UI，那真是不得不考虑转 Linux 了。</p><p>各个厂家都想在手机、平板、电脑上搞 UI 的大一统。可是每个平台有每个平台的使用场景，无脑强行统一只会降低体验。不同厂家抄来抄去也是个大问题。某个大厂搞出个什么新奇的点子，不论是好是坏，其他厂商迫不及待的立马抄过来，唯恐自己赶不上潮流。什么刘海屏、灵动岛、买设备不送充电头，各种毫无下限。这种你追我赶的抄来抄去，各个操作系统能保持自己的特色就见鬼了。</p><p>真别无脑上大圆角了，做点实用又有自己风格的 UI 吧。圆角内卷，真没必要。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;操作系统的圆角内卷，真的有必要吗？&lt;/p&gt;
+&lt;p&gt;很早之前，苹果首先使用圆角矩形，带来了很不一样的视觉效果和使用体验。直到最近两年之前，圆角矩形还比较保守，整个矩形只是将直角部分的很小一部分做成了圆润的弧线。使用了很多年的苹果手机，这套 UI 始终给人很舒服的感觉，既简约又</summary>
+      
+    
+    
+    
+    <category term="日志随笔" scheme="https://lozhu.happy365.day/categories/%E6%97%A5%E5%BF%97%E9%9A%8F%E7%AC%94/"/>
+    
+    
+    <category term="UI" scheme="https://lozhu.happy365.day/tags/UI/"/>
+    
+    <category term="圆角" scheme="https://lozhu.happy365.day/tags/%E5%9C%86%E8%A7%92/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用STMP协议发送邮件</title>
+    <link href="https://lozhu.happy365.day/2025/07/02/5e4bf064e5ad/"/>
+    <id>https://lozhu.happy365.day/2025/07/02/5e4bf064e5ad/</id>
+    <published>2025-07-02T14:43:12.000Z</published>
+    <updated>2025-08-02T13:26:44.714Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近拿到一个需求，需要给一个基于jdk1.6开发的系统增加登录验证码，这个过程中需要调用第三方接口，如果第三方接口调用失败，则需发送告警邮件到指定邮箱。比较坑的是，因为系统比较老，加了 jar 包之后一直不生效，所以不能引入其他依赖，比如 mail-api 之类的。</p><h2 id="基本步骤"><a href="#基本步骤" class="headerlink" title="基本步骤"></a>基本步骤</h2><p>只基于一些工具包做过邮件发送，趁此机会了解了一下 SMTP 协议。<br>使用 SMTP 协议发送邮件分为几个步骤：</p><ul><li>与 SMTP 服务器建立连接</li><li>身份认证（用户名和密码需通过 base64 进行编码，一般不是邮箱密码，而是一个一次性密码）</li><li>指定收件人（没有抄送人选项，抄送通过多次指定收件人实现）</li><li>邮件内容</li><li>退出</li></ul><h2 id="基于命令行"><a href="#基于命令行" class="headerlink" title="基于命令行"></a>基于命令行</h2><pre><code class="shell"># 使用 telnet 连接到 smtp 服务器&gt; telnet smtp.163.com 25Trying 240e:938:a07:6:0:14:203:45...Connected to smtp163.mail.ntes53.netease.com.Escape character is &#39;^]&#39;.220 163.com Anti-spam GT for Coremail System (163com[20141201])</code></pre><pre><code class="shell"># HELO 命令&gt; HELO stmp.163.com250 OK</code></pre><pre><code class="shell"># 认证 （dXNlcm5hbWU6 即为 username:、UGFzc3dvcmQ6 即为 password:）&gt; AUTH LOGIN334 dXNlcm5hbWU6# 输入 base64 编码后的用户名&gt; emh1bG9uZ2t1bjIwQDE2My5jb334 UGFzc3dvcmQ6# 输入 base64 编码的密码&gt; WU54UktjYVJLZFhLWmV235 Authentication successful</code></pre><p>到这里已经成功登录到服务器了。</p><pre><code class="shell"># 发件人&gt; MAIL FROM:&lt;wuyifan2@163.com&gt;250 Mail OK# 收件人&gt; RCPT TO:&lt;liyifeng29@163.com&gt;250 Mail OK# 抄送人&gt; RCPT TO:&lt;76612151@qq.com&gt;250 Mail OK</code></pre><p>邮件内容命令为 DATA，然后以 . 作为结束。</p><pre><code class="shell">&gt; DATA354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;&gt; Subject: Greet Email&gt; This is a greet email from 163!&gt; .250 Mail OK queued as gzsmtp2,PSgvCgBnBIxyor+sPBA--.4614S2 1751466502 # 已经进入发送队列# 使用 QUIT 命令退出&gt; QUIT221 ByeConnection closed by foreign host.</code></pre><p>以上就是使用命令行发送邮件的全过程，其中要注意，短时间内发送多封邮件，可能会被反垃圾邮件程序拦截掉，邮件标题、内容最好不要太随意。</p><h2 id="纯-Java-实现"><a href="#纯-Java-实现" class="headerlink" title="纯 Java 实现"></a>纯 Java 实现</h2><p>基于 socket 和 IO 流实现邮件发送，代码如下：</p><pre><code class="java">import java.io.*;  import java.net.InetSocketAddress;  import java.net.Socket;  import java.nio.charset.StandardCharsets;  import java.util.Base64;    public class MyMail &#123;      public static void sendMail(String host, int port, String username, String password,                                  String receiver, String ccReceiver, String subject, String body) throws IOException &#123;          Socket socket = new Socket();          InetSocketAddress inetSocketAddress = new InetSocketAddress(host, port);          socket.connect(inetSocketAddress);          OutputStream outputStream = socket.getOutputStream();          InputStream inputStream = socket.getInputStream();          readInputStream(inputStream);            // 发送 HELO 命令          sendCommand(outputStream, &quot;HELO &quot; + host);          readInputStream(inputStream);            // 发送 AUTH LOGIN 命令          sendCommand(outputStream, &quot;AUTH LOGIN&quot;);          readInputStream(inputStream);            sendCommand(outputStream, base64Encode(username));          readInputStream(inputStream);            sendCommand(outputStream, base64Encode(password));          readInputStream(inputStream);            sendCommand(outputStream, &quot;MAIL FROM:&lt;&quot; + username + &quot;&gt;&quot;);          readInputStream(inputStream);            sendCommand(outputStream, &quot;RCPT TO:&lt;&quot; + receiver + &quot;&gt;&quot;);          readInputStream(inputStream);            sendCommand(outputStream, &quot;RCPT TO:&lt;&quot; + ccReceiver + &quot;&gt;&quot;);          readInputStream(inputStream);            sendCommand(outputStream, &quot;DATA&quot;);          readInputStream(inputStream);            sendCommand(outputStream, &quot;Subject: &quot; + subject);          sendCommand(outputStream, body);          sendCommand(outputStream, &quot;.&quot;);          readInputStream(inputStream);            sendCommand(outputStream, &quot;QUIT&quot;);          readInputStream(inputStream);      &#125;        public static String base64Encode(String text) &#123;          return Base64.getEncoder().encodeToString(text.getBytes());      &#125;        private static void readInputStream(InputStream inputStream) throws IOException &#123;          BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));          StringBuilder response = new StringBuilder();          String line;          while ((line = bufferedReader.readLine()) != null) &#123;              response.append(line).append(&quot;\n&quot;);              if (line.length() &gt;= 3 &amp;&amp; line.charAt(3) == &#39; &#39;) &#123;                  break;              &#125;          &#125;          System.out.println(response.toString().trim());      &#125;        private static void sendCommand(OutputStream outputStream, String command) throws IOException &#123;          BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));          bufferedWriter.write(command + &quot;\r\n&quot;);          bufferedWriter.flush();      &#125;        public static void main(String[] args) &#123;          try &#123;              sendMail(&quot;smtp.163.com&quot;, 25,                      &quot;wuyifan2@163.com&quot;, &quot;YNxRKcadfsdXsdfa&quot;,                      &quot;liyifeng@163.com&quot;, &quot;123766119@qq.com&quot;,                      &quot;Greet day&quot;, &quot;Today is a great day!&quot;);          &#125; catch (Exception e) &#123;              e.printStackTrace();              System.out.println(&quot;邮件发送失败&quot;);          &#125;    &#125;  &#125;</code></pre><p>注意，认证的密码不是邮箱的密码，而是一次性授权码，在邮箱设置里开启“POP3&#x2F;SMTP服务”可以获取到。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近拿到一个需求，需要给一个基于jdk1.6开发的系统增加登录验证码，这个过程中需要调用第三方接口，如果第三方接口调用失败，则需发送告警邮件</summary>
+      
+    
+    
+    
+    <category term="学习笔记" scheme="https://lozhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="Java" scheme="https://lozhu.happy365.day/tags/Java/"/>
+    
+    <category term="SMTP" scheme="https://lozhu.happy365.day/tags/SMTP/"/>
+    
+    <category term="邮件" scheme="https://lozhu.happy365.day/tags/%E9%82%AE%E4%BB%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在idea2024中编译jdk6项目</title>
+    <link href="https://lozhu.happy365.day/2025/06/23/b5802d61aac8/"/>
+    <id>https://lozhu.happy365.day/2025/06/23/b5802d61aac8/</id>
+    <published>2025-06-22T16:33:00.000Z</published>
+    <updated>2025-08-02T13:26:44.715Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近接手一个基于 jdk6 的 jsp 老项目，需要给这个项目加点功能。在 idea2024 版中修改完代码，使用 jdk8 编译好 class 文件后替换到 tomcat 中项目跑不起来，查看日志发现有错误提示：</p><pre><code>Exception in thread &quot;main&quot; java.lang.UnsupportedClassVersionError: org/catalina/startup/Bootstrap : Unsupported major.minor version 52.0</code></pre><p>查看 tomcat 中配置文件后发现使用的 jdk6，之前看到 WEB-INF 下的 lib 包里有 spring-aop-3.2.2 之类的依赖，看错了看成 spring-boot-3.2.2 了还疑惑了一下老系统都升级到 Springboot3 了吗，还打算使用 jdk17 来编译，原来是看错了。</p><p>然后去查了一下，Spring3 支持 jdk6 和 jdk7，于是在 idea 上将项目的 jdk 版本切换为 jdk6 来编译，但是编译的时候 idea2024 提示最低支持的 jdk 版本是 jdk7。本来将项目使用的 jdk 版本切换成 jdk7 去编译就可以了，可是这个老项目是在云桌面里开发的，里面有 jdk6、jdk8，偏偏没有 jdk7 文件，还无法下载也无法上传。</p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>先是根据 AI 的提示修改了 idea 的相关配置，但还是报错，无法成功编译。</p><p>最后在 segmentfault 里看到一个同样的问题，按回复中的方法试了一下成功编译出来了，替换到 tomcat 中后功能正常。<br><a href="https://segmentfault.com/q/1010000045021590">IDEA环境配置失败，Java项目需要JDK 1.6如何解决？</a></p><p>具体的配置：</p><ol><li>打开 File - Project Structure，设置 Project SDK 为 jdk8，Project Language Level 设置为 7（保持兼容性）</li><li>将 Module 中的 jdk 版本设置成 jdk6</li><li>在 File &gt; Settings &gt; Build, Execution, Deployment &gt; Compiler &gt; Java Compiler 中，在 Additional command-line parameters 中添加：<code>-source 1.7 -target 1.7</code>，强制用高版本 jdk 编译出兼容低版本 jdk 的字节码，设置完之后就可以进行编译了。</li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;最近接手一个基于 jdk6 的 jsp 老项目，需要给这个项目加点功能。在 idea2024 版中修改完代码，使用 jdk8 编译好 cla</summary>
+      
+    
+    
+    
+    <category term="解决方案" scheme="https://lozhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="idea2024" scheme="https://lozhu.happy365.day/tags/idea2024/"/>
+    
+    <category term="jdk6" scheme="https://lozhu.happy365.day/tags/jdk6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>iCloud Drive中无法创建Documents文件夹</title>
+    <link href="https://lozhu.happy365.day/2025/05/03/6dedb1702b09/"/>
+    <id>https://lozhu.happy365.day/2025/05/03/6dedb1702b09/</id>
+    <published>2025-05-03T04:28:58.000Z</published>
+    <updated>2025-08-02T13:26:44.713Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近有跨设备同步文件的需求，分别试用了 OneDrive 和谷歌硬盘，还了解了 Dropbox。</p><p>OneDrive 在国内不需要 VPN 就直接能用，这点比较方便，而且手机、平板、PC 都有对应的客户端，用起来很方便。缺点就是免费容量只有 5G，随便存几个 PDF 就已经占用了大半，免费额度无法长期使用。付费的话最低 1.99 美元每个月，容量是 100G，我用不上这么多空间，一个月 15 块钱还是有点贵。</p><p>谷歌硬盘有 15G 免费空间，足够我同步常用的文件使用了，但是需要 VPN 才能使用，而且 PC 端是没有客户端的，只能用网页版，不是特别的方便，但是用来存放一些使用频率不高的文件还是挺好的。</p><p>Dropbox 免费空间只有 2G，不付费基本不能用，而且月费特别贵，根本不用考虑。</p><p>最终选择了苹果的 50G 的套餐，一个月 6 块钱，不需要第三方客户端，体验更好。</p><h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>在 iCloud Drive 中想创建一个 Documents 文件夹，发现过了两秒钟，文件夹名称会自动变成“untitled folder“，先命名成”Document“，再改为”Documents“也是一样，会自动变成之前的名称“Document“。</p><p>于是想着是不是苹果把这个文件夹名称占用了，网上搜了一下，发现确实如此，准确来说是被保留了。</p><p><a href="https://www.reddit.com/r/MacOS/comments/z41468/why_cant_i_rename_or_delete_this_folder/?rdt=37650">Why can’t I rename or delete this folder?</a></p><p><a href="https://support.apple.com/en-us/109344">Add your Desktop and Documents files to iCloud Drive</a></p><p>因为在系统设置里面可以设置是否开启将 Desktop &#x2F; Documents 文件夹同步到 iCloud Drive，所以自己创建的文件夹就不能叫这个名字了。这个功能虽说很方便实用，我的 Documents 下的文件很多不需要同步，貌似也不能排除不需要同步的文件。</p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>两种方式：</p><ul><li>在设置里将同步 Desktop &#x2F; Documents 目录打开</li><li>选择其他名称</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近有跨设备同步文件的需求，分别试用了 OneDrive 和谷歌硬盘，还了解了 Dropbox。&lt;/p&gt;
+&lt;p&gt;OneDrive 在国内不需</summary>
+      
+    
+    
+    
+    <category term="解决方案" scheme="https://lozhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="iCloud" scheme="https://lozhu.happy365.day/tags/iCloud/"/>
+    
+    <category term="文件夹名称占用" scheme="https://lozhu.happy365.day/tags/%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8D%E7%A7%B0%E5%8D%A0%E7%94%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Elasticsearch入门</title>
+    <link href="https://lozhu.happy365.day/2025/05/01/cf9622d9262a/"/>
+    <id>https://lozhu.happy365.day/2025/05/01/cf9622d9262a/</id>
+    <published>2025-05-01T12:32:30.000Z</published>
+    <updated>2025-08-02T13:26:44.706Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>感谢知乎上大数据梦想家分享的入门教程，很实用。教程地址：<a href="https://zhuanlan.zhihu.com/p/358744225">从 0 到 1 学习 elasticsearch ，这一篇就够了！(建议收藏)</a></p><span id="more"></span><h2 id="Elasticsearch-是什么"><a href="#Elasticsearch-是什么" class="headerlink" title="Elasticsearch 是什么"></a>Elasticsearch 是什么</h2><p>Elasticsearch 简称 ES，是一个开源的高扩展的分布式全文检索引擎，可以近实时的存储、检索数据。ES 使用 Lucene 作为其核心来实现所有索引及搜索的功能，使用 RESTful API来隐藏 Lucene 的复杂性，从而使全文检索变得简单易用。</p><h2 id="Elasticsearch-与-Solr-的比较"><a href="#Elasticsearch-与-Solr-的比较" class="headerlink" title="Elasticsearch 与 Solr 的比较"></a>Elasticsearch 与 Solr 的比较</h2><ul><li>ES 和 Solr 都基于 Lucene。</li><li>ES 自带分布式协调管理功能，Solr 依赖 Zookeeper 进行分布式管理。</li><li>ES 只支持 json 格式，Solr 支持 json、XML、CSV 等格式。</li><li>ES 很多功能需要第三方插件支持，Solr 本身功能较为丰富。</li><li>ES 建立索引快，适用于实时性较强的场景；Solr 查询较快，但是索引更新慢，适用于电商等查询较多的场景。</li></ul><h2 id="Elastisearch-安装及启动"><a href="#Elastisearch-安装及启动" class="headerlink" title="Elastisearch 安装及启动"></a>Elastisearch 安装及启动</h2><p>从官网 <a href="https://www.elastic.co/downloads/elasticsearch">Download Elasticsearch</a> 根据平台选择对应的版本进行下载。下载完成后将下载压缩包文件拷贝到安装路径（~&#x2F;.opt&#x2F;elasticsearch）并解压，在该目录下新建 data 目录用于存储索引。</p><p>修改配置文件 $ES_HOME&#x2F;config&#x2F;elasticsearch.yml 文件：</p><pre><code class="yaml">cluster.name: demo-elasticsearchnode.name: node01path.data: ~/.opt/elasticsearch/datapath.logs: ~/.opt/elasticsearch/logsnetwork.host: 0.0.0.0host.port: 9200cluster.initial_master_nodes: [&quot;node01&quot;]xpack.security.enabled: falsexpack.security.enrollment.enabled: falsexpack.security.http.ssl:    enabled: false    keystore.path: certs/http.p12</code></pre><p>修改 jvm.options 文件中的配置：</p><pre><code>-Xms1g-Xmx1g</code></pre><p>据说 Elasticsearch 不允许使用 root 用户操作，需要新建 elsearch 用户组及 elsearch 用户进行集群的操作，但是我在 macOS 上直接使用 admin 账号操作没遇到什么问题，并且在 macOS 上新建用户组和用户和 Linux 上的命令不通用，所以跳过新建用户这一步。</p><p>启动 es：</p><pre><code class="sh">bin/elasticsearch</code></pre><p>启动之后，可以访问 <a href="http://localhost:9200/">http://localhost:9200</a> 查看。如果没有关闭 xpack.security.http.ssl 配置的话，需要访问 <a href="https://localhost:9200。">https://localhost:9200。</a></p><p>这个页面会返回一些集群相关的信息：</p><pre><code class="json">&#123;  &quot;name&quot; : &quot;node01&quot;,  &quot;cluster_name&quot; : &quot;demo-elasticsearch&quot;,  &quot;cluster_uuid&quot; : &quot;2pFl_UiuQFSwsGD-6CTtMQ&quot;,  &quot;version&quot; : &#123;    &quot;number&quot; : &quot;9.0.0&quot;,    &quot;build_flavor&quot; : &quot;default&quot;,    &quot;build_type&quot; : &quot;tar&quot;,    &quot;build_hash&quot; : &quot;112859b85d50de2a7e63f73c8fc70b99eea24291&quot;,    &quot;build_date&quot; : &quot;2025-04-08T15:13:46.049795831Z&quot;,    &quot;build_snapshot&quot; : false,    &quot;lucene_version&quot; : &quot;10.1.0&quot;,    &quot;minimum_wire_compatibility_version&quot; : &quot;8.18.0&quot;,    &quot;minimum_index_compatibility_version&quot; : &quot;8.0.0&quot;  &#125;,  &quot;tagline&quot; : &quot;You Know, for Search&quot;&#125;</code></pre><h2 id="Elasticsearch-head-安装"><a href="#Elasticsearch-head-安装" class="headerlink" title="Elasticsearch-head 安装"></a>Elasticsearch-head 安装</h2><p>Elasticsearch-head 是 Elasticsearch 的一个开源的图形化界面，在 GitHub 上可以获取：<a href="https://github.com/mobz/elasticsearch-head">https://github.com/mobz/elasticsearch-head</a>。将源码克隆到本地，然后通过 npm 启动。</p><pre><code class="sh">cd elasticsearch-headnpm install npm start</code></pre><p>因为跨域的原因，需要在 elasticsearch.yml 中增加相关的配置：</p><pre><code class="yaml">http.cors.enabled: truehttp.cors.allow-origin: &quot;*&quot;</code></pre><p>修改配置后，重启 es，访问 <a href="http://localhost:9100，就能看到">http://localhost:9100，就能看到</a> es-head 页面了，可以查看索引和查询之类的功能。</p><h2 id="kibana-安装"><a href="#kibana-安装" class="headerlink" title="kibana 安装"></a>kibana 安装</h2><h3 id="kibana-安装-1"><a href="#kibana-安装-1" class="headerlink" title="kibana 安装"></a>kibana 安装</h3><p>kibana 可以将更友好的展示和分析 es 的数据。在 es 官网可以进行下载：<a href="https://www.elastic.co/cn/downloads/kibana%EF%BC%8C%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E6%98%AF%EF%BC%8Ckibana">https://www.elastic.co/cn/downloads/kibana，要注意的是，kibana</a> 的版本需要和 es 的版本保持一致。</p><p>下载后放到指定路径 ~&#x2F;.opt&#x2F;kibana 并解压。</p><p>修改配置文件：~&#x2F;.opt&#x2F;kibana&#x2F;config&#x2F;kibana.yml：</p><pre><code class="yaml">server.port: 5601server.host: 0.0.0.0elasticsearch.hosts: [&quot;http://localhost:9200&quot;]elasticsearch.username: &quot;elsearch&quot;elasticsearch.password: &quot;elsearch&quot;</code></pre><p>通过 <code>bin/kibana</code> 启动 kibana。</p><p>访问 <a href="http://localhost:5601/">http://localhost:5601</a> 访问 kibana 页面。</p><h3 id="ik-分词器安装"><a href="#ik-分词器安装" class="headerlink" title="ik 分词器安装"></a>ik 分词器安装</h3><p>原下载地址：<a href="https://github.com/infinilabs/analysis-ik/releases%EF%BC%8C%E4%BD%86%E6%98%AF%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E5%B7%B2%E4%B8%8D%E5%9C%A8">https://github.com/infinilabs/analysis-ik/releases，但是最新版本已不在</a> GitHub 更新，需要到 <a href="https://release.infinilabs.com/analysis-ik/stable/">https://release.infinilabs.com/analysis-ik/stable/</a> 进行下载。</p><p>下载后拷贝到 $ES_HOME&#x2F;plugins&#x2F;ik 路径下，重启 kibana。</p><p>测试分词器（最少切分）：梦想家</p><pre><code>GET _analyze&#123;    &quot;analyzer&quot;: &quot;ik_smart&quot;,    &quot;text&quot;: &quot;梦想家&quot;&#125;</code></pre><p>最细粒度切分：梦想家、梦想、想家</p><pre><code>GET _analyze&#123;    &quot;analyzer&quot;: &quot;ik_max_word&quot;,    &quot;text&quot;: &quot;梦想家&quot;&#125;</code></pre><p>分词器自定义词典：</p><p>在 $ES_HOME&#x2F;plugins&#x2F;ik&#x2F;config 路径下新建文件 my.dic，写入需要被识别成一个词的词。</p><p>修改 IKAnalyzer.cfg.xml 文件：</p><pre><code class="xml">&lt;properties&gt;   &lt;comment&gt;IK Analyzer 扩展配置&lt;/comment&gt; &lt;!-- 用户可以在这里配置自己的扩展字典 --&gt;   &lt;entry key=&quot;ext_dict&quot;&gt;my.dic&lt;/entry&gt; &lt;!-- 用户可以在这里配置自己的扩展停止词字典 --&gt;   &lt;entry key=&quot;ext_stopwords&quot;&gt;&lt;/entry&gt;&lt;/properties&gt;</code></pre><p>修改完成保存并重启 es，此时 my.dic 中的词就不会再被切分。</p><h2 id="Elasticsearch-基本操作"><a href="#Elasticsearch-基本操作" class="headerlink" title="Elasticsearch 基本操作"></a>Elasticsearch 基本操作</h2><p>创建文档：</p><pre><code class="json">PUT /test1/_doc/1&#123;  &quot;name&quot;: &quot;大数据梦想家&quot;,  &quot;age&quot;: 24&#125;</code></pre><p>创建成功后可在 es-head 页面浏览数据标签页中看到对应的索引 test1。</p><p>创建索引并指定字段类型：</p><pre><code class="json">PUT /test2&#123;  &quot;mappings&quot;: &#123;    &quot;properties&quot;: &#123;      &quot;name&quot;: &#123;        &quot;type&quot;: &quot;text&quot;      &#125;,      &quot;age&quot;: &#123;        &quot;type&quot;: &quot;long&quot;      &#125;,      &quot;birthday&quot;: &#123;        &quot;type&quot;: &quot;date&quot;      &#125;    &#125;  &#125;&#125;</code></pre><p>查看刚才创建的索引：</p><p><code>GET /test2</code></p><p>向该索引增加数据：</p><pre><code class="json">PUT /test2/_doc/1&#123;  &quot;name&quot;: &quot;大数据梦想家&quot;,  &quot;age&quot;: 21,  &quot;birthday&quot;: &quot;2020-01-01&quot;&#125;</code></pre><p>查看文档信息：</p><pre><code class="json">GET /test2/_doc/1</code></pre><p>修改文档：</p><pre><code class="json">PUT /test2/_update/1&#123;  &quot;doc&quot;: &#123;    &quot;name&quot;: &quot;大数据梦想家1&quot;  &#125;&#125;</code></pre><p>修改文档也可以使用和新增同样的方式进行，但是会覆盖元来的数据，不推荐使用。</p><p>删除文档：</p><pre><code>DELETE /test2/_doc/1</code></pre><p>删除索引：</p><pre><code>DELETE /test2</code></pre><h3 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h3><p>先增加几条测试数据：</p><pre><code class="json">PUT /demo/_doc/1&#123;    &quot;name&quot;: &quot;爱丽丝&quot;,    &quot;age&quot;: 21,    &quot;desc&quot;: &quot;在最美的年华，做最好的自己&quot;,    &quot;tags&quot;: [&quot;技术宅&quot;, &quot;温暖&quot;, &quot;思维活跃&quot;]&#125;PUT /demo/_doc/2&#123;    &quot;name&quot;: &quot;鲍勃&quot;,    &quot;age&quot;: 25,    &quot;desc&quot;: &quot;逍遥自在&quot;,    &quot;tags&quot;: [&quot;交友&quot;, &quot;理性&quot;]&#125;PUT /demo/_doc/3&#123;    &quot;name&quot;: &quot;露西&quot;,    &quot;age&quot;: 30,    &quot;desc&quot;: &quot;人越讨厌明天，就睡得越晚&quot;,    &quot;tags&quot;: [&quot;社会&quot;, &quot;科学&quot;]&#125;PUT /demo/_doc/4&#123;    &quot;name&quot;: &quot;Alice爱学Python&quot;,    &quot;age&quot;: 21,    &quot;desc&quot;: &quot;人生苦短，我用Python&quot;,    &quot;tags&quot;: [&quot;好学&quot;, &quot;勤奋刻苦&quot;]&#125;PUT /demo/_doc/5&#123;    &quot;name&quot;: &quot;Alice爱学Java&quot;,    &quot;age&quot;: 18,    &quot;desc&quot;: &quot;技术成就自我&quot;,    &quot;tags&quot;: [&quot;思维敏捷&quot;, &quot;喜欢学习&quot;]&#125;</code></pre><p>按 name 查找，返回 name、age、desc 列，结果按 age 升序排序，从第二个结果开始返回1个结果：</p><pre><code class="json">GET /demo/_search&#123;  &quot;query&quot;: &#123;    &quot;match&quot;: &#123;      &quot;name&quot;: &quot;爱丽丝&quot;    &#125;,    &quot;_source&quot;: [&quot;name&quot;, &quot;age&quot;, &quot;desc&quot;],    &quot;sort&quot;: [&#123;        &quot;age&quot;: &#123;          &quot;order&quot;: &quot;asc&quot;        &#125;      &#125;],    &quot;from&quot;: 1,    &quot;size&quot;: 1  &#125;&#125;</code></pre><p>OR：</p><pre><code class="json">GET /demo/_search&#123;  &quot;query&quot;: &#123;    &quot;bool&quot;: &#123;      &quot;should&quot;: [        &#123;          &quot;match&quot;: &#123;            &quot;name&quot;: &quot;爱丽丝&quot;          &#125;        &#125;,        &#123;          &quot;match&quot;: &#123;            &quot;age&quot;: 25          &#125;        &#125;      ]    &#125;  &#125;&#125;</code></pre><p>AND：</p><pre><code class="json">GET /demo/_search&#123;  &quot;query&quot;: &#123;    &quot;bool&quot;: &#123;      &quot;must&quot;: [        &#123;          &quot;match&quot;: &#123;            &quot;name&quot;: &quot;爱丽丝&quot;          &#125;        &#125;      ],      &quot;filter&quot;: [        &#123;          &quot;range&quot;: &#123;            &quot;age&quot;: &#123;              &quot;lte&quot;: 18            &#125;          &#125;        &#125;      ]    &#125;  &#125;&#125;</code></pre><p>按多个值查找：</p><pre><code class="json">GET /demo/_search&#123;  &quot;query&quot;: &#123;    &quot;match&quot;: &#123;      &quot;tags&quot;: &quot;男 学习&quot;    &#125;  &#125;&#125;</code></pre><p>text 字段在查找时会被先被分词然后再进行查找，keyword 类型的字段会进行精确查找，不会被分词。</p><p>对结果进行高亮显示：</p><pre><code class="json">GET /demo/_search&#123;  &quot;query&quot;: &#123;    &quot;match&quot;: &#123;      &quot;name&quot;: &quot;鲍勃&quot;    &#125;  &#125;,  &quot;highlight&quot;: &#123;    &quot;pre_tags&quot;: &quot;&lt;b class=&#39;key&#39; style=&#39;color: red&#39;&gt;&quot;,    &quot;post_tags&quot;: &quot;&lt;/b&gt;&quot;,    &quot;fields&quot;: &#123;      &quot;name&quot;: &#123;&#125;    &#125;  &#125;&#125;</code></pre><p>关于分词：</p><ul><li>term：不经过分词，直接查询精确的值</li><li>match：会使用分词器解析</li></ul><pre><code class="json">GET /demo/_search&#123;  &quot;query&quot;: &#123;    &quot;term&quot;: &#123;      &quot;name&quot;: &quot;爱&quot;    &#125;  &#125;&#125;</code></pre><h3 id="查看健康信息"><a href="#查看健康信息" class="headerlink" title="查看健康信息"></a>查看健康信息</h3><pre><code class="json">GET _cat/health</code></pre><pre><code class="json">GET _cat/indicies?v</code></pre>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;参考资料&quot;&gt;&lt;a href=&quot;#参考资料&quot; class=&quot;headerlink&quot; title=&quot;参考资料&quot;&gt;&lt;/a&gt;参考资料&lt;/h2&gt;&lt;p&gt;感谢知乎上大数据梦想家分享的入门教程，很实用。教程地址：&lt;a href=&quot;https://zhuanlan.zhihu.com/p/358744225&quot;&gt;从 0 到 1 学习 elasticsearch ，这一篇就够了！(建议收藏)&lt;/a&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://lozhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="ElasticSearch" scheme="https://lozhu.happy365.day/tags/ElasticSearch/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>macOS提示无法验证APP是否包含恶意软件无法打开</title>
+    <link href="https://lozhu.happy365.day/2025/05/01/8d39054318ab/"/>
+    <id>https://lozhu.happy365.day/2025/05/01/8d39054318ab/</id>
+    <published>2025-05-01T06:34:41.000Z</published>
+    <updated>2025-08-02T13:26:44.713Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>下载了elasticsearch，运行 bin&#x2F;elasticsearch 启动时提示“macOS cannot verify that this app if free from Malware”，弹窗上只有“Move to trash”和“Cancel”两个选项，打开系统安全性设置页面，点击”Open Anyway“按钮也没有反应，然后再次运行时又重复上述现象。</p><span id="more"></span><h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>在知乎上找到的方法： <a href="https://www.zhihu.com/question/412633194">macOS无法验证此App不包含恶意软件，怎么解决？</a>，成功解决该问题。</p><p>两种方法：</p><ol><li>安装 Ctrl 键打开该软件，我这里不管用。</li><li>运行 <code>sudo xattr -r -d com.apple.quarantine 应用路径</code> 然后再打开软件，成功解决问题。</li></ol><p>总共有3个软件提示打不开，运行第二种方法中的命令之后，全部成功打开。</p>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;现象&quot;&gt;&lt;a href=&quot;#现象&quot; class=&quot;headerlink&quot; title=&quot;现象&quot;&gt;&lt;/a&gt;现象&lt;/h2&gt;&lt;p&gt;下载了elasticsearch，运行 bin&amp;#x2F;elasticsearch 启动时提示“macOS cannot verify that this app if free from Malware”，弹窗上只有“Move to trash”和“Cancel”两个选项，打开系统安全性设置页面，点击”Open Anyway“按钮也没有反应，然后再次运行时又重复上述现象。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="解决方案" scheme="https://lozhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="macOS" scheme="https://lozhu.happy365.day/tags/macOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Mac mini连接Wi-Fi网速慢的问题</title>
+    <link href="https://lozhu.happy365.day/2025/03/09/adc08664fe0f/"/>
+    <id>https://lozhu.happy365.day/2025/03/09/adc08664fe0f/</id>
+    <published>2025-03-09T13:44:00.000Z</published>
+    <updated>2025-08-02T13:26:44.709Z</updated>
+    
+    <content type="html"><![CDATA[<p>趁着有补贴新买了一个 M4 芯片的 Mac mini，第一次连接 Wi-Fi 使用就发现网速很慢，浏览器打开一个网页要花几十秒的时间，经常打开失败。</p><p>但是旁边的 2020 款 Macbook Pro 就很流畅，下载速度也很快。</p><p>怀疑是 Mac mini 的问题，于是在网上搜了一圈没找到什么有用的信息。</p><p>第二天晚上在 B 站上搜了一下这个问题，找到一个同样问题的视频，他提供了两个解决方案：</p><ul><li>将路由器的 Wi-Fi 频宽从 160MHz 改为 80MHz</li><li>不要将 Mac mini 放置在金属表面</li></ul><p>我才意识到我是将 Mac mini 放在显示器的支撑板上的，刚好是一块金属板。于是将其放到桌子上，果然网速就正常了！</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;趁着有补贴新买了一个 M4 芯片的 Mac mini，第一次连接 Wi-Fi 使用就发现网速很慢，浏览器打开一个网页要花几十秒的时间，经常打开失败。&lt;/p&gt;
+&lt;p&gt;但是旁边的 2020 款 Macbook Pro 就很流畅，下载速度也很快。&lt;/p&gt;
+&lt;p&gt;怀疑是 Mac m</summary>
+      
+    
+    
+    
+    <category term="解决方案" scheme="https://lozhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="Mac mini" scheme="https://lozhu.happy365.day/tags/Mac-mini/"/>
+    
+    <category term="Wi-Fi网速" scheme="https://lozhu.happy365.day/tags/Wi-Fi%E7%BD%91%E9%80%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Win10远程桌面无法连接</title>
+    <link href="https://lozhu.happy365.day/2024/12/08/9028c7deaa0a/"/>
+    <id>https://lozhu.happy365.day/2024/12/08/9028c7deaa0a/</id>
+    <published>2024-12-08T05:53:43.000Z</published>
+    <updated>2025-08-02T13:26:44.712Z</updated>
+    
+    <content type="html"><![CDATA[<p>八九月份的时候买了一个大唐 AMD R7 5800H 的 mini 主机，装的是 Win10 专业版系统。平时 mini 主机只是辅助跑一些软件，所以主要是通过 Mac 上安装 Windows APP Preview 这个微软官方的远程连接软件连接远程桌面使用，不用连接键盘、鼠标、显示器，省事的同时还不占地方。</p><p>不过远程桌面频繁连接失败，一直提示找不到主机请检查IP地址和主机名是否正确，只有偶尔几次能连上。中间有几次提示连接失败，通过更新了 Windows APP Preview 这个连接软件后就连接成功了。</p><span id="more"></span><p>之前还有显示器，连不上就接上显示器、键盘鼠标可以操作一下，上个月搬家显示器也没了，就一个月没开过机。最近网上查了一些资料了解到视频采集卡这个东西，买了一个回来，通过采集卡将笔记本做为主机的显示器确实可行，于是想彻底解决一下远程桌面经常连不上的问题。</p><h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>Mac 上通过 Windows APP Preview 连接 Win10 主机时提示找不到对应的机器，无法连接。更奇怪的是，连接成功之后，断开，然后紧接着再重连就会提示找不到机器。</p><h2 id="排除可能的原因"><a href="#排除可能的原因" class="headerlink" title="排除可能的原因"></a>排除可能的原因</h2><p>根据网上类似问题的帖子，仔细检查了下面这个可能的原因：</p><ol><li>Windows 机器上远程桌面服务没在运行（Win + R 输入 services.msc 打开服务列表，确认 Remote Desktop Service 正在运行，并将启动方式改成了自动，在 cmd 中通过 <code>netstat -ano</code> 确认 3389 端口在监听状态）</li><li>Windows 防火墙的问题（确认公有、专用网络防火墙都是关闭状态，且防火墙中“允许应用程序通过防火墙”的配置中远程桌面选项已经勾选）</li><li>目标主机的 IP 地址错误（确认 IP 地址无误且已设置静态 IP，IP 地址与当前机器在一个网段，且两台机器的网关地址和 DNS 都设置成路由器的网关地址）</li><li>远程登陆用户不在允许远程登陆用户列表中（确认当前登陆已设置允许远程登陆）</li><li>组策略</li></ol><p>上面的可能原因都确排查了一遍，问题依然存在。</p><p>然后发现两台机器可以 ping 通，但是 telnet 连接 3389 端口连接不上，提示：No route to host，又跟着某篇帖子的提示检查了两台机器的 hosts 文件，在 hosts 文件中设置好了本机 IP 地址，但是问题依然存在。</p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>在几次重启的过程中发现一个规律，<strong>每次连接远程桌面之前，在 Mac 上先断开 WiFi 再重连 WiFi，就能连上远程桌面</strong>。怀疑是加入网络的顺序影响连接结果，于是我又验证了一下机器启动顺序对连接结果的影响，发现无论是先启动主机，再启动 Mac还先启动 Mac，再启动主机，连接前都要重连一下网络才能连上，很奇怪的现象，原因不明。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;八九月份的时候买了一个大唐 AMD R7 5800H 的 mini 主机，装的是 Win10 专业版系统。平时 mini 主机只是辅助跑一些软件，所以主要是通过 Mac 上安装 Windows APP Preview 这个微软官方的远程连接软件连接远程桌面使用，不用连接键盘、鼠标、显示器，省事的同时还不占地方。&lt;/p&gt;
+&lt;p&gt;不过远程桌面频繁连接失败，一直提示找不到主机请检查IP地址和主机名是否正确，只有偶尔几次能连上。中间有几次提示连接失败，通过更新了 Windows APP Preview 这个连接软件后就连接成功了。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="解决方案" scheme="https://lozhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="Windows远程桌面" scheme="https://lozhu.happy365.day/tags/Windows%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>OAuth2.0 授权</title>
+    <link href="https://lozhu.happy365.day/2024/12/05/7ee81ff978a5/"/>
+    <id>https://lozhu.happy365.day/2024/12/05/7ee81ff978a5/</id>
+    <published>2024-12-04T16:46:50.000Z</published>
+    <updated>2025-08-02T13:26:44.709Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OAuth2.0 是目前互联网上比较流行的授权方式，GitHub、掘金等大部分网站都采用 OAuth 的方式支持第三方账号登陆。之前工作中有接触到但是没有深入的去了解其中的机制，这里根据原理做了一个小的 demo，源码地址：<a href="https://github.com/lozhu20/oauth2-demo">OAuth2-demo</a></p><span id="more"></span><h2 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h2><p>OAuth2.0 标准出自 RFC6749 <a href="https://www.rfc-editor.org/rfc/rfc6749">The OAuth 2.0 Authorization Framework</a>，英文文档，有兴趣的可以研读一下。</p><h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>比如我们遇到了一个错误，在 <a href="https://cn.bing.com/">必应</a> 上搜索了一下，出现的第一个结果来自 CSDN，点进去读了几行网站弹出登陆页面，登陆框底部就有“其他登陆方式”的选项，可以使用 QQ、微博、百度、GitHub、开放原子开源基金会等账号登陆，这样可以不用在将密码提供给 CSDN 的情况下，授权 CSDN 访问第三方网站上的用户名等一些受密码保护的信息。</p><h2 id="角色"><a href="#角色" class="headerlink" title="角色"></a>角色</h2><p>授权流程中几个角色：</p><ul><li>资源所有者：就是用户自己</li><li>客户端：即当前使用的网站和程序</li><li>认证服务器：存放受保护的数据的网站提供的身份认证</li><li>资源服务器：存放受保护的数据的网站</li></ul><h2 id="授权方式"><a href="#授权方式" class="headerlink" title="授权方式"></a>授权方式</h2><p>OAuth2.0 定义了 4 种授权方式，各种方式之间部分流程略有不同。</p><ol><li>授权码模式</li><li>简化模式（相较于授权模式少了一步获取授权码的流程）</li><li>密码模式（直接将密码提供给客户端，一般不用）</li><li>客户端模式</li></ol><p>授权码模式是最流程最严密的模式，用得应该是最多的。</p><h2 id="授权流程"><a href="#授权流程" class="headerlink" title="授权流程"></a>授权流程</h2><p>以授权码模式为例：</p><pre><code class="mermaid">sequenceDiagram    客户端-&gt;&gt;资源所有者: 请求授权    资源所有者--&gt;客户端: 同意授权    客户端-&gt;&gt;认证服务器: 1️⃣ 请求授权码    认证服务器--&gt;客户端: 2️⃣ 授权码    客户端-&gt;&gt;认证服务器: 3️⃣ 使用授权码请求 token    认证服务器--&gt;客户端: 4️⃣ token    客户端-&gt;&gt;资源服务器: 5️⃣ 访问被保护的资源    资源服务器--&gt;客户端: 6️⃣ 被保护的资源</code></pre><p>为了简化流程，demo 中省略了一个资源服务器。假设客户端运行在 <a href="http://localhost:8001/client%EF%BC%8C%E8%AE%A4%E8%AF%81%E6%9C%8D%E5%8A%A1%E7%AB%AF%E8%BF%90%E8%A1%8C%E5%9C%A8">http://localhost:8001/client，认证服务端运行在</a> <a href="http://localhost:8000/auth-server%EF%BC%8C%E6%AF%8F%E4%B8%80%E6%AD%A5%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C%E5%A6%82%E4%B8%8B%EF%BC%9A">http://localhost:8000/auth-server，每一步具体操作如下：</a></p><h3 id="请求授权码"><a href="#请求授权码" class="headerlink" title="请求授权码"></a>请求授权码</h3><p><strong>请求地址</strong></p><p><a href="http://localhost:8000/auth-server/authorize?response_type=code&client_id=oauth2demo-client&redirect_uri=http://localhost:8001/client/index&scope=username&state=oauth2demo-client-state">http://localhost:8000/auth-server/authorize?response_type=code&amp;client_id=oauth2demo-client&amp;redirect_uri=http://localhost:8001/client/index&amp;scope=username&amp;state=oauth2demo-client-state</a></p><p><strong>参数解释</strong></p><table><thead><tr><th>参数</th><th>含义</th></tr></thead><tbody><tr><td>response_type</td><td>授权类型为授权码模式</td></tr><tr><td>client_id</td><td>客户端 id</td></tr><tr><td>redirect_uri</td><td>服务端返回授权码时的重定向地址</td></tr><tr><td>scope</td><td>授权范围</td></tr><tr><td>state</td><td>客户端状态，自定义值</td></tr></tbody></table><h3 id="认证服务器重定向至登陆"><a href="#认证服务器重定向至登陆" class="headerlink" title="认证服务器重定向至登陆"></a>认证服务器重定向至登陆</h3><p>认证服务器重定向至本站登陆页面使用账号密码进行认证。</p><h3 id="认证服务器返回授权码"><a href="#认证服务器返回授权码" class="headerlink" title="认证服务器返回授权码"></a>认证服务器返回授权码</h3><p>认证服务器登陆成功后给客户端返回授权码。</p><p><strong>请求地址</strong></p><p><a href="http://localhost:8001/client/index?code=XXX&state=YYYY">http://localhost:8001/client/index?code=XXX&amp;state=YYYY</a></p><p><strong>参数解释</strong></p><table><thead><tr><th>参数</th><th>解释</th></tr></thead><tbody><tr><td>code</td><td>认证服务器生成的授权码</td></tr><tr><td>state</td><td>客户端请求授权码时发过去的客户端状态，原值返回，作用不明</td></tr></tbody></table><h3 id="客户端使用授权码请求-token"><a href="#客户端使用授权码请求-token" class="headerlink" title="客户端使用授权码请求 token"></a>客户端使用授权码请求 token</h3><p><strong>请求地址</strong></p><p><a href="http://localhost:8000/auth-server/token?grant_type=authorization_code&code=XXX&redirect_uri=http://localhost:8001/client/index&client_id=oauth2demo-client&client_secret=oauth2demo-client-secret">http://localhost:8000/auth-server/token?grant_type=authorization_code&amp;code=XXX&amp;redirect_uri=http://localhost:8001/client/index&amp;client_id=oauth2demo-client&amp;client_secret=oauth2demo-client-secret</a></p><p><strong>参数解释</strong></p><table><thead><tr><th>参数</th><th>解释</th></tr></thead><tbody><tr><td>code</td><td>认证服务器返回的授权码，只能使用一次</td></tr></tbody></table><h3 id="认证服务器返回-token"><a href="#认证服务器返回-token" class="headerlink" title="认证服务器返回 token"></a>认证服务器返回 token</h3><p><strong>参数</strong></p><table><thead><tr><th>参数</th><th>含义</th></tr></thead><tbody><tr><td>access_token</td><td>token</td></tr><tr><td>token_type</td><td>token 类型</td></tr><tr><td>expires_in</td><td>多久后过期，秒为单位</td></tr><tr><td>refresh_token</td><td>刷新令牌</td></tr><tr><td>scope</td><td>授权范围</td></tr></tbody></table><h3 id="客户端使用-token-请求资源"><a href="#客户端使用-token-请求资源" class="headerlink" title="客户端使用 token 请求资源"></a>客户端使用 token 请求资源</h3><p>客户端获取到 token 之后就拿着 token 向资源服务器访问对应的资源了。</p><p><strong>请求地址</strong></p><p><a href="http://localhost:8000/auth-server/userInfo?accessToken=XXX">http://localhost:8000/auth-server/userInfo?accessToken=XXX</a></p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul><li><a href="https://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html">理解OAuth 2.0</a></li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;OAuth2.0 是目前互联网上比较流行的授权方式，GitHub、掘金等大部分网站都采用 OAuth 的方式支持第三方账号登陆。之前工作中有接触到但是没有深入的去了解其中的机制，这里根据原理做了一个小的 demo，源码地址：&lt;a href=&quot;https://github.com/lozhu20/oauth2-demo&quot;&gt;OAuth2-demo&lt;/a&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://lozhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="OAuth2.0" scheme="https://lozhu.happy365.day/tags/OAuth2-0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从一封邮件聊聊用户体验</title>
+    <link href="https://lozhu.happy365.day/2024/08/22/a8bd9acb149c/"/>
+    <id>https://lozhu.happy365.day/2024/08/22/a8bd9acb149c/</id>
+    <published>2024-08-22T12:01:53.000Z</published>
+    <updated>2025-08-02T13:26:44.714Z</updated>
+    
+    <content type="html"><![CDATA[<p>在使用邮箱注册某个网站时收到了验证码邮件，注册过程很顺利，但是这封邮件的诸多细节让我这个处女座强迫症颇感突兀，由此勾起了想“简单聊两句”的欲望，于是就有了这篇文章。</p><span id="more"></span><h2 id="某网站验证码邮件"><a href="#某网站验证码邮件" class="headerlink" title="某网站验证码邮件"></a>某网站验证码邮件</h2><p>以下是邮件的原文：</p><p><img src="https://images.happy365.day/24/08/22203353_Snipaste20240822203254.png" alt="邮件原文"></p><p>一封再普通不过的验证码邮件，该有的信息都有了。但不论是产品还是开发，在这封邮件上完全没有用心，下面就挑挑这封邮件可以改进地方。</p><h3 id="重要信息不够显眼"><a href="#重要信息不够显眼" class="headerlink" title="重要信息不够显眼"></a>重要信息不够显眼</h3><p>这封邮件中用户最关注的就是验证码了，但是这 6 个数字却完全淹没在文字中了，不能在最短的时间内从邮件中得到最关心的信息。</p><h3 id="中英文标点混用"><a href="#中英文标点混用" class="headerlink" title="中英文标点混用"></a>中英文标点混用</h3><p>时而中文逗号、时而英文逗号，忽长忽短的间距影响阅读。关注这个点很多年了，这个应该算是中文互联网的通病了，貌似很多人都不 care 这个问题。</p><h3 id="时间信息不够准确"><a href="#时间信息不够准确" class="headerlink" title="时间信息不够准确"></a>时间信息不够准确</h3><p>时间信息不够准确。邮件中说“本验证码5分钟内有效”，这个 5 分钟内从何时开始算起？从我点下“发送验证码”按钮开始计算吗？还是从后台系统接收到发送验证码的请求开始算？还是从邮件平台邮件成功开始算？还是我的邮箱收到这封邮件开始算？众所周知，邮件的延迟是相当高的，如果遇到邮件平台繁忙，半小时后才发送成功也是很正常的。还好这里没有设置成 1 分钟内有效，不然我肯定要狠狠的吐槽。</p><h3 id="不明所以的括号且排版混乱"><a href="#不明所以的括号且排版混乱" class="headerlink" title="不明所以的括号且排版混乱"></a>不明所以的括号且排版混乱</h3><p>整个邮件模板排版混乱。括号内的内容应该是辅助说明的，将所有的辅助说明的信息都整理到一起是不是更简洁？和书本中带星号的解释说明都统一标号放到页脚一样。括号和换行的使用也很突兀。</p><h3 id="没有自报家门及来意"><a href="#没有自报家门及来意" class="headerlink" title="没有自报家门及来意"></a>没有自报家门及来意</h3><p>通篇没有提及此邮件由谁以何种目的发送，以至于我要去核对一遍邮件标题和发件人的名称，来确定此邮件是当前我在操作的网站所发送的。</p><h2 id="正面例子"><a href="#正面例子" class="headerlink" title="正面例子"></a>正面例子</h2><p>挑了半天的刺，来看两个正面的例子。</p><h3 id="域名注册网站-Spaceship"><a href="#域名注册网站-Spaceship" class="headerlink" title="域名注册网站 Spaceship"></a>域名注册网站 Spaceship</h3><p><img src="https://images.happy365.day/24/08/22211731_Snipaste20240822211702.png" alt="Spaceship登陆请求验证码"></p><p>用户最关心的验证码不仅使用了更大号的字体，还做了加粗，还特别加了颜色突出显示，长长的邮件中一眼定位到验证码非常省时省心。</p><p>邮件上方大大的 logo 和网站主题色方便识别邮件发送者。</p><p>正文第一行就写明此验证码的用途，不需要再反复确认。</p><p>邮件中很清晰的表明了验证码有效期从何时开始计算，并且有效期设置是 30 分钟，晚两分钟收到邮件也不用担心过期。但这里有个问题是竟然不用简单易读的数字，而是使用英文单词，是害怕用户看出来吗？</p><p>⚠️ 免费广告🪧 <strong>Spaceship 上很多后缀的域名都相对便宜，非常推荐来这里注册域名！！</strong> 不过暂时还不支持支付宝支付。</p><h3 id="苹果"><a href="#苹果" class="headerlink" title="苹果"></a>苹果</h3><p>谈到细节，那就不得不提一下苹果。</p><p><img src="https://images.happy365.day/24/08/22213322_Snipaste20240822213303.png" alt="苹果官网"></p><p>观察了很久，不论是官网和邮件，还是iOS、macOS，文字段落中从没有遇到过中英文标点混用的情况，同时英文单词以及数字的前后都有一个空格，相比没有空格看起来更赏心悦目。</p><p>不过强如苹果也有失误的时候，下面是我 2023 年 12 月 16 日的截图，官网上弹出的页面上有个 “Apple” 英文单词前未加空格，还有“了解更多。”这里的句号感觉是多余了，不但和上一行的链接样式不统一，还造成了单个字符换行。</p><p><img src="https://images.happy365.day/24/08/22214931_memos822202494828%20PM.png" alt="英文单词前未加空格"></p><h2 id="邮件模板优化"><a href="#邮件模板优化" class="headerlink" title="邮件模板优化"></a>邮件模板优化</h2><p>尝试优化一下这个邮件模板：</p><p><img src="https://images.happy365.day/24/08/22223802_Snipaste20240822223744.png" alt="优化"></p><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>周围很多开发对此类细节完全不在意，极少会站在用户的角度来审视自己开发的功能。比如前端页面的功能异常提示文案只笼统的告诉用户操作失败，而不告诉用户接下来要怎么做；告诉用户联系某某某，只留下职位或姓名，却不留下 UID 和邮箱等等。</p><p>其实我们每天也是各种产品的用户，相信大多数人都为一些细枝末节的产品设计问题困扰过。比如某些 APP 开屏广告眨眼 &#x2F; 晃动手机 &#x2F; 1 秒内无操作 &#x2F; 5 秒内有操作自动跳转到广告页面、某些塑料袋总是会撕偏只能撕开一半、倒完油后瓶口总有几滴油会顺着瓶身流下等等。人人都是产品经理，如果我们都能多站在用户的角度思考自己的产品，那这个世界无疑会更加美好。</p><h2 id="免费的-MySQL-数据库-SQLPub"><a href="#免费的-MySQL-数据库-SQLPub" class="headerlink" title="免费的 MySQL 数据库 SQLPub"></a>免费的 MySQL 数据库 SQLPub</h2><p>最后推荐一个免费的在线 MySQL 数据库：<a href="https://www.sqlpub.com/">SQLPub</a>，只需要一个电子邮箱就能申请到 <strong>500M 存储空间、同时 30 个连接、最大 36000 次&#x2F;小时请求</strong> 的免费在线数据库，非常适合做为开发环境数据库使用。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;在使用邮箱注册某个网站时收到了验证码邮件，注册过程很顺利，但是这封邮件的诸多细节让我这个处女座强迫症颇感突兀，由此勾起了想“简单聊两句”的欲望，于是就有了这篇文章。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="日志随笔" scheme="https://lozhu.happy365.day/categories/%E6%97%A5%E5%BF%97%E9%9A%8F%E7%AC%94/"/>
+    
+    
+    <category term="用户体验" scheme="https://lozhu.happy365.day/tags/%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C/"/>
+    
+    <category term="产品设计" scheme="https://lozhu.happy365.day/tags/%E4%BA%A7%E5%93%81%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nginx index转发导致首页无法访问</title>
+    <link href="https://lozhu.happy365.day/2024/08/21/f19dd61c13b1/"/>
+    <id>https://lozhu.happy365.day/2024/08/21/f19dd61c13b1/</id>
+    <published>2024-08-21T06:42:35.000Z</published>
+    <updated>2025-08-02T13:26:44.709Z</updated>
+    
+    <content type="html"><![CDATA[<p>这两天在部署短链接服务，配置 nginx 规则卡了一晚上，特此记录一下。</p><span id="more"></span><h2 id="Nginx-配置及现象"><a href="#Nginx-配置及现象" class="headerlink" title="Nginx 配置及现象"></a>Nginx 配置及现象</h2><p>我的需求是如果访问域名，那么直接展示首页，如果访问其他路径，则转发到后端服务。conf.d&#x2F;default.conf 文件内容如下：</p><pre><code>server &#123;    listen       80;    listen  [::]:80;    server_name  localhost;    #access_log  /var/log/nginx/host.access.log  main;    location = / &#123;        root   /usr/share/nginx/html;        index  index.html;    &#125;    location / &#123;        proxy_pass http://192.168.0.10:8000;    &#125;    # redirect server error pages to the static page /50x.html    #    error_page   500 502 503 504  /50x.html;    location = /50x.html &#123;        root   /usr/share/nginx/html;    &#125;&#125;</code></pre><p>根据 nginx 中 &#x3D; 精确匹配的优先级最好的原则，直接访问域名会匹配到第一个规则。但是实际上请求还是会被转发到后端，非常困惑。</p><p>途中发现一个很好用的 nginx 规则验证工具：<a href="https://nginx.viraptor.info/">Nginx location match tester</a> 。每次修改规则之后要重启，再发起请求然后看结果来验证配置是否符合预期，非常繁琐，这个工具网站可以省去这些步骤，极大的提高效率。</p><h2 id="问题和解决方案"><a href="#问题和解决方案" class="headerlink" title="问题和解决方案"></a>问题和解决方案</h2><p>今天上午认真的读了一篇写得挺不错的 nginx 配置教程：<a href="https://segmentfault.com/a/1190000022315733">一文理清 nginx 中的 location 配置（系列一）</a>，在文章下的评论中看到有人贴出了自己遇到的问题，配置以及问题描述都和我遇到的问题一致，原来是 index 转发的问题。</p><p>如下配置，访问网站根目录并没有正常显示，而是返回了 404：</p><pre><code>location = / &#123;    index index.html;&#125;location / &#123;    return 404;&#125;</code></pre><blockquote><p><a href="https://segmentfault.com/u/sufan_5911192950d85"><strong>苏凡</strong></a>：<a href="https://segmentfault.com/u/chengxiansen">@诚先森</a> 了解下 index 指令，请求被内部重定向到第二个 location 了</p><p>回复 2022-09-16</p></blockquote><p>直接访问域名 <a href="http://localhost,会匹配到第一个规则,但是/">http://localhost，会匹配到第一个规则，但是</a> index 指令并不是找到文件之后就直接用了，而是会重新发起内部重定向，相当于从客户端发起 <a href="http://localhost/index.html">http://localhost/index.html</a> ，所以会再一次匹配 location 配置。</p><p>知道原因之后就简单了，在配置中增加配置 location &#x3D; &#x2F;index.html 让 nginx 内部重定向到首页就好了：</p><pre><code>server &#123;    listen       80;    listen  [::]:80;    server_name  localhost;    #access_log  /var/log/nginx/host.access.log  main;    location = / &#123;        root   /usr/share/nginx/html;        index  index.html;    &#125;        location = /index.html &#123;        root /usr/share/nginx/html;    &#125;    location / &#123;        proxy_pass http://192.168.0.10:8000;    &#125;    # redirect server error pages to the static page /50x.html    #    error_page   500 502 503 504  /50x.html;    location = /50x.html &#123;        root   /usr/share/nginx/html;    &#125;&#125;</code></pre><p>重启 nginx 之后，就能实现直接访问域名展示首页，其余请求转发至后端服务了。</p><p>不得不提一点，Nginx location match tester 这个工具无法看出被转发的情况，比如上面的 index，它只会告诉你匹配到第一条规则了，但实际后面还有更多的动作，结果就是在这个工具里看到的结果与实际验证不一致，被这个点误导了很久。</p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://nginx.viraptor.info/">Nginx location match tester</a></p><p><a href="https://segmentfault.com/a/1190000022315733">一文理清 nginx 中的 location 配置（系列一）</a></p><p><a href="https://www.cnblogs.com/kukudi/p/11496315.html">nginx中的index配置</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;这两天在部署短链接服务，配置 nginx 规则卡了一晚上，特此记录一下。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="解决方案" scheme="https://lozhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="nginx" scheme="https://lozhu.happy365.day/tags/nginx/"/>
+    
+    <category term="index转发" scheme="https://lozhu.happy365.day/tags/index%E8%BD%AC%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在MacOS系统中制作Windows10启动盘</title>
+    <link href="https://lozhu.happy365.day/2024/07/31/289c198310f3/"/>
+    <id>https://lozhu.happy365.day/2024/07/31/289c198310f3/</id>
+    <published>2024-07-31T06:51:11.000Z</published>
+    <updated>2025-08-02T13:26:44.715Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这两天新买了一个迷你主机准系统，需要自己安装系统，手边只有 Mac，第一次在 MacOS 系统下制作启动盘，踩了一些坑，记录一下。</p><span id="more"></span><h2 id="制作过程"><a href="#制作过程" class="headerlink" title="制作过程"></a>制作过程</h2><h3 id="下载-Windows10-ISO-镜像文件"><a href="#下载-Windows10-ISO-镜像文件" class="headerlink" title="下载 Windows10 ISO 镜像文件"></a>下载 Windows10 ISO 镜像文件</h3><p>官方镜像文件下载地址：<a href="https://www.microsoft.com/zh-cn/software-download/windows10ISO">下载 Windows 10 光盘映像（ISO 文件）</a></p><h3 id="安装工具软件"><a href="#安装工具软件" class="headerlink" title="安装工具软件"></a>安装工具软件</h3><p>因为个别文件超大，不能直接复制，因此需要安装一个工具软件进行分割复制：</p><pre><code>brew install wimlib</code></pre><h3 id="开始制作"><a href="#开始制作" class="headerlink" title="开始制作"></a>开始制作</h3><p>将 U 盘插入后，使用 diskutil 命令查看磁盘：</p><pre><code>diskutil list</code></pre><p>我这里 U 盘的路径是 &#x2F;dev&#x2F;disk3。</p><p>将 U 盘格式化：</p><pre><code>diskutil eraseDisk MS-DOS &quot;WIN10&quot; GPT /dev/disk3</code></pre><p>GPT 和 MBR 格式的区别以及怎么选择，可以查查资料，一般来说，新硬件直接选择 GPT 就好了。</p><p>U 盘格式化完成之后，挂载 Windows ISO 镜像文件：</p><pre><code>hdiutil mount ~/Downloads/Win10_1903_V1_English_x64.iso</code></pre><p>挂载完成之后，开始将文件复制到 U 盘，这个过程非常耗时，我的 usb2.0 U 盘，花了整整一夜才复制完成。</p><pre><code>rsync -vha --exclude=sources/install.wim /Volumes/CCCOMA_X64FRE_EN-US_DV9/* /Volumes/WIN10</code></pre><p>此过程可能会持续两三个小时，如果是 usb3.0 应该会快得多。完成之后再单独复制超大文件：</p><pre><code>wimlib-imagex split /Volumes/CCCOMA_X64FRE_EN-US_DV9/sources/install.wim /Volumes/WIN10/sources/install.swm 3800</code></pre><p>此过程可能会持续几个小时，在完成之前进度可能一直是 0%，不要中止。它将使用 wimlib 将 install.wim 文件拆分为 2 个小于 4 GB 的文件（命令中使用 3.8 GB），然后将它们复制到你的 USB。完成后，你可以在 Finder 中从 Mac 中弹出 USB 和 ISO 镜像文件。</p><pre><code>diskutil eject /dev/disk3</code></pre><p>全部完成后就可以正常进行安装了。</p><h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><p>系统安装时遇到“windows无法对计算机进行启动到下一个安装阶段的准备”的错误，无法进行后续步骤。查了一下，这是因为 U 盘和系统安装的硬盘中都存在 EFI 分区导致，需要将 U 盘中的 EFI 分区删除。</p><p>在安装过程进行到选择安装分区时，使用 <code>shift + F10</code> 打开命令行工具，然后输入 <code>diskpart</code> 进入磁盘工具：</p><p>查看磁盘：</p><pre><code>list disk</code></pre><p>找到安装系统的硬盘，记下硬盘编号，我这里 U 盘的磁盘编号是 1。</p><p>选中磁盘：</p><pre><code>select disk 1</code></pre><p>查看磁盘分区：</p><pre><code>list partition</code></pre><p>我这里看到两个分区，其中第一个只有 200M，应该就是对应的 EFI 分区，编号为 0。</p><p>选择磁盘分区：</p><pre><code>select partition 0</code></pre><p>删除对应的磁盘分区：</p><pre><code>delete partition override</code></pre><p>看到 successful 就表示删除成功了。此时关闭命令行工具，选择对应的安装分区，就可以继续进行安装了。</p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.freecodecamp.org/chinese/news/how-make-a-windows-10-usb-using-your-mac-build-a-bootable-iso-from-your-macs-terminal/">如何使用 Mac 制作 Windows 10 U 盘启动盘</a></p><p><a href="https://juejin.cn/post/7289717829732745275">使用mac制作U盘启动盘并安装win10系统</a></p><p><a href="https://www.huluohu.com/posts/446/#">Windows中如何删除移动硬盘上的EFI系统分区</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;这两天新买了一个迷你主机准系统，需要自己安装系统，手边只有 Mac，第一次在 MacOS 系统下制作启动盘，踩了一些坑，记录一下。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://lozhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="Windows" scheme="https://lozhu.happy365.day/tags/Windows/"/>
+    
+    <category term="系统安装" scheme="https://lozhu.happy365.day/tags/%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>GitHub Pages博客加速</title>
+    <link href="https://lozhu.happy365.day/2024/07/14/b35164b5de3a/"/>
+    <id>https://lozhu.happy365.day/2024/07/14/b35164b5de3a/</id>
+    <published>2024-07-14T01:33:25.000Z</published>
+    <updated>2025-08-02T13:26:44.706Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这堵破墙，害人不浅！</p><p>这两天发现博客打开速度非常慢，有时甚至出现无法访问的情况，更新点东西想确认下效果点半天进不去，很是恼火😫！明明一个中文网站，在英文区秒开，到了中文区却无法访问，真的很烦。</p><p>于是想着找找有什么免费的方案可以优化一下，找了半天，发现很多人也被这个问题困扰，但是好像除了花钱，没看到什么有用的解决方案。</p><span id="more"></span><h2 id="一些解决方案"><a href="#一些解决方案" class="headerlink" title="一些解决方案"></a>一些解决方案</h2><h3 id="付费CDN"><a href="#付费CDN" class="headerlink" title="付费CDN"></a>付费CDN</h3><p>最简单粗暴的办法就是购买国内的 CDN 服务，比如阿里云、又拍云之类的厂商。这种方案的缺点首先就是流量需要花钱，如果网站被攻击，可能会损失惨重，需要时时留心；其次就是域名需要备案才能使用，比如 .day、.la 这些域名就别想了，根本无法备案。</p><h3 id="CloudFlare"><a href="#CloudFlare" class="headerlink" title="CloudFlare"></a>CloudFlare</h3><p>将网站托管到 CloudFlare 就能获得 CF 免费的 CDN 加速服务，但是效果也不好。我目前就是用的 CF，有人说去掉 CF，直接裸连 github.io 会更快，我试了暂停 CF，直接访问不了了。现在套上 CF 至少还要比裸连稳定性高得多。</p><h3 id="Vercel"><a href="#Vercel" class="headerlink" title="Vercel"></a>Vercel</h3><p>前两年可以使用 Vercel 进行加速，不过好景不长，随着用的人越来越多，现在 Vercel 也被拿下了。貌似推出了专门针对墙国的域名，但是看反馈也是寄。</p><h3 id="杀杀杀杀杀杀杀！"><a href="#杀杀杀杀杀杀杀！" class="headerlink" title="杀杀杀杀杀杀杀！"></a>杀杀杀杀杀杀杀！</h3><p>就真的没有办法了吗？不妨问问聪明的老祖宗！</p><p><img src="https://images.happy365.day/24/07/14101048_b1bcf50acfbff627fcb2b29bd726edcc.jpeg" alt="0"></p><p><img src="https://images.happy365.day/24/07/14100206_1.jpg" alt="1"></p><p><img src="https://images.happy365.day/24/07/14100227_2.jpg" alt="2"></p><p><img src="https://images.happy365.day/24/07/14100243_3.jpg" alt="3"></p><p><img src="https://images.happy365.day/24/07/14100257_4.jpg" alt="4"></p><p><img src="https://images.happy365.day/24/07/14100333_5.jpg" alt="5"></p><p><img src="https://images.happy365.day/24/07/14100348_6.jpg" alt="6"></p><p><img src="https://images.happy365.day/24/07/14100409_7.jpg" alt="7"></p>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;这堵破墙，害人不浅！&lt;/p&gt;
+&lt;p&gt;这两天发现博客打开速度非常慢，有时甚至出现无法访问的情况，更新点东西想确认下效果点半天进不去，很是恼火😫！明明一个中文网站，在英文区秒开，到了中文区却无法访问，真的很烦。&lt;/p&gt;
+&lt;p&gt;于是想着找找有什么免费的方案可以优化一下，找了半天，发现很多人也被这个问题困扰，但是好像除了花钱，没看到什么有用的解决方案。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="解决方案" scheme="https://lozhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="网站加速" scheme="https://lozhu.happy365.day/tags/%E7%BD%91%E7%AB%99%E5%8A%A0%E9%80%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>码乙己GitCode</title>
+    <link href="https://lozhu.happy365.day/2024/07/12/d2ab6908393c/"/>
+    <id>https://lozhu.happy365.day/2024/07/12/d2ab6908393c/</id>
+    <published>2024-07-12T08:30:25.000Z</published>
+    <updated>2025-08-02T13:26:44.717Z</updated>
+    
+    <content type="html"><![CDATA[<p>GitCode 一上线，所有搞 IT 的人便都看着它笑，有的叫道，“GitCode，你的反馈中心里又添上新 issue 了！”</p><p>它不回答，对用户说，“最低0.47元&#x2F;天解锁提交记录，VIP享 9 折下载代码。”便排出 50 个全球开源项目推荐。</p><p>他们又故意的高声嚷道，“你一定又偷了人家的代码了！”</p><p>GitCode 睁大眼睛说，“你怎么这样凭空污人清白……”</p><p>“什么清白？我前天亲眼见你偷了 GitHub 家的代码，被追着骂。”</p><p>GitCode 便涨红了脸，额上的青筋条条绽出，争辩道，“复制代码仓库不能算偷……剽窃代码！……技术人的事，能算偷么？”</p><p>接连便是难懂的话，什么“国产自研”，什么“开放、协作、自由”之类，引得众人都哄笑起来：互联网上充满了快活的空气。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;GitCode 一上线，所有搞 IT 的人便都看着它笑，有的叫道，“GitCode，你的反馈中心里又添上新 issue 了！”&lt;/p&gt;
+&lt;p&gt;它不回答，对用户说，“最低0.47元&amp;#x2F;天解锁提交记录，VIP享 9 折下载代码。”便排出 50 个全球开源项目推荐。&lt;/p</summary>
+      
+    
+    
+    
+    <category term="日志随笔" scheme="https://lozhu.happy365.day/categories/%E6%97%A5%E5%BF%97%E9%9A%8F%E7%AC%94/"/>
+    
+    
+    <category term="GitCode" scheme="https://lozhu.happy365.day/tags/GitCode/"/>
+    
+    <category term="剽窃" scheme="https://lozhu.happy365.day/tags/%E5%89%BD%E7%AA%83/"/>
+    
+  </entry>
+  
+</feed>

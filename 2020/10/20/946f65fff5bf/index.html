@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="@PreAuthorize 和 @PostAuthorize是SpringSecurity中常用的两个注解，简单了解一下他们的用法吧！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="@PreAuthorize and @PostAuthorize">
+<meta property="og:url" content="https://lozhu.happy365.day/2020/10/20/946f65fff5bf/index.html">
+<meta property="og:site_name" content="🐷&#39;s 部落格">
+<meta property="og:description" content="@PreAuthorize 和 @PostAuthorize是SpringSecurity中常用的两个注解，简单了解一下他们的用法吧！">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-20T07:56:06.000Z">
+<meta property="article:modified_time" content="2025-08-02T13:26:44.710Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="SpringSecurity">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>@PreAuthorize and @PostAuthorize</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="🐷's 部落格" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2020/10/22/15cf386d74ea/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/10/20/c1fbc1b9ca41/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&text=@PreAuthorize and @PostAuthorize"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&title=@PreAuthorize and @PostAuthorize"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&is_video=false&description=@PreAuthorize and @PostAuthorize"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=@PreAuthorize and @PostAuthorize&body=Check out this article: https://lozhu.happy365.day/2020/10/20/946f65fff5bf/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&title=@PreAuthorize and @PostAuthorize"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&title=@PreAuthorize and @PostAuthorize"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&title=@PreAuthorize and @PostAuthorize"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&title=@PreAuthorize and @PostAuthorize"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&name=@PreAuthorize and @PostAuthorize&description=&lt;p&gt;@PreAuthorize 和 @PostAuthorize是SpringSecurity中常用的两个注解，简单了解一下他们的用法吧！&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&t=@PreAuthorize and @PostAuthorize"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E9%AA%8C%E8%AF%81"><span class="toc-number">1.</span> <span class="toc-text">开启验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PreAuthorize%E6%B3%A8%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">@PreAuthorize注解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PostAuthorize"><span class="toc-number">3.</span> <span class="toc-text">@PostAuthorize</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Secured"><span class="toc-number">4.</span> <span class="toc-text">@Secured</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        @PreAuthorize and @PostAuthorize
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-10-20T07:56:06.000Z" class="dt-published" itemprop="datePublished">2020-10-20</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/SpringSecurity/" rel="tag">SpringSecurity</a> -->
+        <a class="category-link" href="/tags/SpringSecurity/" rel="tag">SpringSecurity</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>@PreAuthorize 和 @PostAuthorize是SpringSecurity中常用的两个注解，简单了解一下他们的用法吧！</p>
+<span id="more"></span>
+
+<h2 id="开启验证"><a href="#开启验证" class="headerlink" title="开启验证"></a>开启验证</h2><pre><code class="java">package com.bill.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+/**
+ * @author :  zhulongkun20@gmail.com
+ * @create :  10-20-2020 15:27:16
+ * @description :  SpringSecurity配置类
+ * @since :  v1.0
+ */
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class SpringSecurityConfig extends WebSecurityConfigurerAdapter &#123;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception &#123;
+        // 基于内存的方式构建两个用户，user/123456，admin/123456
+        auth.inMemoryAuthentication()
+                .passwordEncoder(passwordEncoder())
+                .withUser(&quot;admin&quot;)
+                .password(passwordEncoder().encode(&quot;123456&quot;))
+                .roles(&quot;admin&quot;);
+        auth.inMemoryAuthentication()
+                .passwordEncoder(passwordEncoder())
+                .withUser(&quot;user&quot;)
+                .password(passwordEncoder().encode(&quot;123456&quot;))
+                .roles(&quot;normal&quot;);
+    &#125;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() &#123;
+        return new BCryptPasswordEncoder();
+    &#125;
+
+&#125;
+</code></pre>
+<h2 id="PreAuthorize注解"><a href="#PreAuthorize注解" class="headerlink" title="@PreAuthorize注解"></a>@PreAuthorize注解</h2><pre><code class="java">package com.bill.controller;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+/**
+ * @author :  zhulongkun20@gmail.com
+ * @create :  10-20-2020 15:22:13
+ * @description :  HomeController
+ * @since :  v1.0
+ */
+@Controller
+@RequestMapping(&quot;/hello&quot;)
+public class HelloController &#123;
+
+    @GetMapping(&quot;/&quot;)
+    @ResponseBody
+    public String sayHello() &#123;
+        return &quot;Hello, spring security.&quot;;
+    &#125;
+
+    @GetMapping(&quot;/helloNormal&quot;)
+    @ResponseBody
+    @PreAuthorize(&quot;hasAnyRole(&#39;normal&#39;)&quot;)
+    public String helloNormal() &#123;
+        return &quot;Hello, normal.&quot;;
+    &#125;
+
+    @GetMapping(&quot;/helloAdmin&quot;)
+    @ResponseBody
+    @PreAuthorize(&quot;hasAnyRole(&#39;admin&#39;)&quot;)
+    public String helloAdmin() &#123;
+        return &quot;Hello, admin&quot;;
+    &#125;
+&#125;
+</code></pre>
+<p>当@EnableGlobalMethodSecurity(prePostEnabled &#x3D; true)开启的时候，@PreAuthorize注解生效，支持SpringEL表达式，</p>
+<pre><code class="java">// 只要有其中一个权限即可访问
+@PreAuthorize(&quot;hasAnyRole(&quot;admin&quot;, &quot;normal&quot;)&quot;)
+
+// 同时满足条件才可以访问
+@PreAuthorize(&quot;hasRole(&#39;admin&#39;) AND hasRole(&#39;normal&#39;)&quot;)
+</code></pre>
+<h2 id="PostAuthorize"><a href="#PostAuthorize" class="headerlink" title="@PostAuthorize"></a>@PostAuthorize</h2><p>@PostAuthorize 注解使用并不多，在方法执行后再进行权限验证，适合验证带有返回值的权限，Spring EL 提供返回对象能够在表达式语言中获取返回的对象returnObject。</p>
+<p>当@EnableGlobalMethodSecurity(prePostEnabled &#x3D; true)的时候，@PostAuthorize可以使用：</p>
+<pre><code class="java">@GetMapping(&quot;/helloUser&quot;)
+@PostAuthorize(&quot;returnObject != null &amp;&amp;  returnObject.username == authentication.name&quot;)
+public User helloUser() &#123;
+    Object pricipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    User user;
+    if (&quot;anonymousUser&quot;.equals(pricipal)) &#123;
+        user = null;
+    &#125; else &#123;
+        user = (User) pricipal;
+    &#125;
+    return user;
+&#125;
+</code></pre>
+<p>内置表达式：</p>
+<table>
+<thead>
+<tr>
+<th align="left">表达式</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">hasRole([role])</td>
+<td align="left">如果有当前角色, 则返回 true(会自动加上 ROLE_ 前缀)</td>
+</tr>
+<tr>
+<td align="left">hasAnyRole([role1, role2])</td>
+<td align="left">如果有任一角色即可通过校验, 返回true,(会自动加上 ROLE_ 前缀)</td>
+</tr>
+<tr>
+<td align="left">hasAuthority([authority])</td>
+<td align="left">如果有指定权限, 则返回 true</td>
+</tr>
+<tr>
+<td align="left">hasAnyAuthority([authority1, authority2])</td>
+<td align="left">如果有任一指定权限, 则返回true</td>
+</tr>
+<tr>
+<td align="left">principal</td>
+<td align="left">获取当前用户的 principal 主体对象</td>
+</tr>
+<tr>
+<td align="left">authentication</td>
+<td align="left">获取当前用户的 authentication 对象,</td>
+</tr>
+<tr>
+<td align="left">permitAll</td>
+<td align="left">总是返回 true, 表示全部允许</td>
+</tr>
+<tr>
+<td align="left">denyAll</td>
+<td align="left">总是返回 false, 代表全部拒绝</td>
+</tr>
+<tr>
+<td align="left">isAnonymous()</td>
+<td align="left">如果是匿名访问, 返回true</td>
+</tr>
+<tr>
+<td align="left">isRememberMe()</td>
+<td align="left">如果是remember-me 自动认证, 则返回 true</td>
+</tr>
+<tr>
+<td align="left">isAuthenticated()</td>
+<td align="left">如果不是匿名访问, 则返回true</td>
+</tr>
+<tr>
+<td align="left">isFullAuthenticated()</td>
+<td align="left">如果不是匿名访问或remember-me认证登陆, 则返回true</td>
+</tr>
+<tr>
+<td align="left">hasPermission(Object target, Object permission)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">hasPermission(Object target, String targetType, Object permission)</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h2 id="Secured"><a href="#Secured" class="headerlink" title="@Secured"></a>@Secured</h2><p>当@EnableGlobalMethodSecurity(securedEnabled &#x3D; true)的时候，@Secured可以使用。</p>
+<pre><code class="java">@GetMapping(&quot;/helloUser&quot;)
+@Secured(&#123;&quot;ROLE_admin&quot;, &quot;ROLE_normal&quot;&#125;)
+public String helloUser() &#123;
+    return &quot;hello, user&quot;;
+&#125;
+</code></pre>
+<p>拥有normal或者admin角色的用户都可以访问helloUser()方法。另外需要注意的是这里 <strong>匹配的字符串需要添加前缀“ROLE_“</strong>，如果我们要求，只有同时拥有admin &amp; normal的用户才能访问helloUser()方法，这时候@Secured就无能为力了。</p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E9%AA%8C%E8%AF%81"><span class="toc-number">1.</span> <span class="toc-text">开启验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PreAuthorize%E6%B3%A8%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">@PreAuthorize注解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PostAuthorize"><span class="toc-number">3.</span> <span class="toc-text">@PostAuthorize</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Secured"><span class="toc-number">4.</span> <span class="toc-text">@Secured</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&text=@PreAuthorize and @PostAuthorize"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&title=@PreAuthorize and @PostAuthorize"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&is_video=false&description=@PreAuthorize and @PostAuthorize"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=@PreAuthorize and @PostAuthorize&body=Check out this article: https://lozhu.happy365.day/2020/10/20/946f65fff5bf/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&title=@PreAuthorize and @PostAuthorize"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&title=@PreAuthorize and @PostAuthorize"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&title=@PreAuthorize and @PostAuthorize"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&title=@PreAuthorize and @PostAuthorize"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&name=@PreAuthorize and @PostAuthorize&description=&lt;p&gt;@PreAuthorize 和 @PostAuthorize是SpringSecurity中常用的两个注解，简单了解一下他们的用法吧！&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2020/10/20/946f65fff5bf/&t=@PreAuthorize and @PostAuthorize"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

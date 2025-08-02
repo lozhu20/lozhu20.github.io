@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack+React项目搭建">
+<meta property="og:url" content="https://lozhu.happy365.day/2023/11/24/e92bafd74220/index.html">
+<meta property="og:site_name" content="🐷&#39;s 部落格">
+<meta property="og:description" content="Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-24T15:00:02.000Z">
+<meta property="article:modified_time" content="2025-08-02T13:26:44.712Z">
+<meta property="article:author" content="lozhu">
+<meta property="article:tag" content="Webpack">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Webpack+React项目搭建</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="🐷's 部落格" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/12/03/21e964fb706d/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/11/12/8c7a85ccc982/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2023/11/24/e92bafd74220/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&text=Webpack+React项目搭建"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&title=Webpack+React项目搭建"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&is_video=false&description=Webpack+React项目搭建"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Webpack+React项目搭建&body=Check out this article: https://lozhu.happy365.day/2023/11/24/e92bafd74220/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&title=Webpack+React项目搭建"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&title=Webpack+React项目搭建"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&title=Webpack+React项目搭建"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&title=Webpack+React项目搭建"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&name=Webpack+React项目搭建&description=&lt;blockquote&gt;
+&lt;p&gt;Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。&lt;/p&gt;
+&lt;/blockquote&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&t=Webpack+React项目搭建"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">项目初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#typescript%E5%8F%8AReact%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">typescript及React配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webpack%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">webpack配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E5%85%A5-webpack"><span class="toc-number">4.1.</span> <span class="toc-text">引入 webpack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E3%80%81%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">4.2.</span> <span class="toc-text">开发、生产环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC"><span class="toc-number">4.3.</span> <span class="toc-text">修改启动脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Babel%E9%85%8D%E7%BD%AE"><span class="toc-number">4.4.</span> <span class="toc-text">Babel配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HtmlWebpackPlugin%E9%85%8D%E7%BD%AE"><span class="toc-number">4.5.</span> <span class="toc-text">HtmlWebpackPlugin配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E7%A7%8Dloader%E9%85%8D%E7%BD%AE"><span class="toc-number">5.</span> <span class="toc-text">各种loader配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD"><span class="toc-number">5.1.</span> <span class="toc-text">图片加载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#css%E6%A0%B7%E5%BC%8F"><span class="toc-number">5.2.</span> <span class="toc-text">css样式</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Webpack+React项目搭建
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">lozhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-11-24T15:00:02.000Z" class="dt-published" itemprop="datePublished">2023-11-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/React/" rel="tag">React</a>, <a class="p-category" href="/tags/Webpack/" rel="tag">Webpack</a> -->
+        <a class="category-link" href="/tags/React/" rel="tag">React</a>, <a class="category-link" href="/tags/Webpack/" rel="tag">Webpack</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <blockquote>
+<p>Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。</p>
+</blockquote>
+<span id="more"></span>
+
+<p>参考资料</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7228845572618371133#heading-4">手把手教你搭建 Webpack 5 + React 项目</a></li>
+</ul>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul>
+<li>entry: 使用哪个模块来作为构建的起始入口。</li>
+<li>output: 最终打包后的文件放在哪里，以及如何命名这些文件。</li>
+<li>loader: 是处理文件的转换器，用于对模块源码进行转换，webpack 只能识别 js、json 文件，像 css 、ts 、jsx等文件都需要通过 loader 进行转换。</li>
+<li>plugin: 是一种可扩展的机制，可以打包过程中添加额外的功能。比如打包优化，资源管理，注入环境变量等。</li>
+<li>mode: 对于不同的环境，我们往往需要不同的配置，通过设置 mode 参数来选择环境。</li>
+</ul>
+<h2 id="项目初始化"><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h2><p>略过 node.js 安装之类的前置步骤。</p>
+<pre><code class="sh">// 创建项目文件夹
+mkdir start-react
+// 初始化
+npm init
+</code></pre>
+<h2 id="typescript及React配置"><a href="#typescript及React配置" class="headerlink" title="typescript及React配置"></a>typescript及React配置</h2><p>引入 typescript及React</p>
+<pre><code class="sh">// react
+npm add -D react react-dom
+npm add -D @types/react @types/react-dom
+
+// typescript
+npm add -D typescript
+
+// 初始化 typesript 配置，生成 tsconfig.js 文件
+tsc --init
+</code></pre>
+<p>tsconfig.js 文件配置：</p>
+<pre><code class="js">&#123;
+  &quot;compilerOptions&quot;: &#123;
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    // &quot;incremental&quot;: true,                   /* Enable incremental compilation */
+    &quot;target&quot;: &quot;ESNEXT&quot;,                          /* Specify ECMAScript target version: &#39;ES3&#39; (default), &#39;ES5&#39;, &#39;ES2015&#39;, &#39;ES2016&#39;, &#39;ES2017&#39;, &#39;ES2018&#39;, &#39;ES2019&#39;, &#39;ES2020&#39;, or &#39;ESNEXT&#39;. */
+    &quot;module&quot;: &quot;ESNext&quot;,                     /* Specify module code generation: &#39;none&#39;, &#39;commonjs&#39;, &#39;amd&#39;, &#39;system&#39;, &#39;umd&#39;, &#39;es2015&#39;, &#39;es2020&#39;, or &#39;ESNext&#39;. */
+    // &quot;lib&quot;: [],                             /* Specify library files to be included in the compilation. */
+    // &quot;allowJs&quot;: true,                       /* Allow javascript files to be compiled. */
+    // &quot;checkJs&quot;: true,                       /* Report errors in .js files. */
+    &quot;jsx&quot;: &quot;preserve&quot;,                     /* Specify JSX code generation: &#39;preserve&#39;, &#39;react-native&#39;, or &#39;react&#39;. */
+    // &quot;declaration&quot;: true,                   /* Generates corresponding &#39;.d.ts&#39; file. */
+    // &quot;declarationMap&quot;: true,                /* Generates a sourcemap for each corresponding &#39;.d.ts&#39; file. */
+    &quot;sourceMap&quot;: true,                     /* Generates corresponding &#39;.map&#39; file. */
+    // &quot;outFile&quot;: &quot;./&quot;,                       /* Concatenate and emit output to single file. */
+    // &quot;outDir&quot;: &quot;./&quot;,                        /* Redirect output structure to the directory. */
+    &quot;rootDir&quot;: &quot;./src&quot;,                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+    // &quot;composite&quot;: true,                     /* Enable project compilation */
+    // &quot;tsBuildInfoFile&quot;: &quot;./&quot;,               /* Specify file to store incremental compilation information */
+    // &quot;removeComments&quot;: true,                /* Do not emit comments to output. */
+    &quot;noEmit&quot;: true,                        /* Do not emit outputs. */
+    &quot;importHelpers&quot;: true,                 /* Import emit helpers from &#39;tslib&#39;. */
+    // &quot;downlevelIteration&quot;: true,            /* Provide full support for iterables in &#39;for-of&#39;, spread, and destructuring when targeting &#39;ES5&#39; or &#39;ES3&#39;. */
+    // &quot;isolatedModules&quot;: true,               /* Transpile each file as a separate module (similar to &#39;ts.transpileModule&#39;). */
+
+    /* Strict Type-Checking Options */
+    &quot;strict&quot;: true,                           /* Enable all strict type-checking options. */
+    // &quot;noImplicitAny&quot;: true,                 /* Raise error on expressions and declarations with an implied &#39;any&#39; type. */
+    // &quot;strictNullChecks&quot;: true,              /* Enable strict null checks. */
+    // &quot;strictFunctionTypes&quot;: true,           /* Enable strict checking of function types. */
+    // &quot;strictBindCallApply&quot;: true,           /* Enable strict &#39;bind&#39;, &#39;call&#39;, and &#39;apply&#39; methods on functions. */
+    // &quot;strictPropertyInitialization&quot;: true,  /* Enable strict checking of property initialization in classes. */
+    // &quot;noImplicitThis&quot;: true,                /* Raise error on &#39;this&#39; expressions with an implied &#39;any&#39; type. */
+    // &quot;alwaysStrict&quot;: true,                  /* Parse in strict mode and emit &quot;use strict&quot; for each source file. */
+
+    /* Additional Checks */
+    &quot;noUnusedLocals&quot;: true,                /* Report errors on unused locals. */
+    &quot;noUnusedParameters&quot;: true,            /* Report errors on unused parameters. */
+    &quot;noImplicitReturns&quot;: true,             /* Report error when not all code paths in function return a value. */
+    &quot;noFallthroughCasesInSwitch&quot;: true,    /* Report errors for fallthrough cases in switch statement. */
+
+    /* Module Resolution Options */
+    &quot;moduleResolution&quot;: &quot;node&quot;,            /* Specify module resolution strategy: &#39;node&#39; (Node.js) or &#39;classic&#39; (TypeScript pre-1.6). */
+    &quot;baseUrl&quot;: &quot;./&quot;,                       /* Base directory to resolve non-absolute module names. */
+    &quot;paths&quot;: &#123;
+      &quot;common/*&quot;: [
+        &quot;src/common/*&quot;
+      ],
+      &quot;@/*&quot;: [
+        &quot;src/*&quot;
+      ]
+    &#125;,                           /* A series of entries which re-map imports to lookup locations relative to the &#39;baseUrl&#39;. */
+    // &quot;rootDirs&quot;: [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
+    // &quot;typeRoots&quot;: [],                       /* List of folders to include type definitions from. */
+    // &quot;types&quot;: [],                           /* Type declaration files to be included in compilation. */
+    // &quot;allowSyntheticDefaultImports&quot;: true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
+    &quot;esModuleInterop&quot;: true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies &#39;allowSyntheticDefaultImports&#39;. */
+    // &quot;preserveSymlinks&quot;: true,              /* Do not resolve the real path of symlinks. */
+    // &quot;allowUmdGlobalAccess&quot;: true,          /* Allow accessing UMD globals from modules. */
+
+    /* Source Map Options */
+    // &quot;sourceRoot&quot;: &quot;&quot;,                      /* Specify the location where debugger should locate TypeScript files instead of source locations. */
+    // &quot;mapRoot&quot;: &quot;&quot;,                         /* Specify the location where debugger should locate map files instead of generated locations. */
+    // &quot;inlineSourceMap&quot;: true,               /* Emit a single file with source maps instead of having a separate file. */
+    // &quot;inlineSources&quot;: true,                 /* Emit the source alongside the sourcemaps within a single file; requires &#39;--inlineSourceMap&#39; or &#39;--sourceMap&#39; to be set. */
+
+    /* Experimental Options */
+    // &quot;experimentalDecorators&quot;: true,        /* Enables experimental support for ES7 decorators. */
+    // &quot;emitDecoratorMetadata&quot;: true,         /* Enables experimental support for emitting type metadata for decorators. */
+
+    /* Advanced Options */
+    &quot;skipLibCheck&quot;: true,                     /* Skip type checking of declaration files. */
+    &quot;forceConsistentCasingInFileNames&quot;: true  /* Disallow inconsistently-cased references to the same file. */
+  &#125;,
+  &quot;include&quot;: [&quot;src&quot;]
+&#125;
+</code></pre>
+<p>创建 src 目录，在该目录下创建文件 App.tsx 及 index.tsx，文件内容如下：</p>
+<pre><code class="react">// App.tsx
+import * as React from &#39;react&#39;
+
+const App: React.FC = () =&gt; &#123;
+    return (
+        &lt;div&gt;
+            &lt;h1&gt;Hello lozhu!&lt;/h1&gt;
+        &lt;/div&gt;
+    )
+&#125;
+
+export default App
+</code></pre>
+<pre><code class="react">import * as React from &#39;react&#39;
+import * as ReactDOM from &#39;react-dom/client&#39;
+
+import App from &#39;./App&#39;
+
+const root = ReactDOM.createRoot(document.getElementById(&#39;app&#39;)!)
+root.render(&lt;App /&gt;)
+</code></pre>
+<h2 id="webpack配置"><a href="#webpack配置" class="headerlink" title="webpack配置"></a>webpack配置</h2><h3 id="引入-webpack"><a href="#引入-webpack" class="headerlink" title="引入 webpack"></a>引入 webpack</h3><pre><code class="sh">npm add -D webpack webpack-cli webpack-dev-server webpack-merge
+</code></pre>
+<h3 id="开发、生产环境配置"><a href="#开发、生产环境配置" class="headerlink" title="开发、生产环境配置"></a>开发、生产环境配置</h3><p>引入 cross-env</p>
+<pre><code class="sh">npm add -D cross-env
+</code></pre>
+<p>创建 scripts 文件夹及 webpack.base.js、webpack.dev.js、webpack.prod.js 文件</p>
+<pre><code class="js">// webpack.base.js
+const path = require(&#39;path&#39;)
+
+module.exports = &#123;
+    entry: path.resolve(__dirname, &#39;../src/index.tsx&#39;),
+    output: &#123;
+        path: path.resolve(__dirname, &#39;../dist&#39;),  // 打包后的文件存放地址
+        filename: &#39;[name].[hash:8].js&#39;  // 打包的文件名
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="js">// webpack.dev.js
+const &#123; merge &#125; = require(&#39;webpack-merge&#39;)
+const base = require(&#39;./webpack.base.js&#39;)
+
+module.exports = merge(base, &#123;
+    mode: &#39;development&#39;,
+    devServer: &#123;
+        open: true,  // 编译完自动打开浏览器
+        port: 8080
+    &#125;
+&#125;)
+</code></pre>
+<pre><code class="js">// webpack.prod.js
+const &#123; merge &#125; = require(&#39;webpack-merge&#39;)
+const base = require(&#39;./webpack.base.js&#39;)
+
+module.exports = merge(base, &#123;
+    mode: &#39;production&#39;  // 生产模式
+&#125;)
+</code></pre>
+<h3 id="修改启动脚本"><a href="#修改启动脚本" class="headerlink" title="修改启动脚本"></a>修改启动脚本</h3><p>修改 package.json</p>
+<pre><code class="json">&#123;
+  &quot;name&quot;: &quot;start-react&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;no description&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: &#123;
+    // 启动开发环境
+    &quot;dev&quot;: &quot;cross-env NODE_ENV=development webpack serve -c scripts/webpack.dev.js&quot;,
+    // 生产打包
+    &quot;build&quot;: &quot;cross-env NODE_ENV=production webpack -c scripts/webpack.prod.js&quot;
+  &#125;,
+  ...
+&#125; 
+</code></pre>
+<h3 id="Babel配置"><a href="#Babel配置" class="headerlink" title="Babel配置"></a>Babel配置</h3><p>Babel 是一个 JavaScript 编译器。主要用于将高版本的JavaScript代码转为向后兼容的JS代码，从而能让我们的代码运行在更低版本的浏览器或者其他的环境中。</p>
+<p>由于 webpack 只能识别js、json 文件， 无法识别 jsx&#x2F;tsx 文件，此时如果我们尝试启动项目肯定会报错。如何让 webpack 能识别呢？此时我们就需要使用<code>babel-loader</code> 来转换代码，babel-loader 可以让 webpack 在构建的时候借助 Babel 对JS代码进行转译。</p>
+<p>引入依赖</p>
+<pre><code class="sh">npm add -D babel-loader @babel/core @babel/preset-env @babel/preset-react @babel/preset-typescript
+</code></pre>
+<p>修改 webpack.base.js 配置</p>
+<pre><code class="js">const path = require(&#39;path&#39;)
+
+module.exports = &#123;
+    entry: path.resolve(__dirname, &#39;../src/index.tsx&#39;),
+    output: &#123;
+        path: path.resolve(__dirname, &#39;../dist&#39;),  // 打包后的文件存放地址
+        filename: &#39;[name].[hash:8].js&#39;  // 打包的文件名
+    &#125;,
+    resolve: &#123;
+        extensions: [&#39;.ts&#39;, &#39;.tsx&#39;, &#39;.mjs&#39;, &#39;.js&#39;, &#39;.json&#39;, &#39;.jsx&#39;],
+        alias: &#123;
+            &#39;@&#39;: path.resolve(__dirname, &#39;../&#39;)
+        &#125;
+    &#125;,
+    module: &#123;
+        rules: [
+            &#123;
+                test: /.(jsx?)|(tsx?)$/,
+                use: &#123;
+                    loader: &#39;babel-loader&#39;,
+                    options: &#123;
+                        presets: [
+                            [&#39;@babel/preset-env&#39;],
+                            [&#39;@babel/preset-typescript&#39;],
+                            [&#39;@babel/preset-react&#39;]
+                        ]
+                    &#125;
+                &#125;
+            &#125;
+        ]
+    &#125;
+&#125;
+</code></pre>
+<p>运行打包命令</p>
+<pre><code class="sh">npm run build
+</code></pre>
+<p>打包完成后，会生成 dist 目录，但是还需要 index.html 文件才能访问。</p>
+<h3 id="HtmlWebpackPlugin配置"><a href="#HtmlWebpackPlugin配置" class="headerlink" title="HtmlWebpackPlugin配置"></a>HtmlWebpackPlugin配置</h3><p>可以使用 HtmlWebpackPlugin 在每次打包时自动生成 index.html 入口文件。</p>
+<pre><code class="sh">npm add -D html-webpack-plugin
+</code></pre>
+<p>修改 webpack.base.js 文件内容</p>
+<pre><code class="js">const path = require(&#39;path&#39;)
+const HtmlWebpackPlugin = require(&#39;html-webpack-plugin&#39;)
+
+module.exports = &#123;
+    entry: path.resolve(__dirname, &#39;../src/index.tsx&#39;),
+    output: &#123;
+        path: path.resolve(__dirname, &#39;../dist&#39;),  // 打包后的文件存放地址
+        filename: &#39;[name].[hash:8].js&#39;  // 打包的文件名
+    &#125;,
+    resolve: &#123;
+        extensions: [&#39;.ts&#39;, &#39;.tsx&#39;, &#39;.mjs&#39;, &#39;.js&#39;, &#39;.json&#39;, &#39;.jsx&#39;],
+        alias: &#123;
+            &#39;@&#39;: path.resolve(__dirname, &#39;../&#39;)
+        &#125;
+    &#125;,
+    module: &#123;
+        rules: [
+            &#123;
+                test: /.(jsx?)|(tsx?)$/,
+                use: &#123;
+                    loader: &#39;babel-loader&#39;,
+                    options: &#123;
+                        presets: [
+                            [&#39;@babel/preset-env&#39;],
+                            [&#39;@babel/preset-typescript&#39;],
+                            [&#39;@babel/preset-react&#39;]
+                        ]
+                    &#125;
+                &#125;
+            &#125;
+        ]
+    &#125;,
+    plugins: [
+        new HtmlWebpackPlugin(&#123;
+            template: path.resolve(__dirname, &#39;../src/index.html&#39;)  // 使用自定义模板
+        &#125;)
+    ]
+&#125;
+</code></pre>
+<p>在 src 目录下创建 index.html 文件</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;hello webpack&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>再次运行打包命令后，dist 目录下产生了 index.html 文件，浏览器打开就能看到 App.tsx 中定义的内容。</p>
+<h2 id="各种loader配置"><a href="#各种loader配置" class="headerlink" title="各种loader配置"></a>各种loader配置</h2><h3 id="图片加载"><a href="#图片加载" class="headerlink" title="图片加载"></a>图片加载</h3><p>引入依赖 url-loader 及 file-loader</p>
+<pre><code class="sh">npm add -D file-loader url-loader
+</code></pre>
+<p>在根目录下创建图片文件夹 assets&#x2F;images，引入图片 img1.jpg 和 img2.jpg</p>
+<p>在 App.tsx 中引入图片</p>
+<pre><code class="tsx">import * as React from &#39;react&#39;
+import img1 from &#39;../assets/images/img1.jpg&#39;
+
+const App: React.FC = () =&gt; &#123;
+    return (
+        &lt;div&gt;
+            &lt;h1&gt;Hello lozhu!&lt;/h1&gt;
+            &lt;div&gt;
+                &lt;img src=&#123;img1&#125; /&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    )
+&#125;
+
+export default App
+</code></pre>
+<p>修改 webpack.base.js 配置</p>
+<pre><code class="js">const path = require(&#39;path&#39;)
+const HtmlWebpackPlugin = require(&#39;html-webpack-plugin&#39;)
+
+module.exports = &#123;
+    entry: path.resolve(__dirname, &#39;../src/index.tsx&#39;),
+    output: &#123;
+        path: path.resolve(__dirname, &#39;../dist&#39;),  // 打包后的文件存放地址
+        filename: &#39;[name].[hash:8].js&#39;  // 打包的文件名
+    &#125;,
+    resolve: &#123;
+        extensions: [&#39;.ts&#39;, &#39;.tsx&#39;, &#39;.mjs&#39;, &#39;.js&#39;, &#39;.json&#39;, &#39;.jsx&#39;],
+        alias: &#123;
+            &#39;@&#39;: path.resolve(__dirname, &#39;../&#39;)
+        &#125;
+    &#125;,
+    module: &#123;
+        rules: [
+            &#123;
+                test: /.(jsx?)|(tsx?)$/,
+                use: &#123;
+                    loader: &#39;babel-loader&#39;,
+                    options: &#123;
+                        presets: [
+                            [&#39;@babel/preset-env&#39;],
+                            [&#39;@babel/preset-typescript&#39;],
+                            [&#39;@babel/preset-react&#39;]
+                        ]
+                    &#125;
+                &#125;
+            &#125;,
+            &#123;
+                test: /\.(jpg|png)$/,
+                use: [
+                    &#123;
+                        loader: &#39;url-loader&#39;,
+                        options: &#123;
+                            limit: 2000
+                        &#125;
+                    &#125;
+                ]
+            &#125;
+        ]
+    &#125;,
+    plugins: [
+        new HtmlWebpackPlugin(&#123;
+            template: path.resolve(__dirname, &#39;../src/index.html&#39;)  // 使用自定义模板
+        &#125;)
+    ]
+&#125;
+</code></pre>
+<p>重新打包即可看到图片加载出来了:eyes:</p>
+<h3 id="css样式"><a href="#css样式" class="headerlink" title="css样式"></a>css样式</h3><p>css-loader 只能帮我们将 css 解析成 js，但不能挂载到元素上。style-loader 可以帮我们实现将样式挂载到元素上，它负责将 css 样式通过 style 标签插入到 DOM 中。通过 style-loader 实现样式挂载，自动添加 style 标签到 head 中。</p>
+<p>使用 postcss 处理 css</p>
+<pre><code class="sh">npm add -D style-loader css-loader postcss postcss-loader postcss-preset-env
+</code></pre>
+<p>新建 src&#x2F;assets&#x2F;style&#x2F;mystyle.css 样式文件</p>
+<pre><code class="css">// mystyle.css
+/* 标准图片样式 */
+.standard-img &#123;
+    width: 100px;
+    height: 60px;
+    border-radius: 8px;
+&#125;
+</code></pre>
+<p>修改 App.tsx 文件引入 css</p>
+<pre><code class="tsx">import * as React from &#39;react&#39;
+import img1 from &#39;./src/assets/images/img1.jpg&#39;
+import &#39;./assets/style/mystyle.css&#39;
+
+const App: React.FC = () =&gt; &#123;
+    return (
+        &lt;div&gt;
+            &lt;h1&gt;Hello lozhu!&lt;/h1&gt;
+            &lt;div&gt;
+                &lt;img src=&#123;img1&#125; className=&quot;standard-img&quot; /&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    )
+&#125;
+
+export default App
+</code></pre>
+<p>修改 webpack.base.js 文件</p>
+<pre><code class="js">const path = require(&#39;path&#39;)
+const HtmlWebpackPlugin = require(&#39;html-webpack-plugin&#39;)
+
+module.exports = &#123;
+    entry: path.resolve(__dirname, &#39;../src/index.tsx&#39;),
+    output: &#123;
+        path: path.resolve(__dirname, &#39;../dist&#39;),  // 打包后的文件存放地址
+        filename: &#39;[name].[hash:8].js&#39;  // 打包的文件名
+    &#125;,
+    resolve: &#123;
+        extensions: [&#39;.ts&#39;, &#39;.tsx&#39;, &#39;.mjs&#39;, &#39;.js&#39;, &#39;.json&#39;, &#39;.jsx&#39;],
+        alias: &#123;
+            &#39;@&#39;: path.resolve(__dirname, &#39;../&#39;)
+        &#125;
+    &#125;,
+    module: &#123;
+        rules: [
+            &#123;
+                test: /.(jsx?)|(tsx?)$/,
+                use: &#123;
+                    loader: &#39;babel-loader&#39;,
+                    options: &#123;
+                        presets: [
+                            [&#39;@babel/preset-env&#39;],
+                            [&#39;@babel/preset-typescript&#39;],
+                            [&#39;@babel/preset-react&#39;]
+                        ]
+                    &#125;
+                &#125;
+            &#125;,
+            &#123;
+                test: /\.(jpg|png)$/,
+                use: [
+                    &#123;
+                        loader: &#39;url-loader&#39;,
+                        options: &#123;
+                            limit: 2000
+                        &#125;
+                    &#125;
+                ]
+            &#125;,
+            &#123;
+                test: /\.css$/,
+                use: [
+                    &#39;style-loader&#39;,
+                    &#39;css-loader&#39;,
+                    &#123;
+                        loader: &#39;postcss-loader&#39;,
+                        options: &#123;		
+                            postcssOptions: &#123;
+                                plugins: [[&#39;postcss-preset-env&#39;, &#123;&#125;]]
+                            &#125;
+                        &#125;
+                    &#125;
+                ]
+            &#125;
+        ]
+    &#125;,
+    plugins: [
+        new HtmlWebpackPlugin(&#123;
+            template: path.resolve(__dirname, &#39;../src/index.html&#39;)  // 使用自定义模板
+        &#125;)
+    ]
+&#125;
+</code></pre>
+<p>重新打包之后可以看到图片的大小变为想要的样式了。</p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">项目初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#typescript%E5%8F%8AReact%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">typescript及React配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webpack%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">webpack配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E5%85%A5-webpack"><span class="toc-number">4.1.</span> <span class="toc-text">引入 webpack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E3%80%81%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">4.2.</span> <span class="toc-text">开发、生产环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC"><span class="toc-number">4.3.</span> <span class="toc-text">修改启动脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Babel%E9%85%8D%E7%BD%AE"><span class="toc-number">4.4.</span> <span class="toc-text">Babel配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HtmlWebpackPlugin%E9%85%8D%E7%BD%AE"><span class="toc-number">4.5.</span> <span class="toc-text">HtmlWebpackPlugin配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E7%A7%8Dloader%E9%85%8D%E7%BD%AE"><span class="toc-number">5.</span> <span class="toc-text">各种loader配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD"><span class="toc-number">5.1.</span> <span class="toc-text">图片加载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#css%E6%A0%B7%E5%BC%8F"><span class="toc-number">5.2.</span> <span class="toc-text">css样式</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lozhu.happy365.day/2023/11/24/e92bafd74220/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&text=Webpack+React项目搭建"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&title=Webpack+React项目搭建"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&is_video=false&description=Webpack+React项目搭建"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Webpack+React项目搭建&body=Check out this article: https://lozhu.happy365.day/2023/11/24/e92bafd74220/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&title=Webpack+React项目搭建"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&title=Webpack+React项目搭建"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&title=Webpack+React项目搭建"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&title=Webpack+React项目搭建"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&name=Webpack+React项目搭建&description=&lt;blockquote&gt;
+&lt;p&gt;Webpack 是一个使用比较广泛的前端项目打包工具，可以帮我们处理一些诸如 typescript、es6+、Vue、tsx 之类浏览器无法直接支持的问题，将项目打包成各个浏览器都可以直接支持的 js 文件。类似的工具还有 Vite 等。&lt;/p&gt;
+&lt;/blockquote&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lozhu.happy365.day/2023/11/24/e92bafd74220/&t=Webpack+React项目搭建"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    lozhu
+  </div>
+  
+    <div>
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备 20249900 号</a>
+    </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往 🚇</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

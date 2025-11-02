@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="题目内容输入一个数组，例如{-1 0 1 2 -1 -4}，从数组中找三个数（a,b,c），使得其和0，输出所有的（a,b,c）组合。 要求abc不能重复，并且a&lt;&#x3D;b&lt;&#x3D;c。 例： S &#x3D; {-1, 0, 1, 2, -1, -4}； 输出： (-1, 0 ,1) (-1, -1, 2)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode之3Sum">
+<meta property="og:url" content="https://zhu.happy365.day/2019/01/03/8923673d5906/index.html">
+<meta property="og:site_name" content="🐷&#39;s 部落格">
+<meta property="og:description" content="题目内容输入一个数组，例如{-1 0 1 2 -1 -4}，从数组中找三个数（a,b,c），使得其和0，输出所有的（a,b,c）组合。 要求abc不能重复，并且a&lt;&#x3D;b&lt;&#x3D;c。 例： S &#x3D; {-1, 0, 1, 2, -1, -4}； 输出： (-1, 0 ,1) (-1, -1, 2)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-01-03T13:55:22.000Z">
+<meta property="article:modified_time" content="2025-11-02T01:35:33.188Z">
+<meta property="article:author" content="zhu">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="3sum">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>LeetCode之3Sum</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="🐷's 部落格" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2019/01/24/a7bf16cc5800/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2019/01/01/110f3650bd4f/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/2019/01/03/8923673d5906/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&text=LeetCode之3Sum"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&title=LeetCode之3Sum"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&is_video=false&description=LeetCode之3Sum"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=LeetCode之3Sum&body=Check out this article: https://zhu.happy365.day/2019/01/03/8923673d5906/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&title=LeetCode之3Sum"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&title=LeetCode之3Sum"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&title=LeetCode之3Sum"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&title=LeetCode之3Sum"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&name=LeetCode之3Sum&description=&lt;h2 id=&#34;题目内容&#34;&gt;&lt;a href=&#34;#题目内容&#34; class=&#34;headerlink&#34; title=&#34;题目内容&#34;&gt;&lt;/a&gt;题目内容&lt;/h2&gt;&lt;p&gt;输入一个数组，例如{-1 0 1 2 -1 -4}，从数组中找三个数（a,b,c），使得其和0，输出所有的（a,b,c）组合。&lt;/p&gt;
+&lt;p&gt;要求abc不能重复，并且a&amp;lt;&amp;#x3D;b&amp;lt;&amp;#x3D;c。&lt;/p&gt;
+&lt;p&gt;例：&lt;/p&gt;
+&lt;p&gt;S &amp;#x3D; {-1, 0, 1, 2, -1, -4}；&lt;/p&gt;
+&lt;p&gt;输出：&lt;/p&gt;
+&lt;p&gt;(-1, 0 ,1)&lt;/p&gt;
+&lt;p&gt;(-1, -1, 2)&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/2019/01/03/8923673d5906/&t=LeetCode之3Sum"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text">题目内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Other"><span class="toc-number">3.</span> <span class="toc-text">Other</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        LeetCode之3Sum
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-03T13:55:22.000Z" class="dt-published" itemprop="datePublished">2019-01-03</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%A7%A3%E9%A2%98%E8%AE%B0%E5%BD%95/">解题记录</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/3sum/" rel="tag">3sum</a>, <a class="p-category" href="/tags/LeetCode/" rel="tag">LeetCode</a> -->
+        <a class="category-link" href="/tags/3sum/" rel="tag">3sum</a>, <a class="category-link" href="/tags/LeetCode/" rel="tag">LeetCode</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="题目内容"><a href="#题目内容" class="headerlink" title="题目内容"></a>题目内容</h2><p>输入一个数组，例如{-1 0 1 2 -1 -4}，从数组中找三个数（a,b,c），使得其和0，输出所有的（a,b,c）组合。</p>
+<p>要求abc不能重复，并且a&lt;&#x3D;b&lt;&#x3D;c。</p>
+<p>例：</p>
+<p>S &#x3D; {-1, 0, 1, 2, -1, -4}；</p>
+<p>输出：</p>
+<p>(-1, 0 ,1)</p>
+<p>(-1, -1, 2)</p>
+<span id="more"></span>
+
+
+
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>一看到题目，不问代码行数，不问时间复杂度，便排出三个循环。。但是循环非常耗时，显然不是题目的本意。想了好长时间没有什么进展。</p>
+<p>先将给定数组排序，然后指定一个数，在数组中找出两个数并且这两个数的和是目标数值的相反数：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/xcr1234/p/5285727.html">【LeetCode】3Sum 解题报告</a></p>
+<p>在网上找到了篇比较有新意的文章：[<a target="_blank" rel="noopener" href="https://www.cnblogs.com/xcr1234/p/5285727.html">3Sum algorithm - 非常容易理解的实现 （java)</a>] 。</p>
+<hr>
+<p>最后发现维基百科中就有收录：<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/3SUM">维基百科—3SUM</a> ，还有更一般的情形 N SUM。</p>
+<pre><code class="pascal"> sort(S);
+ for i=0 to n-3 do
+    a = S[i];
+    start = i+1;
+    end = n-1;
+    while (start &lt; end) do
+       b = S[start]
+       c = S[end];
+       if (a+b+c == 0) then
+          output a, b, c;
+          // Continue search for all triplet combinations summing to zero.
+           end = end - 1
+       else if (a+b+c &gt; 0) then
+          end = end - 1;
+       else
+          start = start + 1;
+       end
+    end
+ end
+</code></pre>
+<p>伪代码还挺容易理解的。</p>
+<h2 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h2><p>因为知乎上有人宣称证明了哥德巴赫猜想的原因，这两天还特意了解了下猜想证明的历史，“1+2”、“1+3”之类的证明，虽然一点也没看懂。感觉数学真的很有魅力，严谨清晰的逻辑，精妙完美的结论，自然界中的一切每时每刻都在遵循着其中的规律运行，更加感慨于人类的智慧，都找不到合适的赞美的词了。</p>
+<p>“超越数”、“黄金分割”、“哥德巴赫猜想”、“黎曼猜想”…</p>
+<p>停下思绪，回到现实：<strong>当你理解它的时候你觉得进入了天堂，当你不理解它的时候你仿佛进入了地狱</strong>，看哭了…</p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text">题目内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Other"><span class="toc-number">3.</span> <span class="toc-text">Other</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/2019/01/03/8923673d5906/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&text=LeetCode之3Sum"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&title=LeetCode之3Sum"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&is_video=false&description=LeetCode之3Sum"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=LeetCode之3Sum&body=Check out this article: https://zhu.happy365.day/2019/01/03/8923673d5906/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&title=LeetCode之3Sum"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&title=LeetCode之3Sum"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&title=LeetCode之3Sum"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&title=LeetCode之3Sum"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/2019/01/03/8923673d5906/&name=LeetCode之3Sum&description=&lt;h2 id=&#34;题目内容&#34;&gt;&lt;a href=&#34;#题目内容&#34; class=&#34;headerlink&#34; title=&#34;题目内容&#34;&gt;&lt;/a&gt;题目内容&lt;/h2&gt;&lt;p&gt;输入一个数组，例如{-1 0 1 2 -1 -4}，从数组中找三个数（a,b,c），使得其和0，输出所有的（a,b,c）组合。&lt;/p&gt;
+&lt;p&gt;要求abc不能重复，并且a&amp;lt;&amp;#x3D;b&amp;lt;&amp;#x3D;c。&lt;/p&gt;
+&lt;p&gt;例：&lt;/p&gt;
+&lt;p&gt;S &amp;#x3D; {-1, 0, 1, 2, -1, -4}；&lt;/p&gt;
+&lt;p&gt;输出：&lt;/p&gt;
+&lt;p&gt;(-1, 0 ,1)&lt;/p&gt;
+&lt;p&gt;(-1, -1, 2)&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/2019/01/03/8923673d5906/&t=LeetCode之3Sum"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    zhu
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

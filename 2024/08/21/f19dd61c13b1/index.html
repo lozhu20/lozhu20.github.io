@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="这两天在部署短链接服务，配置 nginx 规则卡了一晚上，特此记录一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx index转发导致首页无法访问">
+<meta property="og:url" content="https://zhu.happy365.day/2024/08/21/f19dd61c13b1/index.html">
+<meta property="og:site_name" content="🐷&#39;s 部落格">
+<meta property="og:description" content="这两天在部署短链接服务，配置 nginx 规则卡了一晚上，特此记录一下。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-21T06:42:35.000Z">
+<meta property="article:modified_time" content="2025-11-02T01:35:33.189Z">
+<meta property="article:author" content="zhu">
+<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="index转发">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Nginx index转发导致首页无法访问</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="🐷's 部落格" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/12/05/7ee81ff978a5/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/07/31/289c198310f3/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&text=Nginx index转发导致首页无法访问"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&title=Nginx index转发导致首页无法访问"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&is_video=false&description=Nginx index转发导致首页无法访问"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Nginx index转发导致首页无法访问&body=Check out this article: https://zhu.happy365.day/2024/08/21/f19dd61c13b1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&title=Nginx index转发导致首页无法访问"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&title=Nginx index转发导致首页无法访问"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&title=Nginx index转发导致首页无法访问"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&title=Nginx index转发导致首页无法访问"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&name=Nginx index转发导致首页无法访问&description=&lt;p&gt;这两天在部署短链接服务，配置 nginx 规则卡了一晚上，特此记录一下。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&t=Nginx index转发导致首页无法访问"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E9%85%8D%E7%BD%AE%E5%8F%8A%E7%8E%B0%E8%B1%A1"><span class="toc-number">1.</span> <span class="toc-text">Nginx 配置及现象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">问题和解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Nginx index转发导致首页无法访问
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-08-21T06:42:35.000Z" class="dt-published" itemprop="datePublished">2024-08-21</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">解决方案</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/index%E8%BD%AC%E5%8F%91/" rel="tag">index转发</a>, <a class="p-category" href="/tags/nginx/" rel="tag">nginx</a> -->
+        <a class="category-link" href="/tags/index%E8%BD%AC%E5%8F%91/" rel="tag">index转发</a>, <a class="category-link" href="/tags/nginx/" rel="tag">nginx</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>这两天在部署短链接服务，配置 nginx 规则卡了一晚上，特此记录一下。</p>
+<span id="more"></span>
+
+
+
+
+
+<h2 id="Nginx-配置及现象"><a href="#Nginx-配置及现象" class="headerlink" title="Nginx 配置及现象"></a>Nginx 配置及现象</h2><p>我的需求是如果访问域名，那么直接展示首页，如果访问其他路径，则转发到后端服务。conf.d&#x2F;default.conf 文件内容如下：</p>
+<pre><code>server &#123;
+    listen       80;
+    listen  [::]:80;
+    server_name  localhost;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location = / &#123;
+        root   /usr/share/nginx/html;
+        index  index.html;
+    &#125;
+
+    location / &#123;
+        proxy_pass http://192.168.0.10:8000;
+    &#125;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html &#123;
+        root   /usr/share/nginx/html;
+    &#125;
+
+&#125;
+
+</code></pre>
+<p>根据 nginx 中 &#x3D; 精确匹配的优先级最好的原则，直接访问域名会匹配到第一个规则。但是实际上请求还是会被转发到后端，非常困惑。</p>
+<p>途中发现一个很好用的 nginx 规则验证工具：<a target="_blank" rel="noopener" href="https://nginx.viraptor.info/">Nginx location match tester</a> 。每次修改规则之后要重启，再发起请求然后看结果来验证配置是否符合预期，非常繁琐，这个工具网站可以省去这些步骤，极大的提高效率。</p>
+<h2 id="问题和解决方案"><a href="#问题和解决方案" class="headerlink" title="问题和解决方案"></a>问题和解决方案</h2><p>今天上午认真的读了一篇写得挺不错的 nginx 配置教程：<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000022315733">一文理清 nginx 中的 location 配置（系列一）</a>，在文章下的评论中看到有人贴出了自己遇到的问题，配置以及问题描述都和我遇到的问题一致，原来是 index 转发的问题。</p>
+<p>如下配置，访问网站根目录并没有正常显示，而是返回了 404：</p>
+<pre><code>location = / &#123;
+    index index.html;
+&#125;
+
+location / &#123;
+    return 404;
+&#125;
+</code></pre>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/u/sufan_5911192950d85"><strong>苏凡</strong></a>：<a target="_blank" rel="noopener" href="https://segmentfault.com/u/chengxiansen">@诚先森</a> 了解下 index 指令，请求被内部重定向到第二个 location 了</p>
+<p>回复 2022-09-16</p>
+</blockquote>
+<p>直接访问域名 <a target="_blank" rel="noopener" href="http://localhost,会匹配到第一个规则,但是/">http://localhost，会匹配到第一个规则，但是</a> index 指令并不是找到文件之后就直接用了，而是会重新发起内部重定向，相当于从客户端发起 <a target="_blank" rel="noopener" href="http://localhost/index.html">http://localhost/index.html</a> ，所以会再一次匹配 location 配置。</p>
+<p>知道原因之后就简单了，在配置中增加配置 location &#x3D; &#x2F;index.html 让 nginx 内部重定向到首页就好了：</p>
+<pre><code>server &#123;
+    listen       80;
+    listen  [::]:80;
+    server_name  localhost;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location = / &#123;
+        root   /usr/share/nginx/html;
+        index  index.html;
+    &#125;
+    
+    location = /index.html &#123;
+        root /usr/share/nginx/html;
+    &#125;
+
+    location / &#123;
+        proxy_pass http://192.168.0.10:8000;
+    &#125;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html &#123;
+        root   /usr/share/nginx/html;
+    &#125;
+
+&#125;
+
+</code></pre>
+<p>重启 nginx 之后，就能实现直接访问域名展示首页，其余请求转发至后端服务了。</p>
+<p>不得不提一点，Nginx location match tester 这个工具无法看出被转发的情况，比如上面的 index，它只会告诉你匹配到第一条规则了，但实际后面还有更多的动作，结果就是在这个工具里看到的结果与实际验证不一致，被这个点误导了很久。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://nginx.viraptor.info/">Nginx location match tester</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000022315733">一文理清 nginx 中的 location 配置（系列一）</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kukudi/p/11496315.html">nginx中的index配置</a></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E9%85%8D%E7%BD%AE%E5%8F%8A%E7%8E%B0%E8%B1%A1"><span class="toc-number">1.</span> <span class="toc-text">Nginx 配置及现象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">问题和解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&text=Nginx index转发导致首页无法访问"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&title=Nginx index转发导致首页无法访问"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&is_video=false&description=Nginx index转发导致首页无法访问"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Nginx index转发导致首页无法访问&body=Check out this article: https://zhu.happy365.day/2024/08/21/f19dd61c13b1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&title=Nginx index转发导致首页无法访问"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&title=Nginx index转发导致首页无法访问"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&title=Nginx index转发导致首页无法访问"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&title=Nginx index转发导致首页无法访问"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&name=Nginx index转发导致首页无法访问&description=&lt;p&gt;这两天在部署短链接服务，配置 nginx 规则卡了一晚上，特此记录一下。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/2024/08/21/f19dd61c13b1/&t=Nginx index转发导致首页无法访问"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    zhu
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

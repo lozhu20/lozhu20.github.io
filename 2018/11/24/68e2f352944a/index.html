@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="1. 关于Reverse Polish Notation摘自 维基百科 的解释：  逆波兰表示法（Reverse Polish notation，RPN，或逆波兰记法），是一种是由波兰数学家扬·武卡谢维奇1920年引入的数学表达式方式，在逆波兰记法中，所有操作符置于操作数的后面，因此也被称为后缀表示法。逆波兰记法不需要括号来标识操作符的优先级。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode之Reverse Polish Notation">
+<meta property="og:url" content="https://zhu.happy365.day/2018/11/24/68e2f352944a/index.html">
+<meta property="og:site_name" content="🐷&#39;s 部落格">
+<meta property="og:description" content="1. 关于Reverse Polish Notation摘自 维基百科 的解释：  逆波兰表示法（Reverse Polish notation，RPN，或逆波兰记法），是一种是由波兰数学家扬·武卡谢维奇1920年引入的数学表达式方式，在逆波兰记法中，所有操作符置于操作数的后面，因此也被称为后缀表示法。逆波兰记法不需要括号来标识操作符的优先级。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-11-23T16:58:19.000Z">
+<meta property="article:modified_time" content="2025-11-02T01:35:33.188Z">
+<meta property="article:author" content="zhu">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="逆波兰表达式">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>LeetCode之Reverse Polish Notation</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="🐷's 部落格" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2018/11/24/c410417f8b09/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2018/11/22/def2d54928c6/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/2018/11/24/68e2f352944a/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&text=LeetCode之Reverse Polish Notation"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&title=LeetCode之Reverse Polish Notation"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&is_video=false&description=LeetCode之Reverse Polish Notation"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=LeetCode之Reverse Polish Notation&body=Check out this article: https://zhu.happy365.day/2018/11/24/68e2f352944a/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&title=LeetCode之Reverse Polish Notation"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&title=LeetCode之Reverse Polish Notation"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&title=LeetCode之Reverse Polish Notation"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&title=LeetCode之Reverse Polish Notation"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&name=LeetCode之Reverse Polish Notation&description=&lt;h2 id=&#34;1-关于Reverse-Polish-Notation&#34;&gt;&lt;a href=&#34;#1-关于Reverse-Polish-Notation&#34; class=&#34;headerlink&#34; title=&#34;1. 关于Reverse Polish Notation&#34;&gt;&lt;/a&gt;1. 关于Reverse Polish Notation&lt;/h2&gt;&lt;p&gt;摘自 &lt;a href=&#34;https://zh.wikipedia.org/zh-hans/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E7%A4%BA%E6%B3%95&#34;&gt;维基百科&lt;/a&gt; 的解释：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;逆波兰表示法&lt;/strong&gt;（&lt;strong&gt;Reverse Polish notation&lt;/strong&gt;，&lt;strong&gt;RPN&lt;/strong&gt;，或&lt;strong&gt;逆波兰记法&lt;/strong&gt;），是一种是由&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E6%B3%A2%E5%85%B0&#34; title=&#34;波兰&#34;&gt;波兰&lt;/a&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E6%95%B0%E5%AD%A6%E5%AE%B6&#34; title=&#34;数学家&#34;&gt;数学家&lt;/a&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E6%89%AC%C2%B7%E6%AD%A6%E5%8D%A1%E8%B0%A2%E7%BB%B4%E5%A5%87&#34; title=&#34;扬·武卡谢维奇&#34;&gt;扬·武卡谢维奇&lt;/a&gt;1920年引入的数学表达式方式，在逆波兰记法中，所有&lt;a href=&#34;https://zh.wikipedia.org/w/index.php?title=%E6%93%8D%E4%BD%9C%E7%AC%A6&amp;action=edit&amp;redlink=1&#34; title=&#34;操作符（页面不存在）&#34;&gt;操作符&lt;/a&gt;置于&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E6%95%B0&#34; title=&#34;操作数&#34;&gt;操作数&lt;/a&gt;的后面，因此也被称为&lt;strong&gt;后缀表示法&lt;/strong&gt;。逆波兰记法不需要括号来标识操作符的优先级。&lt;/p&gt;
+&lt;/blockquote&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/2018/11/24/68e2f352944a/&t=LeetCode之Reverse Polish Notation"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%85%B3%E4%BA%8EReverse-Polish-Notation"><span class="toc-number">1.</span> <span class="toc-text">1. 关于Reverse Polish Notation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%A2%98%E7%9B%AE%E5%86%85%E5%AE%B9"><span class="toc-number">2.</span> <span class="toc-text">2. 题目内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">3. 解题思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">4. 代码实现</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        LeetCode之Reverse Polish Notation
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-11-23T16:58:19.000Z" class="dt-published" itemprop="datePublished">2018-11-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%A7%A3%E9%A2%98%E8%AE%B0%E5%BD%95/">解题记录</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/LeetCode/" rel="tag">LeetCode</a>, <a class="p-category" href="/tags/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F/" rel="tag">逆波兰表达式</a> -->
+        <a class="category-link" href="/tags/LeetCode/" rel="tag">LeetCode</a>, <a class="category-link" href="/tags/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F/" rel="tag">逆波兰表达式</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="1-关于Reverse-Polish-Notation"><a href="#1-关于Reverse-Polish-Notation" class="headerlink" title="1. 关于Reverse Polish Notation"></a>1. 关于Reverse Polish Notation</h2><p>摘自 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E7%A4%BA%E6%B3%95">维基百科</a> 的解释：</p>
+<blockquote>
+<p><strong>逆波兰表示法</strong>（<strong>Reverse Polish notation</strong>，<strong>RPN</strong>，或<strong>逆波兰记法</strong>），是一种是由<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%B3%A2%E5%85%B0" title="波兰">波兰</a><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%95%B0%E5%AD%A6%E5%AE%B6" title="数学家">数学家</a><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%89%AC%C2%B7%E6%AD%A6%E5%8D%A1%E8%B0%A2%E7%BB%B4%E5%A5%87" title="扬·武卡谢维奇">扬·武卡谢维奇</a>1920年引入的数学表达式方式，在逆波兰记法中，所有<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/w/index.php?title=%E6%93%8D%E4%BD%9C%E7%AC%A6&action=edit&redlink=1" title="操作符（页面不存在）">操作符</a>置于<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E6%95%B0" title="操作数">操作数</a>的后面，因此也被称为<strong>后缀表示法</strong>。逆波兰记法不需要括号来标识操作符的优先级。</p>
+</blockquote>
+<span id="more"></span>
+
+
+
+<h2 id="2-题目内容"><a href="#2-题目内容" class="headerlink" title="2. 题目内容"></a>2. 题目内容</h2><p>Evaluate the value of an arithmetic expression in <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Reverse_Polish_notation">Reverse Polish Notation</a>.</p>
+<p>Valid operators are+,-,*,&#x2F;. Each operand may be an integer or another expression.<br>Some examples:</p>
+<p> [“2”, “1”, “+”, “3”, “*”] -&gt; ((2 + 1) * 3) -&gt; 9<br> [“4”, “13”, “5”, “&#x2F;“, “+”] -&gt; (4 + (13 &#x2F; 5)) -&gt; 6</p>
+<h2 id="3-解题思路"><a href="#3-解题思路" class="headerlink" title="3. 解题思路"></a>3. 解题思路</h2><p>对于一个合法的字符数组，依次扫描该字符数组：</p>
+<ol>
+<li>如果该字符是”+”,”-“,”*”,”&#x2F;“中的任意一个，则将其放入栈中；</li>
+<li>如果该字符是操作符，则从栈中取出两个操作数按照顺序进行运算；</li>
+<li>直到扫描完毕，取出栈中的最后一个数，即为结果。</li>
+</ol>
+<h2 id="4-代码实现"><a href="#4-代码实现" class="headerlink" title="4. 代码实现"></a>4. 代码实现</h2><pre><code class="java">public int evalRPN(String[] tokens) &#123;
+    List&lt;String&gt; operators = new ArrayList&lt;String&gt;() &#123;&#123;
+        add("+");
+        add("-");
+        add("*");
+        add("/");
+    &#125;&#125;;
+    Stack&lt;Integer&gt; tempValue = new Stack&lt;&gt;();
+    int number1;
+    int number2;
+    int result = 0;
+    for (String token : tokens) &#123;
+        if (!operators.contains(token)) &#123;
+            tempValue.push((Integer.valueOf(token)));
+        &#125; else &#123;
+            number1 = tempValue.pop();
+            number2 = tempValue.pop();
+            switch (token) &#123;
+                case &quot;+&quot;:
+                    result = number2 + number1;
+                    break;
+                case &quot;-&quot;:
+                    result = number2 - number1;
+                    break;
+                case &quot;*&quot;:
+                    result = number2 * number1;
+                    break;
+                case &quot;/&quot;:
+                    result = number2 / number1;
+                    break;
+            &#125;
+            tempValue.push(result);
+        &#125;
+    &#125;
+    return tempValue.pop();
+&#125;
+</code></pre>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%85%B3%E4%BA%8EReverse-Polish-Notation"><span class="toc-number">1.</span> <span class="toc-text">1. 关于Reverse Polish Notation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%A2%98%E7%9B%AE%E5%86%85%E5%AE%B9"><span class="toc-number">2.</span> <span class="toc-text">2. 题目内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">3. 解题思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">4. 代码实现</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/2018/11/24/68e2f352944a/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&text=LeetCode之Reverse Polish Notation"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&title=LeetCode之Reverse Polish Notation"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&is_video=false&description=LeetCode之Reverse Polish Notation"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=LeetCode之Reverse Polish Notation&body=Check out this article: https://zhu.happy365.day/2018/11/24/68e2f352944a/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&title=LeetCode之Reverse Polish Notation"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&title=LeetCode之Reverse Polish Notation"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&title=LeetCode之Reverse Polish Notation"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&title=LeetCode之Reverse Polish Notation"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/2018/11/24/68e2f352944a/&name=LeetCode之Reverse Polish Notation&description=&lt;h2 id=&#34;1-关于Reverse-Polish-Notation&#34;&gt;&lt;a href=&#34;#1-关于Reverse-Polish-Notation&#34; class=&#34;headerlink&#34; title=&#34;1. 关于Reverse Polish Notation&#34;&gt;&lt;/a&gt;1. 关于Reverse Polish Notation&lt;/h2&gt;&lt;p&gt;摘自 &lt;a href=&#34;https://zh.wikipedia.org/zh-hans/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E7%A4%BA%E6%B3%95&#34;&gt;维基百科&lt;/a&gt; 的解释：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;逆波兰表示法&lt;/strong&gt;（&lt;strong&gt;Reverse Polish notation&lt;/strong&gt;，&lt;strong&gt;RPN&lt;/strong&gt;，或&lt;strong&gt;逆波兰记法&lt;/strong&gt;），是一种是由&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E6%B3%A2%E5%85%B0&#34; title=&#34;波兰&#34;&gt;波兰&lt;/a&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E6%95%B0%E5%AD%A6%E5%AE%B6&#34; title=&#34;数学家&#34;&gt;数学家&lt;/a&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E6%89%AC%C2%B7%E6%AD%A6%E5%8D%A1%E8%B0%A2%E7%BB%B4%E5%A5%87&#34; title=&#34;扬·武卡谢维奇&#34;&gt;扬·武卡谢维奇&lt;/a&gt;1920年引入的数学表达式方式，在逆波兰记法中，所有&lt;a href=&#34;https://zh.wikipedia.org/w/index.php?title=%E6%93%8D%E4%BD%9C%E7%AC%A6&amp;action=edit&amp;redlink=1&#34; title=&#34;操作符（页面不存在）&#34;&gt;操作符&lt;/a&gt;置于&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E6%95%B0&#34; title=&#34;操作数&#34;&gt;操作数&lt;/a&gt;的后面，因此也被称为&lt;strong&gt;后缀表示法&lt;/strong&gt;。逆波兰记法不需要括号来标识操作符的优先级。&lt;/p&gt;
+&lt;/blockquote&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/2018/11/24/68e2f352944a/&t=LeetCode之Reverse Polish Notation"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    zhu
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'lozhu20/my-blog-comments';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-light';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>🐷&#39;s 部落格</title>
+  
+  
+  <link href="https://zhu.happy365.day/atom.xml" rel="self"/>
+  
+  <link href="https://zhu.happy365.day/"/>
+  <updated>2025-11-15T17:47:33.752Z</updated>
+  <id>https://zhu.happy365.day/</id>
+  
+  <author>
+    <name>zhu</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>为hexo-theme-cactus主题添加Giscus评论系统</title>
+    <link href="https://zhu.happy365.day/20251116/929196e9f268/"/>
+    <id>https://zhu.happy365.day/20251116/929196e9f268/</id>
+    <published>2025-11-15T17:47:33.752Z</published>
+    <updated>2025-11-15T17:47:33.752Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="启发"><a href="#启发" class="headerlink" title="启发"></a>启发</h2><p>最近添加了 <a href="https://pinpe.top/">Pinpe的云端</a> 博友的友链，并且在留言页面留过言。</p><p>今天晚上收到了来自 GitHub 的其他博友留言的抄送邮件，遵循周末晚上要把友链都翻一遍的习惯，点进了博友的留言页面，惊奇的发现留言和回复是连贯的。</p><p>原 hexo-theme-cactus 主题的基于 Utterances 的评论系统中，评论和回复是分开的，只能引用回复。</p><p>我还以为是我使用错误，最后确认 GitHub 的 issues 中确实不能直接 Reply，只能 Quote Reply。</p><h2 id="Giscus"><a href="#Giscus" class="headerlink" title="Giscus"></a>Giscus</h2><p>很久之前就看到过 Giscus 这个评论系统的名字，可是没机会仔细了解，本能的以为是和 disqus、wolai 类似的第三方的评论系统。</p><p>点进主页，这主页风格和 Utterances 如出一辙，惊喜的发现 Giscus 就是受到 Utterances 的启发利用 GitHub Discussions 功能开发的，而 GitHub Discussions 系统是支持直接回复的。</p><p>于是打算将评论切换为 Giscus。</p><p>不过 hexo-theme-cactus 主题默认只支持 disqus 和 utterances，并没有 Giscus 的选项。</p><p>没有了解过 Hexo 的评论系统，不过看从 <a href="https://giscus.app/zh-CN">Giscus</a> 主页生成的配置看，就一个 script 标签，所以想着应该也不复杂。</p><p>尝试着看看原有的主题相关的配置和 ejs 文件，复制了改改就弄好了，比想象中的简单。</p><h2 id="代码变更"><a href="#代码变更" class="headerlink" title="代码变更"></a>代码变更</h2><p>主要涉及 <code>theme/_config.yml</code>、<code>theme/layout/_partial/comments.ejs</code>、<code>theme/layout/_partial/scripts.ejs</code> 这几个文件。</p><p>在 <code>theme/_config.yml</code> 文件中新增配置：</p><pre><code class="yaml">giscus:  enabled: true  repo: &quot;username/repository&quot;  # 用户名/仓库名，仓库名不带 .git 后缀  repo_id: &quot;repo-id&quot;  category: &quot;Announcements&quot;  # 推荐使用的 Discussions 类别  category_id: &quot;category-id&quot;  mapping: &quot;pathname&quot;  strict: &quot;0&quot;  reactions_enabled: &quot;1&quot;  emit-metadata: &quot;0&quot;  input_position: &quot;top&quot;  theme: &quot;light&quot;  lang: &quot;zh-CN&quot;  loading: &quot;lazy&quot;  crossorigin: &quot;anonymous&quot;</code></pre><p><code>theme/layout/_partial/comments.ejs</code> 文件末尾新增内容：</p><pre><code class="ejs">&lt;% if(page.comments &amp;&amp; theme.giscus.enabled)&#123; %&gt;    &lt;div class=&quot;blog-post-comments&quot;&gt;        &lt;div id=&quot;giscus_thread&quot;&gt;            &lt;noscript&gt;&lt;%= __(&#39;comments.no_js&#39;) %&gt;&lt;/noscript&gt;        &lt;/div&gt;    &lt;/div&gt;&lt;% &#125; %&gt;</code></pre><p>在 <code>theme/layout/_partial/scripts.ejs</code> 中新增内容：</p><pre><code class="ejs">&lt;% if (page.comments &amp;&amp; theme.giscus.enabled &amp;&amp; theme.giscus.repo &amp;&amp; theme.giscus.category &amp;&amp; theme.giscus.theme)&#123; %&gt;  &lt;script type=&quot;text/javascript&quot;&gt;    var giscus_repo = &#39;&lt;%= theme.giscus.repo %&gt;&#39;;    var giscus_repo_id = &#39;&lt;%= theme.giscus.repo_id %&gt;&#39;;    var giscus_category = &#39;&lt;%= theme.giscus.category %&gt;&#39;;    var giscus_category_id = &#39;&lt;%= theme.giscus.category_id %&gt;&#39;;    var giscus_mapping = &#39;&lt;%= theme.giscus.mapping %&gt;&#39;;    var giscus_strict = &#39;&lt;%= theme.giscus.strict %&gt;&#39;;    var giscus_reactions_enabled = &#39;&lt;%= theme.giscus.reactions_enabled %&gt;&#39;;    var giscus_emit_metadata = &#39;&lt;%= theme.giscus.emit_metadata %&gt;&#39;;    var giscus_input_position = &#39;&lt;%= theme.giscus.input_position %&gt;&#39;;    var giscus_theme = &#39;&lt;%= theme.giscus.theme %&gt;&#39;;    var theme_lang = &#39;&lt;%= theme.lang %&gt;&#39;;    var giscus_loading = &#39;&lt;%= theme.giscus.loading %&gt;&#39;;    var giscus_crossorigin = &#39;&lt;%= theme.giscus.crossorigin %&gt;&#39;;    (function()&#123;        var script = document.createElement(&#39;script&#39;);        script.src = &#39;https://giscus.app/client.js&#39;;        script.setAttribute(&#39;data-repo&#39;, giscus_repo);        script.setAttribute(&#39;data-repo-id&#39;, giscus_repo_id);        script.setAttribute(&#39;data-category&#39;, giscus_category);        script.setAttribute(&#39;data-category-id&#39;, giscus_category_id);        script.setAttribute(&#39;data-mapping&#39;, giscus_mapping);        script.setAttribute(&#39;data-strict&#39;, giscus_strict);        script.setAttribute(&#39;data-reactions-enabled&#39;, giscus_reactions_enabled);        script.setAttribute(&#39;data-emit-metadata&#39;, giscus_emit_metadata);        script.setAttribute(&#39;data-input-position&#39;, giscus_input_position);        script.setAttribute(&#39;data-theme&#39;, giscus_theme);        script.setAttribute(&#39;data-lang&#39;, theme_lang);        script.setAttribute(&#39;data-loading&#39;, giscus_loading);        script.setAttribute(&#39;crossorigin&#39;, giscus_crossorigin);        script.async = true;        (document.getElementById(&#39;giscus_thread&#39;)).appendChild(script);    &#125;());&lt;/script&gt;&lt;% &#125; %&gt;</code></pre><p><code>hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</code> 本地运行测试，一次通过！</p><h2 id="历史评论迁移"><a href="#历史评论迁移" class="headerlink" title="历史评论迁移"></a>历史评论迁移</h2><p>看 Giscus 主页提到如果历史评论基于 Utterances，还可以进行迁移，非常的便利，有空再看看迁移。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;启发&quot;&gt;&lt;a href=&quot;#启发&quot; class=&quot;headerlink&quot; title=&quot;启发&quot;&gt;&lt;/a&gt;启发&lt;/h2&gt;&lt;p&gt;最近添加了 &lt;a href=&quot;https://pinpe.top/&quot;&gt;Pinpe的云端&lt;/a&gt; 博友的友链，并且在留言页面留过言。&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="博客维护" scheme="https://zhu.happy365.day/categories/%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/"/>
+    
+    
+    <category term="hexo-theme-cactus" scheme="https://zhu.happy365.day/tags/hexo-theme-cactus/"/>
+    
+    <category term="Giscus" scheme="https://zhu.happy365.day/tags/Giscus/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>邪教的一些典型特征</title>
+    <link href="https://zhu.happy365.day/20251115/90d2ffa73aed/"/>
+    <id>https://zhu.happy365.day/20251115/90d2ffa73aed/</id>
+    <published>2025-11-15T09:35:00.000Z</published>
+    <updated>2025-11-15T17:47:33.755Z</updated>
+    
+    <content type="html"><![CDATA[<p>人只相信自己愿意相信的，愿意相信什么并没有对错之分，人生短暂，只要能乐在其中。</p><p>对我的认知中的邪教的一些典型特征进行了总结。相信邪教也好、反对邪教也罢，只要能让自身感到愉悦和满足，那便是最好的选择。</p><p><strong>造神</strong></p><p>合法宗教的信仰对象是一般是历经历史传承的固定对象，并非是人为 “制造” 出来的。比如基督教敬奉耶稣、伊斯兰教信奉真主安拉、佛教奉释迦牟尼为佛祖、道教奉老子为教祖，这些崇拜对象是宗教文化长期积淀的结果。</p><p>而邪教的核心手段之一就是 “造神”，通常将某个人神化，将此人神化为没有缺点、集所有美好人性于一身的神：智慧、担当、正义、勇敢、奉献，通过脱离客观实际的刻意塑造，构建超现实的绝对权威，以此蒙骗信徒盲目崇拜，实现对特定对象的精神控制。</p><p>常见的造神手段：</p><ul><li>刻意美化：放大对象的优点，甚至编造虚假功绩、经历，塑造完美形象。</li><li>信息垄断：隔绝外界不同声音，只向受众传递有利于神化的信息，形成认知闭环。</li><li>情感裹挟：利用受众的迷茫、渴望（如摆脱困境、抚平伤痛、期盼未来等），将对象塑造成 “唯一希望”，绑定情感依赖。</li></ul><p><strong>极端和仇恨</strong></p><p>邪教充满极端和仇恨，普遍反科学、反人类。常以编造虚假故事或歪曲历史事实为核心手段，通过刻意塑造对立群体、渲染极端情绪，放大信徒对特定群体的仇恨，最终实现精神控制、巩固组织势力。</p><p><strong>寻求认同</strong></p><p>极端宗教及其教徒的 “寻求认同”。借助极端化的宗教叙事和群体运作，弥补教徒的身份缺失与归属感匮乏，同时通过构建排他性群体强化内部凝聚力，最终实现对教徒的精神控制，还会以此推动极端思想扩散、煽动对立。</p><p>邪教的 “寻求认同” 是带有强制性和欺骗性的精神裹挟，抓住人们的心理弱点，通过不断灌输歪理邪说，再配合诱惑、恐吓、报复等手段，迫使信徒接受其理念，还强迫信徒拉拢他人加入，以此扩大势力。</p><p><strong>禁止评论并反对质疑</strong></p><p>邪教为了维护其精神控制，会极力禁止信徒及其他群体质疑其教义，一旦信徒产生疑问或提出不同看法，就会遭受恐吓威胁、极端报复。</p><p>它们还会隔绝信徒与外界的正常交流，阻止外界对其行为和教义的评论，以此掩盖其非法本质。</p><p><strong>洗脑及扭曲认知</strong></p><p>邪教徒大多意识不到自己是邪教徒，核心是邪教通过一套循序渐进的精神操控手段，逐步扭曲他们的认知、切断其外部联结并固化极端思维，整个过程如同 “温水煮青蛙”，让教徒在潜移默化中陷入认知误区且难以察觉。</p><ul><li><p>神化组织与教主，制造不可质疑的权威</p><p>  邪教往往将教主神化为 “救世主”，将组织定义为 “唯一能让人获得拯救的领路人”，把教义抬到 “绝对真理” 的高度，禁止任何形式的质疑。在这种氛围下，教徒会对教主和组织产生绝对崇拜，将其指令奉为圭臬。他们会把对邪教的信仰当作神圣的追求，根本不会去怀疑组织的性质，也就不可能意识到自己是邪教徒。</p></li><li><p>循序渐进的洗脑，扭曲认知</p><p>  邪教不会一开始就暴露极端本质，而是用潜移默化的方式完成对教徒的洗脑。它们先精准抓住人们现实中的困境，比如孤独、疾病、事业挫折等，再以 “救赎者” 姿态提供情感慰藉或虚假解决方案。 “先暖心后洗脑” 的模式，让教徒在接受极端思想时毫无防备。</p><p>  邪教还会反复强化教义，抑制教徒原有的正确观念，久而久之教徒会自觉摒弃过往认知，转而坚信邪教理论，完全意识不到自己已被思想改造。</p></li><li><p>利用心理错觉，构件自我说服的认知闭环</p><p>  邪教深谙心理学规律，利用多种心理错觉让教徒对其理论深信不疑。比如利用 “注意错觉”，将邪教内容伪装在正能量故事中，教徒注意力集中在熟悉的宗教相关内容上时，会忽略其中的邪教本质；借助 “记忆错觉”，让教徒对学习的邪教内容自行脑内加工，即便发现教义存在矛盾，也会主动找借口修补逻辑漏洞。</p><p>  邪教还会制造 “因果错觉”，教唆教徒把生活中的偶然事件归因为 “神的庇佑”，比如将通过自己的劳动获得的报酬看成是神的恩赐。这些错觉让教徒不断自我说服，深陷邪教骗局却无法察觉。</p></li><li><p>打造封闭环境，切断外部理性声音</p><p>  邪教竭力构建封闭的群体环境，切断其与外界的正常联系。一方面，它们会灌输“外部世界充满危险”等言论，教唆教徒远离正常社会。另一方面，邪教还会控制教徒接触的信息，只允许他们接收组织内部的内容，杜绝不同观点的传入。在这样的封闭环境中，教徒听不到对邪教的质疑和批判，身边只有一致的邪教言论，久而久之就会觉得自己的认知是绝对正确的，自然不会意识到自己加入的是邪教。</p></li><li><p>设置排他性规则，用奖惩机制巩固忠诚</p><p>  邪教内部有着严格的规则，且常通过奖惩手段强化教徒的忠诚度。</p><p>  组织会明确规定教徒能说什么、做什么，禁止讨论教义的合理性，还鼓励成员检举违规者。若教徒有质疑教义、接触外界的行为，可能会遭受极端报复。</p><p>  在这种奖惩机制下，教徒会为了避免惩罚、获得认可，主动遵守邪教规则，逐步丧失独立思考能力。他们还会把外界的劝诫当作 “恶意干扰”，把不同意见者视为敌人，越发坚定对邪教的认同，完全无法认清其邪教本质。</p></li></ul><p>希望所有人都能加入自己中意的邪教并远离自己不中意的邪教。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;人只相信自己愿意相信的，愿意相信什么并没有对错之分，人生短暂，只要能乐在其中。&lt;/p&gt;
+&lt;p&gt;对我的认知中的邪教的一些典型特征进行了总结。相信邪教也好、反对邪教也罢，只要能让自身感到愉悦和满足，那便是最好的选择。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;造神&lt;/strong&gt;&lt;/p&gt;</summary>
+      
+    
+    
+    
+    <category term="玩" scheme="https://zhu.happy365.day/categories/%E7%8E%A9/"/>
+    
+    
+    <category term="邪教" scheme="https://zhu.happy365.day/tags/%E9%82%AA%E6%95%99/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>删除 instagram 绑定的不再使用的电话</title>
+    <link href="https://zhu.happy365.day/20251115/a7b242358d8c/"/>
+    <id>https://zhu.happy365.day/20251115/a7b242358d8c/</id>
+    <published>2025-11-15T03:25:00.000Z</published>
+    <updated>2025-11-15T17:47:33.753Z</updated>
+    
+    <content type="html"><![CDATA[<p>绑定在 instagram 上的电话号码四五年前就不再使用了。</p><p>最近又换了一个新的号码，在挨个更换 App 绑定的电话号码的时候，发现 instagram 上绑定的还是好几年前就已经停用的号码。<br>于是乎开始了这丝毫不顺利的换绑过程。</p><p>从 App 设置菜单进入到 Meta 账号中心，点进个人信息后能看到绑定的电话，点进去这个号码再点下面的删除按钮，按钮加载动画结束之后什么也没变，重复试了好多次都没用。</p><p>换到 Web 端试了一下，Web 端想删除还需要先输入 WhatsApp 的验证码。？？我都没有这个账号，也不知道从哪里去接收这个验证码。</p><p>放弃之前打算最后试一试，去 Google 用英文搜了一下，看到 Gemini 生成的回答里提到要删除联系方式需要确保还有另外的联系方式绑定到账号，可以是电话号码也可以是邮箱。确实，我只有一个手机号绑定了，删除之后就没有多余的联系方式了。</p><p>先将 App 更新到最新版本，然后在账号联系方式里添加了一个邮箱。之后再试着从 App 里删除手机号码，成功删除！</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;绑定在 instagram 上的电话号码四五年前就不再使用了。&lt;/p&gt;
+&lt;p&gt;最近又换了一个新的号码，在挨个更换 App 绑定的电话号码的时候，发现 instagram 上绑定的还是好几年前就已经停用的号码。&lt;br&gt;于是乎开始了这丝毫不顺利的换绑过程。&lt;/p&gt;
+&lt;p&gt;从 A</summary>
+      
+    
+    
+    
+    <category term="玩" scheme="https://zhu.happy365.day/categories/%E7%8E%A9/"/>
+    
+    
+    <category term="instagram" scheme="https://zhu.happy365.day/tags/instagram/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LeetCode5-最长回文子串</title>
+    <link href="https://zhu.happy365.day/20251114/102a206c205e/"/>
+    <id>https://zhu.happy365.day/20251114/102a206c205e/</id>
+    <published>2025-11-14T15:23:00.000Z</published>
+    <updated>2025-11-15T17:47:33.748Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给你一个字符串 <code>s</code>，找到 <code>s</code> 中最长的 回文 子串。</p><p><strong>示例 1：</strong><br>输入：s &#x3D; “babad”<br>输出：”bab”<br>解释：”aba” 同样是符合题意的答案。</p><p><strong>示例 2：</strong><br>输入：s &#x3D; “cbbd”<br>输出：”bb”</p><p><strong>提示：</strong></p><ul><li><code>1 &lt;= s.length &lt;= 1000</code></li><li><code>s</code> 仅由数字和英文字母组成</li></ul><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="遍历所有字串"><a href="#遍历所有字串" class="headerlink" title="遍历所有字串"></a>遍历所有字串</h3><p>开始的思路是暴力求解，直接遍历字符串，将由每个字符开头的所有长度为 1、2、3…  的所有子串都拿出来，逐一判断，记下最大长度。思路简单，但是效率太低，测试用例的长度超过 100 个字符，直接超时。</p><h3 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h3><p>遍历字符串中，使用两个指针，从当前字符开始，然后判断两个指针位置的字符是否相等。如果相等，则两个指针分别向前、向后移动一位，继续比较，直到两个指针处的字符不相等，记录下两个指针间的字符拼接的字符串。如果有向后的指针到达字符串结尾，则结束比较，后面不会再有更长的回文子串了。<br>后面发现这种方法只能处理长度为奇数的子串，会遗漏比如 “ABBA” 这种长度为偶数的回文子串。<br>于是在此基础上改进，遍历两遍字符串，分别处理两种情况。</p><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>Java 代码实现如下：</p><pre><code class="java">public static String maxLengthOfSubString(String s) &#123;      char[] charArray = s.toCharArray();      String r = &quot;&quot;;      // 奇数个      for (int i = 0; i &lt; charArray.length; i++) &#123;          int p1 = i;          int p2 = i;          while (p1 &gt;= 0 &amp;&amp; p2 &lt; charArray.length &amp;&amp; charArray[p1] == charArray[p2]) &#123;              p1--;              p2++;          &#125;            String tmp = new String(charArray, p1 + 1, (p2 - 1) - (p1 + 1) + 1);          if (tmp.length() &gt; r.length()) &#123;              r = tmp;          &#125;            if (p2 == charArray.length - 1) &#123;              break;          &#125;      &#125;        // 偶数个      for (int i = 0; i &lt; charArray.length - 1; i++) &#123;          int p1 = i;          int p2 = i + 1;          while (p1 &gt;= 0 &amp;&amp; p2 &lt; charArray.length &amp;&amp; charArray[p1] == charArray[p2]) &#123;              p1--;              p2++;          &#125;            String tmp = new String(charArray, p1 + 1, (p2 - 1) - (p1 + 1) + 1);          if (tmp.length() &gt; r.length()) &#123;              r = tmp;          &#125;            if (p2 == charArray.length - 1) &#123;              break;          &#125;      &#125;        return r;  &#125;</code></pre><p><em>后续 LeetCode 的做题记录只记录一些个人感觉有难度或者是解法比较精妙的题。</em></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h2&gt;&lt;p&gt;给你一个字符串 &lt;code&gt;s&lt;/code&gt;，找到 &lt;code&gt;s&lt;/code&gt; 中最长的 回文 子串。&lt;/p&gt;
+&lt;p&gt;&lt;s</summary>
+      
+    
+    
+    
+    <category term="解题记录" scheme="https://zhu.happy365.day/categories/%E8%A7%A3%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+    
+    
+    <category term="LeetCode" scheme="https://zhu.happy365.day/tags/LeetCode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SkyWalking 学习笔记</title>
+    <link href="https://zhu.happy365.day/20251112/67b2eb5fc4d8/"/>
+    <id>https://zhu.happy365.day/20251112/67b2eb5fc4d8/</id>
+    <published>2025-11-11T23:15:00.000Z</published>
+    <updated>2025-11-15T17:47:33.750Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="SkyWalking-能干什么"><a href="#SkyWalking-能干什么" class="headerlink" title="SkyWalking 能干什么"></a>SkyWalking 能干什么</h2><h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><h3 id="找不到-sky-wakling-主类"><a href="#找不到-sky-wakling-主类" class="headerlink" title="找不到 sky-wakling 主类"></a>找不到 sky-wakling 主类</h3><p>你的脚本报错的根本原因是 <strong>使用了错误的连字符（hyphen）</strong>，具体来说是：</p><pre><code>‐javaagent:</code></pre><p>这个符号 <code>‐</code> 看起来像普通的短横线 <code>-</code>，但实际上是一个 <strong>Unicode 的 “HYPHEN” 字符（U+2010）</strong>，而不是 ASCII 中标准的 <strong>“HYPHEN-MINUS”（U+002D）</strong>。Java 虚拟机无法识别这种特殊连字符，因此把它当成了一个类名，导致报错。</p><pre><code class="bash">export JAVA_AGENT=‐javaagent:/home/longkun/Applications/apache-skywalking-apm-bin/agent/skywalking-agent/skywalking-agent.jarjava $JAVA_AGENT ‐jar user-service‐1.0.0.jar</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;SkyWalking-能干什么&quot;&gt;&lt;a href=&quot;#SkyWalking-能干什么&quot; class=&quot;headerlink&quot; title=&quot;SkyWalking 能干什么&quot;&gt;&lt;/a&gt;SkyWalking 能干什么&lt;/h2&gt;&lt;h2 id=&quot;问题记录&quot;&gt;&lt;a href</summary>
+      
+    
+    
+    
+    <category term="学习笔记/中间件及协议" scheme="https://zhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%8F%8A%E5%8D%8F%E8%AE%AE/"/>
+    
+    
+    <category term="SkyWalking" scheme="https://zhu.happy365.day/tags/SkyWalking/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 trash 防止文件误删</title>
+    <link href="https://zhu.happy365.day/20251111/063a85e90264/"/>
+    <id>https://zhu.happy365.day/20251111/063a85e90264/</id>
+    <published>2025-11-11T14:48:00.000Z</published>
+    <updated>2025-11-15T17:47:33.753Z</updated>
+    
+    <content type="html"><![CDATA[<p>一般在 Windows 中删除文件系统都会先放到回收站里，后续确认要删除文件再从回收站里永久删除，这个操作流程可以很好的防止文件误删。</p><p>但是 Linux 中使用 rm 命令会直接删除文件，网上看到一些方案是写脚本代替 rm 命令，在脚本中将文件移动到指定的目录里，个人感觉稍显复杂。今天找到一个更简单的方式——trash。</p><p>安装：</p><pre><code class="shell">sudo apt install trash-cli</code></pre><p>移动文件到回收站：</p><pre><code class="shell">trash test.txt</code></pre><p>查看回收站中的文件：</p><pre><code class="shell">trash-list</code></pre><p>清空文件夹：</p><pre><code class="shell">trash-empty</code></pre><p>从回收站恢复文件</p><pre><code class="shell">trash-restore</code></pre><p>用 trash 命令代替 rm，编辑 ~&#x2F;.zshrc</p><pre><code class="shell">alias rm = &quot;trash&quot;</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;一般在 Windows 中删除文件系统都会先放到回收站里，后续确认要删除文件再从回收站里永久删除，这个操作流程可以很好的防止文件误删。&lt;/p&gt;
+&lt;p&gt;但是 Linux 中使用 rm 命令会直接删除文件，网上看到一些方案是写脚本代替 rm 命令，在脚本中将文件移动到指定的目录</summary>
+      
+    
+    
+    
+    <category term="工具软件" scheme="https://zhu.happy365.day/categories/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/"/>
+    
+    
+    <category term="Linux" scheme="https://zhu.happy365.day/tags/Linux/"/>
+    
+    <category term="实用工具" scheme="https://zhu.happy365.day/tags/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 Docker 部署 RocketMQ</title>
+    <link href="https://zhu.happy365.day/20251110/dc34ff3dae85/"/>
+    <id>https://zhu.happy365.day/20251110/dc34ff3dae85/</id>
+    <published>2025-11-09T16:25:00.000Z</published>
+    <updated>2025-11-15T17:47:33.752Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="安装-Docker-及-Docker-Compose"><a href="#安装-Docker-及-Docker-Compose" class="headerlink" title="安装 Docker 及 Docker Compose"></a>安装 Docker 及 Docker Compose</h2><p>Docker 的安装官网给了很详细的步骤，略过。</p><p>Docker Compose 需要另外安装，从 GitHub 搜索 Docker Compose，下载 linux x86 平台的二进制文件，放到 &#x2F;usr&#x2F;local&#x2F;bin 目录下，再添加执行权限就能正常使用了。<br>使用 <code>docker-compose --version</code> 验证安装和查看版本。</p><h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>拉取镜像：</p><pre><code class="shell">docker pull apache/rocketmq:5.3.2docker pull apacherocketmq/rocketmq-dashboard:2.1.0</code></pre><p>! 如遇网络问题可配置 &#x2F;etc&#x2F;docker&#x2F;daemon.json 使用代理（2025年11月可用）：</p><pre><code class="json">&#123;    &quot;registry-mirrors&quot;: [        &quot;https://docker.xuanyuan.me&quot;    ],    &quot;userland-proxy&quot;: false&#125;</code></pre><p>配置完需要重启 Docker。</p><h2 id="部署-namesrv-及-broker"><a href="#部署-namesrv-及-broker" class="headerlink" title="部署 namesrv 及 broker"></a>部署 namesrv 及 broker</h2><p>使用 Docker Compose 安装 namesrv 及 broker。<br>新增 conf&#x2F;broker.conf 文件：</p><pre><code class="properties"># !! 千万不要写成 127.0.0.1，这个值指的是容器本身的地址，会导致后面部署 rocketmq-dashboard 提示无法连接到 brokerbrokerIP1=rocketmq-broker</code></pre><p>docker-compose 配置文件如下：</p><pre><code class="yaml">version: &#39;3.8&#39;services:  namesrv:    image: apache/rocketmq:5.3.2    container_name: rocketmq-namesrv    ports:      - &quot;25060:9876&quot;    environment:      JAVA_OPT_EXT: &quot;-server -Xms512m -Xmx512m -Xmn128m&quot;    command: sh mqnamesrv    networks:      - rocketmq  broker:    image: apache/rocketmq:5.3.2    container_name: rocketmq-broker    ports:      - &quot;25062:10909&quot;      - &quot;25063:10911&quot;      - &quot;25064:10913&quot;      - &quot;25065:8081&quot;    environment:      NAMESRV_ADDR: &quot;rocketmq-namesrv:9876&quot;      JAVA_OPT_EXT: &quot;-server -Xms512m -Xmx512m -Xmn128m&quot;    volumes:      - Applications/docker_app_config/rocketmq/conf/broker.conf:/home/rocketmq/rocketmq-5.3.2/conf/broker.conf    depends_on:      - namesrv    command: sh mqbroker -n rocketmq-namesrv:9876 -c /home/rocketmq/rocketmq-5.3.2/conf/broker.conf    networks:      - rocketmqnetworks:  rocketmq:    driver: bridge    external: true</code></pre><p>在 docker-compose.yml 文件所在路径下执行 <code>docker-compose up -d</code> 启动 namesrv 和 broker。</p><h2 id="安装-rocketmq-dashboard"><a href="#安装-rocketmq-dashboard" class="headerlink" title="安装 rocketmq-dashboard"></a>安装 rocketmq-dashboard</h2><p>启动 rocketmq-dashboard 容器：</p><pre><code class="shell">docker run -d \  --name rocketmq-dashboard \  --network rocketmq \  -p 25061:8082 \  -e &quot;JAVA_OPTS=-Drocketmq.config.namesrvAddr=rocketmq-namesrv:9876&quot; \  apacherocketmq/rocketmq-dashboard:2.1.0</code></pre><p>! 如果配置了防火墙需放行映射的宿主机端口。</p><p>访问 <a href="http://host:25061/">http://host:25061</a> 打开 dashboard 首页。</p><h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><p>部署 dashboard 之后打开首页提示：</p><pre><code>org.apache.rocketmq.remoting.exception.RemotingConnectException: connect to 127.0.0.1:10909 failed</code></pre><p>以为是端口映射的问题，下载了源码下来查看，没有找到 10909 这个端口相关的代码。后面问了 AI，发现是 conf&#x2F;broker.conf 文件中配置有问题：</p><pre><code class="properties">brokerIP1: 127.0.0.1</code></pre><p>将此配置改为 broker 容器的名称，再重启 broker，刷新 dashboard 就正常展示数据了。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;安装-Docker-及-Docker-Compose&quot;&gt;&lt;a href=&quot;#安装-Docker-及-Docker-Compose&quot; class=&quot;headerlink&quot; title=&quot;安装 Docker 及 Docker Compose&quot;&gt;&lt;/a&gt;安装 Docke</summary>
+      
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="Docker" scheme="https://zhu.happy365.day/tags/Docker/"/>
+    
+    <category term="RocketMQ" scheme="https://zhu.happy365.day/tags/RocketMQ/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker安装MySQL连接被拒绝</title>
+    <link href="https://zhu.happy365.day/20251109/27cc6b967d71/"/>
+    <id>https://zhu.happy365.day/20251109/27cc6b967d71/</id>
+    <published>2025-11-09T05:45:00.000Z</published>
+    <updated>2025-11-15T17:47:33.747Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>使用 Docker 安装了 MySQL 之后，从其他机器连接提示连接被拒绝。<br>排查了各种可能的原因：</p><ul><li>确认本机 IP 无误，<code>/etc/hosts</code> 配置无误。</li><li>确认 ufw 已经放开连接端口。</li><li>确认 frp 的配置不会影响 MySQL 的连接。</li><li>确认要暴露的 MySQL 连接端口已在监听，且 IPv4 和 IPv6 都能监听。</li></ul><p>问了 AI，排查了很长时间，没有明白问题出在哪里。</p><h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>为了对比，用 3306 默认端口启动了一个新容器，ufw 放开 3306 端口连接正常，说明还是端口有问题。<br>最后排查到是端口映射搞乱了。<br>在启动 Docker 容器的时候端口映射配置为 <code>25040:3306</code>。<br>在 mysql&#x2F;conf&#x2F;my.conf 配置文件中的又配置了 MySQL 的端口：</p><pre><code class="conf">[mysqld]bind-address=0.0.0.0port=25040</code></pre><p>其实容器内的 MySQL 是从 25040 端口启动的，Docker 的端口却映射到了 3306，所以导致一直连接不上。<br>最后将启动 Docker 容器的端口映射改为 <code>25040:25040</code> 重新启动容器，连接正常。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;使用 Docker 安装了 MySQL 之后，从其他机器连接提示连接被拒绝。&lt;br&gt;排查了各种可能的原因：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;确认本</summary>
+      
+    
+    
+    
+    <category term="解决方案" scheme="https://zhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="Docker" scheme="https://zhu.happy365.day/tags/Docker/"/>
+    
+    <category term="MySQL" scheme="https://zhu.happy365.day/tags/MySQL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>frp内网穿透配置</title>
+    <link href="https://zhu.happy365.day/20251105/a0b550176c2e/"/>
+    <id>https://zhu.happy365.day/20251105/a0b550176c2e/</id>
+    <published>2025-11-05T13:55:12.000Z</published>
+    <updated>2025-11-15T17:47:33.751Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>通过京东云 VPS 内网穿透部署在内网的主机，配置的时候踩了点坑，记录一下，供以后参考。</p><h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>思路是通过 frp 服务端监听 9000 端口，内网机器 ssh 端口为 10000，在外网通过 9001 穿透到内网 10000 端口上。<br>服务端防火墙已放行 9000、9001 端口，内网机器防火墙已放行 10000 端口。</p><p>环境：</p><ul><li>京东云 VPS，系统为 Debian12</li><li>内网主机，系统为 Debian13</li><li>frp_0.63.0_linux_amd64，下载地址：<a href="https://github.com/fatedier/frp/tags">frp_0.63.0_linux_amd64</a></li></ul><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>frp 服务端监听 9000 端口。</p><pre><code class="toml"># 服务绑定的IP与端口bindAddr = &quot;0.0.0.0&quot;bindPort = 9000# web dashboard配置webServer.addr = &quot;0.0.0.0&quot;webServer.port = 9001webServer.user = &quot;qiyuecha&quot;webServer.password = &quot;.9991aa!zxd&quot;# 启用prometheus监控指标enablePrometheus = false# token权限验证，需与客户端配置一致auth.method = &quot;token&quot;auth.token = &quot;uuiixx.aasqq!pa&quot;# 日志配置log.to = &quot;~/Applications/frp-0.63.0/logs/frpc.log&quot;log.level = &quot;info&quot;log.maxDays = 7</code></pre><p>客户端配置：</p><pre><code class="toml"># 服务绑定的IP与端口serverAddr = &quot;&quot;serverPort = 9020# web dashboard配置webServer.addr = &quot;0.0.0.0&quot;webServer.port = 9021webServer.user = &quot;longkun&quot;webServer.password = &quot;.9991aa!zxd&quot;# token权限验证，需与客户端配置一致auth.method = &quot;token&quot;auth.token = &quot;uiixx.aasqq!pa&quot;# 日志配置log.to = &quot;～/Applications/frp_0.63.0_linux_amd64/frpc.log&quot;log.level = &quot;info&quot;log.maxDays = 7[[proxies]]name = &quot;ssh&quot;type = &quot;tcp&quot;localIp = &quot;127.0.0.1&quot;localPort = 10000# 在外网访问的端口，映射到 localPortremotePort = 9001</code></pre><h2 id="自启动"><a href="#自启动" class="headerlink" title="自启动"></a>自启动</h2><p>增加自启动项：<code>/etc/systemd/system/frpc.service</code></p><pre><code>[Unit]Description=FRP Client ServiceAfter=network.target syslog.targetWants=network.target[Service]Type=simpleExecStart=～/Applications/frp_0.63.0_linux_amd64/frpc -c ～/Applications/frp_0.63.0_linux_amd64/frpc.tomlRestart=on-failureWorkingDirectory=～/Applications/frp_0.63.0_linux_amd64RestartSec=5[Install]WantedBy=multi-user</code></pre><h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><p>配置好了之后，通过 <code>sudo systemctl start frpc</code> 启动一直没启动成功，看了日志提示 frpc 的路径不存在，对了好久，发现在 frpc.service 文件中把 frpc 写成 fprc 了。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;通过京东云 VPS 内网穿透部署在内网的主机，配置的时候踩了点坑，记录一下，供以后参考。&lt;/p&gt;
+&lt;h2 id=&quot;环境&quot;&gt;&lt;a href=&quot;</summary>
+      
+    
+    
+    
+    <category term="工具软件" scheme="https://zhu.happy365.day/categories/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/"/>
+    
+    
+    <category term="frp" scheme="https://zhu.happy365.day/tags/frp/"/>
+    
+    <category term="内网穿透" scheme="https://zhu.happy365.day/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LeetCode58-最后一个单词的长度</title>
+    <link href="https://zhu.happy365.day/20251102/1944a433fb0f/"/>
+    <id>https://zhu.happy365.day/20251102/1944a433fb0f/</id>
+    <published>2025-11-01T16:30:00.000Z</published>
+    <updated>2025-11-15T17:47:33.748Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给你一个字符串 <code>s</code>，由若干单词组成，单词前后用一些空格字符隔开。返回字符串中 <strong>最后一个</strong> 单词的长度。<br><strong>单词</strong> 是指仅由字母组成、不包含任何空格字符的最大子字符串。</p><p><strong>示例 1：</strong><br>输入：s &#x3D; “Hello World”<br>输出：5<br>解释：最后一个单词是“World”，长度为 5。</p><p><strong>示例 2：</strong><br>输入：s &#x3D; “   fly me   to   the moon  “<br>输出：4<br>解释：最后一个单词是“moon”，长度为 4。</p><p><strong>示例 3：</strong><br>输入：s &#x3D; “luffy is still joyboy”<br>输出：6<br>解释：最后一个单词是长度为 6 的“joyboy”。</p><p><strong>提示：</strong></p><ul><li><code>1 &lt;= s.length &lt;= 104</code></li><li><code>s</code> 仅有英文字母和空格 <code>&#39; &#39;</code> 组成</li><li><code>s</code> 中至少存在一个单词</li></ul><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>用一个变量记录单词的长度，遍历整个字符串，对每个字符有以下情况：</p><ul><li>当前字符是空白字符<ul><li>什么也不做</li></ul></li><li>当前字符不是空白字符<ul><li>如果前一个字符是空白字符<ul><li>将记录的单词长度重置为 1</li></ul></li><li>如果前一个字符不是空白字符<ul><li>将长度加 1</li></ul></li></ul></li></ul><p>代码如下：</p><pre><code class="python">class Solution:    def lengthOfLastWord(self, s: str) -&gt; int:        length = 0        for i in range(len(s)):            char = s[i]            if char != &quot; &quot;:                preChar = s[i - 1] if i &gt; 1 else 0                if preChar == &quot; &quot;:                    length = 1                else:                    length += 1        return length</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h2&gt;&lt;p&gt;给你一个字符串 &lt;code&gt;s&lt;/code&gt;，由若干单词组成，单词前后用一些空格字符隔开。返回字符串中 &lt;strong&gt;最后</summary>
+      
+    
+    
+    
+    <category term="解题记录" scheme="https://zhu.happy365.day/categories/%E8%A7%A3%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+    
+    
+    <category term="LeetCode" scheme="https://zhu.happy365.day/tags/LeetCode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LeetCode20-有效的括号</title>
+    <link href="https://zhu.happy365.day/20251101/3d6e49f8f384/"/>
+    <id>https://zhu.happy365.day/20251101/3d6e49f8f384/</id>
+    <published>2025-10-31T16:35:00.000Z</published>
+    <updated>2025-11-15T17:47:33.748Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给定一个只包括 <code>&#39;(&#39;</code>，<code>&#39;)&#39;</code>，<code>&#39;&#123;&#39;</code>，<code>&#39;&#125;&#39;</code>，<code>&#39;[&#39;</code>，<code>&#39;]&#39;</code> 的字符串 <code>s</code> ，判断字符串是否有效。<br>有效字符串需满足：</p><ol><li>左括号必须用相同类型的右括号闭合。</li><li>左括号必须以正确的顺序闭合。</li><li>每个右括号都有一个对应的相同类型的左括号。</li></ol><p><strong>示例 1：</strong><br>输入：s &#x3D; “()”<br>输出：true</p><p><strong>示例 2：</strong><br>输入：s &#x3D; “()[]{}”<br>输出：true</p><p><strong>示例 3：</strong><br>输入：s &#x3D; “(]”<br>输出：false</p><p><strong>示例 4：</strong><br>输入：s &#x3D; “([])”<br>输出：true</p><p><strong>示例 5：</strong><br>输入：s &#x3D; “([)]”<br>输出：false</p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>相比大家在学习数据结构中的栈时，都学过怎么利用栈来对逆波兰表达式求解了。遇到左侧括号先入栈，遇到右侧括号则弹出栈顶元素，判断是否匹配。如果匹配消去，如果不匹配直接返回匹配失败，最后再看栈中的元素是否清空，没有的话就表示不完全匹配。</p><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>Java 代码实现如下：</p><pre><code class="java">class Solution20 &#123;    public boolean isValid(String s) &#123;        Map&lt;Character, Character&gt; map = Map.of(&#39;(&#39;, &#39;)&#39;, &#39;[&#39;, &#39;]&#39;, &#39;&#123;&#39;, &#39;&#125;&#39;);        char[] charArray = s.toCharArray();        Stack&lt;Character&gt; stack = new Stack&lt;&gt;();        for (char c : charArray) &#123;            if (map.containsKey(c)) &#123;                stack.push(c);            &#125; else if (map.containsValue(c)) &#123;                if (stack.isEmpty()) &#123;                    return false;                &#125;                Character pop = stack.peek();                if (c != map.get(pop)) &#123;                    return false;                &#125;            &#125;        &#125;        return stack.isEmpty();    &#125;&#125;</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h2&gt;&lt;p&gt;给定一个只包括 &lt;code&gt;&amp;#39;(&amp;#39;&lt;/code&gt;，&lt;code&gt;&amp;#39;)&amp;#39;&lt;/code&gt;，&lt;cod</summary>
+      
+    
+    
+    
+    <category term="解题记录" scheme="https://zhu.happy365.day/categories/%E8%A7%A3%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+    
+    
+    <category term="LeetCode" scheme="https://zhu.happy365.day/tags/LeetCode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LeetCode2-两数相加</title>
+    <link href="https://zhu.happy365.day/20251101/a8f3178c226f/"/>
+    <id>https://zhu.happy365.day/20251101/a8f3178c226f/</id>
+    <published>2025-10-31T16:19:00.000Z</published>
+    <updated>2025-11-15T17:47:33.748Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>用两个非单空链表逆序的表示两个非负整数，链表中的每个节点存储数字中的一个数位，链表起始节点表示个位、第二个节点表示十位….，最后一个节点表示最高位。除了数字 0 之外，这两个数字都不会以 0 开头。<br>图示如下：<br>单链表1：2 -&gt; 4 -&gt; 3<br>单链表2：5 -&gt; 6 -&gt; 4<br>表示数字 342 和 465。<br>要求输入两个链表的头节点，以相同形式输出这两个数相加的结果。</p><p>示例：<br>输入：l1 &#x3D; [2, 4, 3] l2 &#x3D; [5, 6, 4]<br>输出：[7, 0, 8]<br>解释：342 + 465 &#x3D; 807</p><h2 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h2><p>观察链表的表示可以发现这种表示方式中，链表头节点是最低位，尾节点是最高位。并且有前提“两个数字除了 0 之外，都不会以 0 开头“，这说明两个数的数位正好是对齐的。如果以两个指针从前往后同步遍历两个链表，则个位对个位，十位对十位。运算时，只要将对应指针指向的节点的数值相加，超过 10 的则用一个临时变量存储 1 表示进位，下一次循环中加上这个进位的 1。要注意，产生进位后，当前节点值的和应减去 10。<br>另外，有可能两个链表长度不一致，而且有可能最后一位的运算会产生进位，所以结束循环的条件应该是两个指针均指向空且上一次加法中没有产生进位，即存储进位的临时变量值 !&#x3D; 1。</p><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>Python3 代码实现如下：</p><pre><code class="python">class Solution:    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -&gt; Optional[ListNode]:        nodeIndex1 = l1        nodeIndex2 = l2        l3 = None        nodeIndex3 = None        tempVal = 0        while nodeIndex1 != None or nodeIndex2 != None or tempVal != 0:            tempNode = ListNode(0, None)            val1 = nodeIndex1.val if nodeIndex1 else 0            val2 = nodeIndex2.val if nodeIndex2 else 0            val3 = val1 + val2 + tempVal            if (val3 &gt;= 10):                tempVal = 1                val3 = val3 - 10            else:                tempVal = 0                        tempNode.val = val3            if l3 is None:                l3 = tempNode                nodeIndex3 = l3            else:                nodeIndex3.next = tempNode                nodeIndex3 = nodeIndex3.next            nodeIndex1 = nodeIndex1.next if nodeIndex1 else None            nodeIndex2 = nodeIndex2.next if nodeIndex2 else None                return l3</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h2&gt;&lt;p&gt;用两个非单空链表逆序的表示两个非负整数，链表中的每个节点存储数字中的一个数位，链表起始节点表示个位、第二个节点表示十位….，</summary>
+      
+    
+    
+    
+    <category term="解题记录" scheme="https://zhu.happy365.day/categories/%E8%A7%A3%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+    
+    
+    <category term="LeetCode" scheme="https://zhu.happy365.day/tags/LeetCode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LeetCode70-爬楼梯</title>
+    <link href="https://zhu.happy365.day/20251030/acf5b521f80e/"/>
+    <id>https://zhu.happy365.day/20251030/acf5b521f80e/</id>
+    <published>2025-10-30T14:16:00.000Z</published>
+    <updated>2025-11-15T17:47:33.748Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>假设你正在爬楼梯。需要 <code>n</code> 阶你才能到达楼顶。</p><p>每次你可以爬 <code>1</code> 或 <code>2</code> 个台阶。你有多少种不同的方法可以爬到楼顶呢？</p><p><strong>示例 1：</strong><br>输入：n &#x3D; 2<br>输出：2<br>解释：有两种方法可以爬到楼顶。</p><ol><li>1 阶 + 1 阶</li><li>2 阶</li></ol><p><strong>示例 2：</strong><br>输入：n &#x3D; 3<br>输出：3<br>解释：有三种方法可以爬到楼顶。</p><ol><li>1 阶 + 1 阶 + 1 阶</li><li>1 阶 + 2 阶</li><li>2 阶 + 1 阶</li></ol><p><strong>提示</strong></p><ul><li><code>1 &lt;= n &lt;= 45</code></li></ul><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>先手动算出 n &#x3D; 4 时的结果，将 n &#x3D; 1…4 的结果列出来的时候，看着就像是 Fibonacci 数列，花了好长时间往这个数列上去理解，但是死活想不通。</p><p>最后去看了官方题解，就一句话“要上到 n 阶台阶只有两种方式：要么从 n - 1 阶台阶上跨 1 步上来，要么从 n - 2 阶台阶上跨 2 步上来，所以上 n 阶台阶的方式就是上 n - 1 阶台阶的方式加上 n - 2 阶台阶的方式“。</p><p>以为全部理解了，就写了递归求数列的代码拿去提交了。结果提交了好几次都在 44 这个测试用例上超时，所以递归是不行的，只能用递推的方式实现。</p><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>递归很简单但是性能不佳，需采用递推的方式实现，也很简单。</p><pre><code class="python">class Solution:    def climbStairs(self, n: int) -&gt; int:        first = 0        second = 1        for i in range(n):            result = first + second            first = second            second = result        return result</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h2&gt;&lt;p&gt;假设你正在爬楼梯。需要 &lt;code&gt;n&lt;/code&gt; 阶你才能到达楼顶。&lt;/p&gt;
+&lt;p&gt;每次你可以爬 &lt;code&gt;1&lt;/co</summary>
+      
+    
+    
+    
+    <category term="解题记录" scheme="https://zhu.happy365.day/categories/%E8%A7%A3%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+    
+    
+    <category term="LeetCode" scheme="https://zhu.happy365.day/tags/LeetCode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LeetCode7-整数反转</title>
+    <link href="https://zhu.happy365.day/20251029/3a0d567614e2/"/>
+    <id>https://zhu.happy365.day/20251029/3a0d567614e2/</id>
+    <published>2025-10-28T16:26:00.000Z</published>
+    <updated>2025-11-15T17:47:33.748Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给你一个 32 位的有符号整数 <code>x</code> ，返回将 <code>x</code> 中的数字部分反转后的结果。<br>如果反转后整数超过 32 位的有符号整数的范围 <code>[−231,  231 − 1]</code> ，就返回 0。</p><p>假设环境不允许存储 64 位整数（有符号或无符号）。</p><p><strong>示例 1：</strong><br>输入：x &#x3D; 123<br>输出：321</p><p><strong>示例 2：</strong><br>输入：x &#x3D; -123<br>输出：-321</p><p><strong>示例 3：</strong><br>输入：x &#x3D; 120<br>输出：21</p><p><strong>示例 4：</strong><br>输入：x &#x3D; 0<br>输出：0</p><p><strong>提示：</strong></p><ul><li><code>-231 &lt;= x &lt;= 231 - 1</code></li></ul><h2 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h2><p>基于状态机的接发还没看懂，下面是自己的理解。<br>首先固定读取顺序为 空格 -&gt; 符号 -&gt; 字符，其中空格可能没有，也可能有多个，符号也是如此，但是符号最多只读取一次，如果读取到就从下一个字符开始读取数字部分，如果没有读取到则本次就要读取数字部分。<br>代码如下。</p><pre><code class="python"># !/usr/bin/python3# -*- coding: utf-8 -*-class Solution:    def reverse(self, x: int) -&gt; int:        num_str = str(x)        stack = []        sign = &quot;&quot;        for index in range(len(num_str)):            char = num_str[index]            if (char == &quot;-&quot;):                sign = char            else:                stack.append(num_str[index])        if (len(sign) &gt; 0):            stack.append(sign)        num_str = &quot;&quot;        for index in range(len(stack)):            char = stack.pop()            num_str += char        num = int(num_str)        if (num &gt; 2**31 - 1 or num &lt; -2**31):            return 0        else:            return num</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h2&gt;&lt;p&gt;给你一个 32 位的有符号整数 &lt;code&gt;x&lt;/code&gt; ，返回将 &lt;code&gt;x&lt;/code&gt; 中的数字部分反转后的结</summary>
+      
+    
+    
+    
+    <category term="解题记录" scheme="https://zhu.happy365.day/categories/%E8%A7%A3%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+    
+    
+    <category term="LeetCode" scheme="https://zhu.happy365.day/tags/LeetCode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>博客调整</title>
+    <link href="https://zhu.happy365.day/20251026/a4d3c56821b7/"/>
+    <id>https://zhu.happy365.day/20251026/a4d3c56821b7/</id>
+    <published>2025-10-26T12:09:27.000Z</published>
+    <updated>2025-11-15T17:47:33.753Z</updated>
+    
+    <content type="html"><![CDATA[<p>距离更换博客主题为 hexo-theme-cactus 已经一年半了，最近有点时间进行了一些调整和优化，记录一下调整的地方。</p><p>主要有：<br>域名：精简域名为 zhu.happy365.day。</p><p>页面布局：</p><ul><li>将导航中的“开往”移到页面底部中间位置，同时增加“十年之约”入口。</li><li>删除首页中间位置的社交元素，更改为欢迎语。</li><li>友链页面将友链列表放在页面顶部，站点信息下移</li></ul><p>样式：</p><ul><li>主题色调整为绿色。</li><li>删除萌国备案信息中的空格以节省空间。</li></ul><p>其他：</p><ul><li>更新“关于”页面。</li><li>移除部分无法访问的友链，新增 2 个友链。</li><li>部分元素国际化调整。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;距离更换博客主题为 hexo-theme-cactus 已经一年半了，最近有点时间进行了一些调整和优化，记录一下调整的地方。&lt;/p&gt;
+&lt;p&gt;主要有：&lt;br&gt;域名：精简域名为 zhu.happy365.day。&lt;/p&gt;
+&lt;p&gt;页面布局：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;将导航中的“</summary>
+      
+    
+    
+    
+    <category term="博客维护" scheme="https://zhu.happy365.day/categories/%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/"/>
+    
+    
+    <category term="博客维护" scheme="https://zhu.happy365.day/tags/%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>KMP算法</title>
+    <link href="https://zhu.happy365.day/20251024/99677b39ea2d/"/>
+    <id>https://zhu.happy365.day/20251024/99677b39ea2d/</id>
+    <published>2025-10-24T15:56:20.000Z</published>
+    <updated>2025-11-15T17:47:33.748Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="什么是-KMP-算法"><a href="#什么是-KMP-算法" class="headerlink" title="什么是 KMP 算法"></a>什么是 KMP 算法</h2><p>KMP 算法是一种用于字符串模式匹配的高效算法，由 Knuth、Morris、Pratt 三位大佬于 1977 年提出，算法名称来源于这几个人的名字首字母。可以将时间复杂度从傻瓜式的暴力匹配的 O(m x n) 降低到 O(m + n) 级别，效率提升非常大。</p><h2 id="暴力匹配"><a href="#暴力匹配" class="headerlink" title="暴力匹配"></a>暴力匹配</h2><p>傻瓜式的暴力匹配原理很简单，对于 text 的第 i 个字符，分别用 p、t 指针分别指向 text 的第 i 个字符、pattern 的起始字符，然后判断两个下标指针位置的字符是否相等；如果相等，则两个下标指针后移一位；如果不相等，则对 text 字符串的第 （i + 1)  个字符循环上述过程，直到 pattern 中的字符全部匹配成功或者到达 text 的最后一个字符。</p><p>第一轮：</p><p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_11.51.33.png"></p><p>第二轮：</p><p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_11.55.49.png"></p><p>第三轮：</p><p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_11.56.57.png"></p><p>代码实现如下。</p><pre><code class="python">def match(text, pattern):    text_list = list(text)    pattern_list = list(pattern)    i = 0    while i &lt; len(text_list):        t = i        p = 0        while t &lt; len(pattern_list):            if (text_list[t] == pattern_list[p]):                t += 1                p += 1            else:                break                if p == len(pattern_list):            return i        elif t == len(text_list):            return -1        i += 1    return -1</code></pre><p>这种匹配方式实现起来非常简单，时间复杂度为 O(m x n)。 但是这样的匹配方式存在回溯问题，每次遇到不匹配的字符时需要回退到 text 的第 i + 1 个字符。</p><h2 id="KMP-算法的匹配过程"><a href="#KMP-算法的匹配过程" class="headerlink" title="KMP 算法的匹配过程"></a>KMP 算法的匹配过程</h2><p>KMP 算法消除了暴力匹配的回溯问题。</p><p>观察匹配过程：</p><p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_11.51.33.png"></p><p>直到第 5 个字符： A、C 不匹配时，前面的 4 个字符都是匹配的，并且观察可以发现前 4 个字符中存在重复的序列 AB，因为前 4 个字符是匹配的，所有同样重复的序列在 pattern 中同样存在。于是可以想有没有可能不回溯 text，而是将 pattern 向右移动，移动时跳过重复的 AB 字符？如下图，这样就能保证在当前匹配到的第 5 个位置之前的字符都是匹配的，然后就可以继续往后匹配了，从而节省回溯 text 之后的几次重复无用匹配。</p><p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_12.28.49.png"></p><p>这就是 KMP 算法的思想，利用 pattern 中子串重复的信息来指示当遇到不匹配字符时 pattern 串应该跳过多少次匹配（也就是跳过多少个存在重复的最长子串），确保 text 不回溯，从而提高匹配的效率。</p><p>next 数组就是用来保存 pattern 串中截止到每个字符最长的重复子串信息的。</p><h2 id="next-数组"><a href="#next-数组" class="headerlink" title="next 数组"></a>next 数组</h2><p>上面提到，next 数组是用来保存 pattern 串中截止到当前字符最长重复子串长度信息的。</p><p>要计算 next 数组，需要几个概念：最长前缀、最长后缀和最长公共前后缀。</p><p><strong>最长前缀</strong></p><p>前缀是指所有以第二个字符开始的连续子串，最长前缀就是这些连续子串中最长的一个。</p><p>比如 ABAB ，前缀有：A、AB、ABA，最长前缀为 ABA。</p><p><strong>最长后缀</strong></p><p>后缀是指所有以倒数第二个字符结尾的连续子串，最长后缀就是这些连续子串中最长的一个。</p><p>比如 ABAB 中，后缀有：A、BA、ABA。</p><p><strong>最长公共前后缀</strong></p><p>就是字符串对应的最长前缀和最长后缀的交集中长度最长的一个。</p><p>比如 ABAB 中，公共前缀和后缀有：A、ABA，最长的公共前后缀就是 ABA。</p><p><strong>next 数组</strong></p><p>next 数组是指字符串中以第一个字符开始，以每个字符结尾的子串对应的最长公共前缀的长度为元素的数组。</p><p>比如 ABABC 中：</p><p>A：不存在公共前后缀，所以长度为 0。</p><p>B：子串为 AB，不存在公共前后缀，所以长度为 0。</p><p>A：子串为 ABA，最长公共前后缀为 B，长度为 1。</p><p>B：子串为 ABAB，最长公共前后缀为 BA，长度为 2。</p><p>C：字串为 ABABC，不存在公共前后缀，所以长度为 0。</p><p>于是得到 ABABC 的 next 数组如下。</p><p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_12.54.12.png"></p><h2 id="代码实现-next-数组的计算"><a href="#代码实现-next-数组的计算" class="headerlink" title="代码实现 next 数组的计算"></a>代码实现 next 数组的计算</h2><p>可以使用暴力求解，遍历 pattern 字符串，对于每个字符，向前找出所有的前缀、向后找出所有的后缀，求两个集合的交集，如果交集为空，则返回 0，否则取出交集中最长的子串的长度即为结果。</p><p>在网上看到有效率更高的方法，采用动态规划，从左到右来求最长公共前后缀。大致过程如下：</p><ol><li>用 next 数组记录结果，用 i 记录当前字符的下标位置，用 lenth 来记录两个指针已经连续匹配上多少个字符，即 text 中对应字符的 next 值。</li><li>初始化时，next[0] &#x3D; 0 且 i &#x3D; 1（即默认第一个字符 next 值为 0，从第 2 个字符开始进行计算），length &#x3D; 0，lenth 用来记录前一个字符的 next 值，并且可以用作第 2 个指针。</li><li>对于 text 中的每个字符：<ol><li>如果 text[i] &#x3D;&#x3D; text[len]，说明当前字符在前面出现过，于是 length + 1，并且两个指针都往后移动一位，即 i + 1，lenth 已经也加过 1。</li><li>如果 text[i] !&#x3D; text[length]，说明重复序列结束了，即 text[0] 至 text[length - 1] 这个子串和 text[i - length] 至 text[i - 1] 这个字串相同，但是 text[0] 至 text[length] 这个子串和 text[i - length] 至 text[i] 这个子串最后一位不相同，相同序列结束了，让 length 指针退回到重复序列之前，即 lenth &#x3D; next[length - 1]，再重复上面的步骤，如果 length 退回到了起始位置，说明当前字符对应的最长公共子串为 0。</li></ol></li></ol><p>代码实现如下。</p><pre><code class="python">def next(pattern):    pattern_list = list(pattern)    next = []    next.append(0)    i = 1    lenth = 0    while i &lt; len(pattern_list):        if pattern_list[i] == pattern_list[lenth]:            lenth += 1            next.insert(i, lenth)            i += 1        else:            if lenth == 0:                next.insert(i, 0)                i += 1            else:                lenth = next[lenth - 1]    return next</code></pre><h2 id="代码实现-KMP-算法"><a href="#代码实现-KMP-算法" class="headerlink" title="代码实现 KMP 算法"></a>代码实现 KMP 算法</h2><p>求出 next 数组之后，text 中的指针只管往后走，每当遇到不匹配的字符时，只需要将 pattern 中的 p 指针移动到 p - next[p - 1] 的位置处，跳过 next[p - 1] 次比较即可。循环上面的过程，如果 p 指针走到了最后，说明匹配到结果；如果 i 指针走到了最后并且 p 指针没走到最后，则匹配失败。</p><p>Python 代码如下。</p><pre><code class="python">def kmp_match(self, text, pattern):    next = self.next(pattern)    text_list = list(text)    pattern_list = list(pattern)    i = 0    p = 0    while i &lt; len(text_list) and p &lt; len(pattern_list):        if text_list[i] == pattern_list[p]:            i += 1            p += 1        else:            p = p - next[p - 1]            if p == len(pattern_list):            return i - p    return -1 </code></pre><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>这个算法比较难理解，这次花了很长时间才算是勉强搞明白其中的原理。</p><p>可以参考一下这些讲得很不错资料：</p><ul><li><a href="https://www.cnblogs.com/Higurashi-kagome/p/18013626">图文详解 KMP 算法</a></li><li><a href="https://blog.csdn.net/qq_62982856/article/details/128003067">KMP算法——通俗易懂讲好KMP算法</a></li></ul><p>B 站上也有一些视频，结合视频动画理解匹配过程会更容易理解。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;什么是-KMP-算法&quot;&gt;&lt;a href=&quot;#什么是-KMP-算法&quot; class=&quot;headerlink&quot; title=&quot;什么是 KMP 算法&quot;&gt;&lt;/a&gt;什么是 KMP 算法&lt;/h2&gt;&lt;p&gt;KMP 算法是一种用于字符串模式匹配的高效算法，由 Knuth、Morris</summary>
+      
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="算法" scheme="https://zhu.happy365.day/tags/%E7%AE%97%E6%B3%95/"/>
+    
+    <category term="KMP算法" scheme="https://zhu.happy365.day/tags/KMP%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Excel中隔N行取一行</title>
+    <link href="https://zhu.happy365.day/20251024/ad37b84c4d4b/"/>
+    <id>https://zhu.happy365.day/20251024/ad37b84c4d4b/</id>
+    <published>2025-10-24T14:00:46.000Z</published>
+    <updated>2025-11-15T17:47:33.747Z</updated>
+    
+    <content type="html"><![CDATA[<p>先上每两行中取出一行的公式</p><p><code>INDEX(A$2:A$10, ROW(A2) * 2 - 2, 1)</code> </p><p>从 A2:A10 的区域中，获取 A2、A4、A6、A8… 的值。</p><p>事情是这样的，之前做了一个批量提交审批的功能，没有做防重复提交处理，而且每个提交人每次需要处理的数据量还挺大。这周有个人提交数据之后刷新页面发现还有未提交状态的数据加载出来，于是又全部勾选再次进行了提交。就这样，申请表中就出现了部分重复的数据。</p><p>这些重复的数据需要清理掉其中的一条，重复数据除了 id 之外，其他字段都一样，需要先找出要删除的数据 id。</p><p>先用 SQL 按业务字段 group by 出来重复的数据，导出到 Excel 中，然后按业务字段进行排序，将重复数据排到一起。</p><p>然后每两行中取出一行的 id，拿到这些 id 就去进行删除就行了。怎么每两行取取出其中的一行呢？</p><p>需要用到两个函数：INDEX(array, row_num, [column_num]) 和 ROW()。</p><p><strong>INDEX(array, row_num, [column_num])</strong></p><p>从 array 区域中获取 row_num 行 column 列 的值。</p><p><strong>ROW()</strong></p><p>获取某个单元格的行号，比如 ROW(A1) 结果就是 1。</p><p>技巧就在于怎么得到目标行号，然后放到 INDEX() 函数中。</p><table><thead><tr><th>单元格行</th><th>要获取的目标行的行号（隔1行）</th><th>对应的公式计算公式</th><th>对应的 Excel 公式</th></tr></thead><tbody><tr><td>A1</td><td>1</td><td>2 x ROW(A1) - 1</td><td>INDEX(A$1:A$10, 2 * ROW(A1) - 1, 1)</td></tr><tr><td>A2</td><td>3</td><td>2 x ROW(A2) - 1</td><td></td></tr><tr><td>A3</td><td>5</td><td>2 x ROW(A3) - 1</td><td></td></tr><tr><td>A4</td><td>7</td><td>2 x ROW(A4) - 1</td><td></td></tr><tr><td>A5</td><td>9</td><td>2 x ROW(A5) - 1</td><td></td></tr><tr><td>A6</td><td></td><td></td><td></td></tr><tr><td>A7</td><td></td><td></td><td></td></tr><tr><td>A8</td><td></td><td></td><td></td></tr><tr><td>A9</td><td></td><td></td><td></td></tr><tr><td>A10</td><td></td><td></td><td></td></tr></tbody></table><table><thead><tr><th>单元格行</th><th>要获取的目标行的行号（隔2行）</th><th>对应的公式计算公式</th><th>对应的 Excel 公式</th></tr></thead><tbody><tr><td>A1</td><td>1</td><td>3 x ROW(A1) - 2</td><td>INDEX(A$1:A$10, 3 * ROW(A1) - 2, 1)</td></tr><tr><td>A2</td><td>4</td><td>3 x ROW(A2) - 2</td><td></td></tr><tr><td>A3</td><td>7</td><td></td><td></td></tr><tr><td>A4</td><td>10</td><td></td><td></td></tr><tr><td>A5</td><td></td><td></td><td></td></tr><tr><td>A6</td><td></td><td></td><td></td></tr><tr><td>A7</td><td></td><td></td><td></td></tr><tr><td>A8</td><td></td><td></td><td></td></tr><tr><td>A9</td><td></td><td></td><td></td></tr><tr><td>A10</td><td></td><td></td><td></td></tr></tbody></table>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;先上每两行中取出一行的公式&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;INDEX(A$2:A$10, ROW(A2) * 2 - 2, 1)&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;从 A2:A10 的区域中，获取 A2、A4、A6、A8… 的值。&lt;/p&gt;
+&lt;p&gt;事情是这样的，之前做了一个批量提交审</summary>
+      
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="Excel" scheme="https://zhu.happy365.day/tags/Excel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在macOS上编译OpenJDK8</title>
+    <link href="https://zhu.happy365.day/20250802/1e117267d714/"/>
+    <id>https://zhu.happy365.day/20250802/1e117267d714/</id>
+    <published>2025-08-02T12:14:00.000Z</published>
+    <updated>2025-11-15T17:47:33.753Z</updated>
+    
+    <content type="html"><![CDATA[<p>在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。</p><span id="more"></span><h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>1、Mac 上安装 Mercurial 总是报错，没找到什么原因，所以用不了 <code>hg clone <a href="http://hg.openjdk.java.net/jdk8">http://hg.openjdk.java.net/jdk8</a></code> 这种方式。</p><p>jdk8 源码地址：<a href="http://jdk.java.net/java-se-ri/8-MR3">jdk8u41源码下载</a>  <a href="https://download.java.net/openjdk/openjdk/jdk8/promoted/b132/openjdk-8-src-b132-03_mar_2014.zip">zip文件下载</a></p><p>2、安装 freetype 和 ccache：</p><p><code>brew install freetype</code></p><p><code>brew install ccache</code></p><h1 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h1><p>运行 configure：</p><pre><code class="bash">./configure --with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/ --disable-warnings-as-errors --with-debug-level=slowdebug --with-jvm-variants=server --enable-ccache</code></pre><p><em>遇到的报错及解决方案</em></p><p>1、The C compiler (located as &#x2F;usr&#x2F;bin&#x2F;gcc) does not seem to be the required GCC compiler.</p><pre><code>打开文件common/autoconf/generated-configure.sh，搜索compiler is required注释或把报错命令改为echo即可。</code></pre><br><p>比较顺利，只遇到上面一个错误。</p><p>成功输出：</p><pre><code>........config.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/spec.shconfig.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/Makefileconfig.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/config.h====================================================A new configuration has been successfully created in/Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-releaseusing configure arguments &#39;--with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/&#39;.Configuration summary:* Debug level:    release* JDK variant:    normal* JVM variants:   server* OpenJDK target: OS: macosx, CPU architecture: x86, address length: 64Tools summary:* Boot JDK:       openjdk version &quot;1.8.0_292&quot; OpenJDK Runtime Environment (Zulu 8.54.0.21-CA-macosx) (build 1.8.0_292-b10) OpenJDK 64-Bit Server VM (Zulu 8.54.0.21-CA-macosx) (build 25.292-b10, mixed mode)  (at /opt/java/zulu8.54.0.21-ca-jdk8.0.292-macosx_x64)* C Compiler:      version  (at /usr/bin/gcc)* C++ Compiler:    version  (at /usr/bin/g++)Build performance summary:* Cores to use:   4* Memory limit:   16384 MB* ccache status:  installed, but disabled (version older than 3.1.4)Build performance tip: ccache gives a tremendous speedup for C++ recompilations.You have ccache installed, but it is a version prior to 3.1.4. Try upgrading.</code></pre><br><p>运行 <code>make all</code></p><p>报错及解决：</p><p>1、clang: error: include path for libstdc++ headers not found; pass ‘-stdlib&#x3D;libc++’ on the command line to use the libc++ standard library instead [-Werror,-Wstdlibcxx-not-found]</p><p><a href="https://blog.csdn.net/quantum7/article/details/108466760">MAC编译OpenJDK8：clang: error: include path for libstdc++ headers not found</a></p><p><a href="https://github.com/quantum6/xcode-missing-libstdcpp.git">The missing libstdc++ headers and libraries for Xcode 10 or above.</a></p><p>2、</p><pre><code>l-op-parentheses]    if ( instr-&gt;is_ideal_branch() &amp;&amp; instr-&gt;label_position() == -1 ||         ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~/Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/hotspot/src/share/vm/adlc/archDesc.cpp:336:35: note: place parentheses around the &#39;&amp;&amp;&#39; expression to silence this warning    if ( instr-&gt;is_ideal_branch() &amp;&amp; instr-&gt;label_position() == -1 ||                                  ^         (                                                        )</code></pre><h1 id="其他可能遇到的错误"><a href="#其他可能遇到的错误" class="headerlink" title="其他可能遇到的错误"></a>其他可能遇到的错误</h1><p>&#x2F;Users&#x2F;lozhu&#x2F;Documents&#x2F;projects&#x2F;jdk12-06222165c35f&#x2F;src&#x2F;java.base&#x2F;macosx&#x2F;native&#x2F;libosxsecurity&#x2F;KeystoreImpl.m note: did not find header ‘JavaNativeFoundation.h’ in framework ‘JavaNativeFoundation’ (loaded from ‘&#x2F;Applications&#x2F;Xcode.app&#x2F;Contents&#x2F;Developer&#x2F;Platforms&#x2F;MacOSX.platform&#x2F;Developer&#x2F;SDKs&#x2F;MacOSX14.0.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks’)</p><p>现在的位置：&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX14.sdk</p><p>编辑 .&#x2F;make&#x2F;test&#x2F;JtregNativeJdk.gmk</p><p>BUILD_JDK_JTREG_LIBRARIES_LIBS_libTestMainKeyWindow :&#x3D; -framework JavaVM <br>      -framework Cocoa -framework JavaNativeFoundation</p><p>修改为</p><p>BUILD_JDK_JTREG_LIBRARIES_LIBS_libTestMainKeyWindow :&#x3D; -framework Cocoa -framework JavaNativeFoundation</p><p>编辑 .&#x2F;build&#x2F;macosx-x86_64-server-slowdebug&#x2F;spec.gmk</p><p>删除 -F &#x2F;Applications&#x2F;Xcode.app&#x2F;Contents&#x2F;Developer&#x2F;Platforms&#x2F;MacOSX.platform&#x2F;Developer&#x2F;SDKs&#x2F;MacOSX11.1.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Frameworks</p><p>编辑 .&#x2F;build&#x2F;macosx-x86_64-server-slowdebug&#x2F;buildjdk-spec.gmk</p><p>参考: <a href="https://www.jianshu.com/p/885c718df9de">macOS Catalina + Xcode 12 编译OpenJDK 14 错误解决</a></p><hr><p>.&#x2F;configure –with-freetype-include&#x3D;&#x2F;usr&#x2F;local&#x2F;include&#x2F;freetype2 –with-freetype-lib&#x3D;&#x2F;usr&#x2F;local&#x2F;lib&#x2F;</p><p>报错：The C compiler (located as &#x2F;usr&#x2F;bin&#x2F;gcc) does not seem to be the required GCC compiler.<br>打开文件common&#x2F;autoconf&#x2F;generated-configure.sh，搜索compiler is required<br>注释或把报错命令改为echo即可。</p><hr><p>(base) ➜  jdk8 make<br>Building OpenJDK for target ‘default’ in configuration ‘macosx-x86_64-normal-server-release’</p><p>Starting langtools</p><p>&#x2F;bin&#x2F;sh: line 0: cd: &#x2F;Users&#x2F;chenxii&#x2F;Documents&#x2F;Java&#x2F;jdk8&#x2F;jdk8&#x2F;langtools&#x2F;make: No such file or directory<br>make: *** [langtools-only] Error 1</p><p>解决方案参考：<a href="https://stackoverflow.com/questions/34703703/jdk8-build-error-langtools">https://stackoverflow.com/questions/34703703/jdk8-build-error-langtools</a></p><hr><p>执行：.&#x2F;get_source.sh</p><p>(base) ➜  jdk8 .&#x2F;get_source.sh</p><p>Repositories:  corba jaxp jaxws langtools jdk hotspot nashorn</p><pre><code>            corba:   hg clone http://hg.openjdk.java.net/jdk8/jdk8/corba corba             jaxp:   hg clone http://hg.openjdk.java.net/jdk8/jdk8/jaxp jaxp            corba:   requesting all changes</code></pre><p>Waiting 5 secs before spawning next background command.</p><p>lcm.cpp:52:35: error: ordered comparison between pointer and zero (‘address’ (aka ‘unsigned char *’) and ‘int’) </p><p>解决：编辑&#x2F;hotspot&#x2F;src&#x2F;share&#x2F;vm&#x2F;opto&#x2F;lcm.cpp:52 原：if (Universe::narrow_oop_base() &gt; 0) 修改后： if (Universe::narrow_oop_base()!&#x3D; NULL) { &#x2F;&#x2F; Implies UseCompressedOops.</p><hr><p>error: ordered comparison between pointer and zero</p><p>修改openjdk&#x2F;hotspot&#x2F;src&#x2F;share&#x2F;vm&#x2F;runtime&#x2F;virtualspace.cpp<br>　　修改331行为<br>　　if (base() !&#x3D; 0) {</p><hr><p>fatal error: ‘JavaNativeFoundation&#x2F;JavaNativeFoundation.h’ file not found<br>#import &lt;JavaNativeFoundation&#x2F;JavaNativeFoundation.h&gt;</p><p>(base) ➜  openjdk  sudo find &#x2F; -name “<em>JavaNativeFoundation.h</em>“<br>Password:<br>find: &#x2F;Library&#x2F;Application Support&#x2F;com.apple.TCC: Operation not permitted<br>&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX11.1.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaNativeFoundation.framework&#x2F;Versions&#x2F;A&#x2F;Headers&#x2F;JavaNativeFoundation.h<br>&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Versions&#x2F;A&#x2F;Frameworks&#x2F;JavaNativeFoundation.framework&#x2F;Versions&#x2F;A&#x2F;Headers&#x2F;JavaNativeFoundation.h</p><p>编辑：<br>vim hotspot&#x2F;make&#x2F;bsd&#x2F;makefiles&#x2F;saproc.make 61行：<br>SALIBS &#x3D; -g -framework Foundation -F&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Frameworks -framework JavaNativeFoundation -framework Security -framework CoreFoundation</p><p>105行：<br>-I&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Headers</p><hr><p>执行：make CONF&#x3D;macosx-x86_64-normal-server-release clean<br>make CONF&#x3D;macosx-x86_64-normal-server-release install</p><p>—– Build times ——-<br>Start 2021-07-11 10:50:45<br>End   2021-07-11 10:59:52<br>00:00:16 corba<br>00:00:50 demos<br>00:01:24 docs<br>00:02:10 hotspot<br>00:01:01 images<br>00:00:09 jaxp<br>00:00:14 jaxws<br>00:02:35 jdk<br>00:00:18 langtools<br>00:00:08 nashorn</p><p>00:09:07 TOTAL</p><p>Finished building OpenJDK for target ‘all’</p><p>WARNING: You have the following ALT_ variables set:<br>ALT_PARALLEL_COMPILE_JOBS&#x3D;2<br>ALT_ variables are deprecated and will be ignored. Please clean your environment.</p><p>[1]    90140 bus error  build&#x2F;macosx-x86_64-normal-server-release&#x2F;jdk&#x2F;bin&#x2F;java -version</p><p>&#x2F;Users&#x2F;chenxii&#x2F;Documents&#x2F;Java&#x2F;jdk8&#x2F;openjdk&#x2F;build&#x2F;macosx-x86_64-normal-server-release&#x2F;jdk&#x2F;bin</p><p>？</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="Java" scheme="https://zhu.happy365.day/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Debian12主机无法被ping通的问题</title>
+    <link href="https://zhu.happy365.day/20250728/174112c250b1/"/>
+    <id>https://zhu.happy365.day/20250728/174112c250b1/</id>
+    <published>2025-07-28T13:14:02.000Z</published>
+    <updated>2025-11-15T17:47:33.747Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>给 mini 主机安装了 Debian12 做为服务器使用，配置好 ssh 之后从 Mac 上进行远程登录，虽然连接的都是同一个Wi-Fi，但是一直连接失败。<br>ping 了一下延迟非常高，接近 100% 的丢包率。从 debian 系统 ping Mac 又是正常的，平均延迟在 10 秒左右，非常奇怪。</p><p>参考了网上很多资料这个问题都没有解决，前后浪费了好几个小时的时间。最后还是看到网上提到了 Docker，Docker 网络可能会对宿主机的网络产生影响，然后去问了 AI，根据 AI 的提示 <strong>修改 nftables 配置</strong> 解决了这个问题。</p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>允许 ICMP（ping）通过 nftables</p><pre><code class="bash"># 临时允许ICMP（立即生效，重启nftables后失效）sudo nft add rule inet filter input meta l4proto icmp accept# 若需永久生效，需写入nft配置文件sudo vim /etc/nftables.conf# 在&quot;input&quot;链中添加（确保在&quot;drop&quot;规则之前）：# chain input &#123;#   ...#   meta l4proto icmp accept  # 允许ICMP#   ...# &#125;# 重启nftables生效sudo systemctl restart nftables</code></pre><p>修改 &#x2F;etc&#x2F;nftables.conf，在 input 部分添加 <code>meta l4proto icmp accept</code>，然后重启 nftables，就能正常 ping 通了。</p><p>更早之前看到一篇博客说在 &#x2F;etc&#x2F;sysctl.conf 配置最下面新增配置 <code>net.ipv4.icmp_echo_ignore_all = 0</code>，但是在我这里没有效果。</p><h2 id="其他可能的原因"><a href="#其他可能的原因" class="headerlink" title="其他可能的原因"></a>其他可能的原因</h2><p>其他可能导致此类的问题的原因及排查方向：</p><ul><li>服务端和客户端没有连接同一个网络</li><li>服务端配置了防火墙</li><li>服务端配置忽略 ICMP 请求，就是我这种情况</li><li>服务端配置了静态 IP，IP 的网段、子网掩码长度、网关地址配置可能有误</li><li>服务端安装了 docker，服务端宿主机 IP 网段和 docker 默认配置的网络的网段有冲突，类似 172.12.0.1&#x2F;16</li><li>客户端路由表可能指向了错误的地址或者存在缓存，使用 <code>arp -a</code>查看本机路由表</li><li>客户端 DNS 配置可能有误，检查下是否可以访问百度等网站</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;给 mini 主机安装了 Debian12 做为服务器使用，配置好 ssh 之后从 Mac 上进行远程登录，虽然连接的都是同一个Wi-Fi，</summary>
+      
+    
+    
+    
+    <category term="解决方案" scheme="https://zhu.happy365.day/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    
+    
+    <category term="Debian" scheme="https://zhu.happy365.day/tags/Debian/"/>
+    
+    <category term="网络" scheme="https://zhu.happy365.day/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Debian12配置Clash代理拉取docker镜像</title>
+    <link href="https://zhu.happy365.day/20250728/3bf22fba5636/"/>
+    <id>https://zhu.happy365.day/20250728/3bf22fba5636/</id>
+    <published>2025-07-28T12:58:48.000Z</published>
+    <updated>2025-11-15T17:47:33.747Z</updated>
+    
+    <content type="html"><![CDATA[<p>debian12 中安装了 docker，由于一些为你好的原因，死活拉取不了镜像，一直超时。第一次在 Linux 环境下配置 clash，踩了一些坑，记录一下，供遇到相同问题的参考。</p><p>项目地址：<a href="https://github.com/wnlen/clash-for-linux">wnlen&#x2F;clash-for-linux</a></p><p>拉取项目</p><pre><code class="bash">git clone https://github.com/wnlen/clash-for-linux.git clash-for-linux</code></pre><p>编辑 .env 文件，将 CLASH_URL 变量替换为订阅链接，将 CLASH_SECRET 替换为自定义的密码。</p><p>运行启动脚本</p><pre><code class="bash">chmod +x start.sh./start.sh</code></pre><p>开启代理</p><pre><code class="bash">source /etc/profile.d/clash.shproxy_on</code></pre><p>检查环境变量</p><pre><code class="bash">env | grep -E &#39;http_proxy|https_proxy&#39;http_proxy=http://127.0.0.1:7890https_proxy=http://127.0.0.1:7890</code></pre><p>以上步鄹如果正常，说明服务clash程序启动成功。</p><p>重启程序</p><p>如果需要对Clash配置进行修改，请修改 <code>conf/config.yaml</code> 文件。然后运行 <code>restart.sh</code> 脚本进行重启。</p><p><strong>注意：</strong> 重启脚本 <code>restart.sh</code> 不会更新订阅信息。</p><p>关闭服务</p><pre><code class="bash">sudo bash shutdown.sh</code></pre><p>关闭代理</p><pre><code class="bash">proxy_off</code></pre><p>访问 <a href="http://ip:9090/ui">http://ip:9090/ui</a> 登录管理界面，可以选择节点等。</p><p>配置好代理之后，发现还是连不上 docker hub，拉取镜像还是超时。虽然在 clash 管理界面中配置了全局代理，但是还需要在 docker 中单独配置一下。</p><p>配置 docker 优先使用 ipv4，修改 &#x2F;etc&#x2F;daemon.json 如下：</p><pre><code class="json">&#123;  &quot;ipv6&quot;: false,  &quot;fixed-cidr-v6&quot;: &quot;2001:db8:1::/64&quot;,  # 值不影响  &quot;experimental&quot;: false&#125;</code></pre><p>然后配置 systemd：</p><pre><code class="bash">sudo mkdir -p /etc/systemd/system/docker.service.dsudo vim /etc/systemd/system/docker.service.d/http-proxy.conf</code></pre><p>文件内容如下：</p><pre><code>[Service]Environment=&quot;HTTP_PROXY=http://127.0.0.1:7890&quot;Environment=&quot;HTTPS_PROXY=http://127.0.0.1:7890&quot;</code></pre><p>重启服务</p><pre><code class="bash">sudo systemctl daemon-reloadsudo systemctl restart docker</code></pre><p>执行 <code>docker search hello-world</code> 测试一下吧！</p><p>参考：</p><ul><li><a href="https://neucrack.com/p/286">docker 设置代理，以及国内加速镜像设置</a></li><li><a href="https://github.com/wnlen/clash-for-linux">wnlen&#x2F;clash-for-linux</a></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;debian12 中安装了 docker，由于一些为你好的原因，死活拉取不了镜像，一直超时。第一次在 Linux 环境下配置 clash，踩了一些坑，记录一下，供遇到相同问题的参考。&lt;/p&gt;
+&lt;p&gt;项目地址：&lt;a href=&quot;https://github.com/wnlen</summary>
+      
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhu.happy365.day/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="Debian" scheme="https://zhu.happy365.day/tags/Debian/"/>
+    
+    <category term="clash" scheme="https://zhu.happy365.day/tags/clash/"/>
+    
+    <category term="网络代理" scheme="https://zhu.happy365.day/tags/%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%90%86/"/>
+    
+  </entry>
+  
+</feed>

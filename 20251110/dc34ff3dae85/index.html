@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBV0UPgBod" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D63E78AF8679980069" />
+    <meta name="description" content="安装 Docker 及 Docker ComposeDocker 的安装官网给了很详细的步骤，略过。 Docker Compose 需要另外安装，从 GitHub 搜索 Docker Compose，下载 linux x86 平台的二进制文件，放到 &#x2F;usr&#x2F;local&#x2F;bin 目录下，再添加执行权限就能正常使用了。使用 docker-compose --versio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 Docker 部署 RocketMQ">
+<meta property="og:url" content="https://zhu.happy365.day/20251110/dc34ff3dae85/index.html">
+<meta property="og:site_name" content="🐷&#39;s 部落格">
+<meta property="og:description" content="安装 Docker 及 Docker ComposeDocker 的安装官网给了很详细的步骤，略过。 Docker Compose 需要另外安装，从 GitHub 搜索 Docker Compose，下载 linux x86 平台的二进制文件，放到 &#x2F;usr&#x2F;local&#x2F;bin 目录下，再添加执行权限就能正常使用了。使用 docker-compose --versio">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-09T16:25:00.000Z">
+<meta property="article:modified_time" content="2025-11-15T17:47:33.752Z">
+<meta property="article:author" content="zhu">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="RocketMQ">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>使用 Docker 部署 RocketMQ</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMGS491MQF"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMGS491MQF');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="🐷's 部落格" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20251111/063a85e90264/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20251109/27cc6b967d71/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251110/dc34ff3dae85/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&text=使用 Docker 部署 RocketMQ"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&title=使用 Docker 部署 RocketMQ"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&is_video=false&description=使用 Docker 部署 RocketMQ"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=使用 Docker 部署 RocketMQ&body=Check out this article: https://zhu.happy365.day/20251110/dc34ff3dae85/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&title=使用 Docker 部署 RocketMQ"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&title=使用 Docker 部署 RocketMQ"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&title=使用 Docker 部署 RocketMQ"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&title=使用 Docker 部署 RocketMQ"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&name=使用 Docker 部署 RocketMQ&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251110/dc34ff3dae85/&t=使用 Docker 部署 RocketMQ"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Docker-%E5%8F%8A-Docker-Compose"><span class="toc-number">1.</span> <span class="toc-text">安装 Docker 及 Docker Compose</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="toc-number">2.</span> <span class="toc-text">拉取镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-namesrv-%E5%8F%8A-broker"><span class="toc-number">3.</span> <span class="toc-text">部署 namesrv 及 broker</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-rocketmq-dashboard"><span class="toc-number">4.</span> <span class="toc-text">安装 rocketmq-dashboard</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95"><span class="toc-number">5.</span> <span class="toc-text">问题记录</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        使用 Docker 部署 RocketMQ
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-11-09T16:25:00.000Z" class="dt-published" itemprop="datePublished">2025-11-10</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Docker/" rel="tag">Docker</a>, <a class="p-category" href="/tags/RocketMQ/" rel="tag">RocketMQ</a> -->
+        <a class="category-link" href="/tags/Docker/" rel="tag">Docker</a>, <a class="category-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="安装-Docker-及-Docker-Compose"><a href="#安装-Docker-及-Docker-Compose" class="headerlink" title="安装 Docker 及 Docker Compose"></a>安装 Docker 及 Docker Compose</h2><p>Docker 的安装官网给了很详细的步骤，略过。</p>
+<p>Docker Compose 需要另外安装，从 GitHub 搜索 Docker Compose，下载 linux x86 平台的二进制文件，放到 &#x2F;usr&#x2F;local&#x2F;bin 目录下，再添加执行权限就能正常使用了。<br>使用 <code>docker-compose --version</code> 验证安装和查看版本。</p>
+<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>拉取镜像：</p>
+<pre><code class="shell">docker pull apache/rocketmq:5.3.2
+docker pull apacherocketmq/rocketmq-dashboard:2.1.0
+</code></pre>
+<p>! 如遇网络问题可配置 &#x2F;etc&#x2F;docker&#x2F;daemon.json 使用代理（2025年11月可用）：</p>
+<pre><code class="json">&#123;
+    &quot;registry-mirrors&quot;: [
+        &quot;https://docker.xuanyuan.me&quot;
+    ],
+    &quot;userland-proxy&quot;: false
+&#125;
+</code></pre>
+<p>配置完需要重启 Docker。</p>
+<h2 id="部署-namesrv-及-broker"><a href="#部署-namesrv-及-broker" class="headerlink" title="部署 namesrv 及 broker"></a>部署 namesrv 及 broker</h2><p>使用 Docker Compose 安装 namesrv 及 broker。<br>新增 conf&#x2F;broker.conf 文件：</p>
+<pre><code class="properties"># !! 千万不要写成 127.0.0.1，这个值指的是容器本身的地址，会导致后面部署 rocketmq-dashboard 提示无法连接到 broker
+brokerIP1=rocketmq-broker
+</code></pre>
+<p>docker-compose 配置文件如下：</p>
+<pre><code class="yaml">version: &#39;3.8&#39;
+services:
+  namesrv:
+    image: apache/rocketmq:5.3.2
+    container_name: rocketmq-namesrv
+    ports:
+      - &quot;25060:9876&quot;
+    environment:
+      JAVA_OPT_EXT: &quot;-server -Xms512m -Xmx512m -Xmn128m&quot;
+    command: sh mqnamesrv
+    networks:
+      - rocketmq
+
+  broker:
+    image: apache/rocketmq:5.3.2
+    container_name: rocketmq-broker
+    ports:
+      - &quot;25062:10909&quot;
+      - &quot;25063:10911&quot;
+      - &quot;25064:10913&quot;
+      - &quot;25065:8081&quot;
+    environment:
+      NAMESRV_ADDR: &quot;rocketmq-namesrv:9876&quot;
+      JAVA_OPT_EXT: &quot;-server -Xms512m -Xmx512m -Xmn128m&quot;
+    volumes:
+      - Applications/docker_app_config/rocketmq/conf/broker.conf:/home/rocketmq/rocketmq-5.3.2/conf/broker.conf
+    depends_on:
+      - namesrv
+    command: sh mqbroker -n rocketmq-namesrv:9876 -c /home/rocketmq/rocketmq-5.3.2/conf/broker.conf
+    networks:
+      - rocketmq
+
+networks:
+  rocketmq:
+    driver: bridge
+    external: true
+</code></pre>
+<p>在 docker-compose.yml 文件所在路径下执行 <code>docker-compose up -d</code> 启动 namesrv 和 broker。</p>
+<h2 id="安装-rocketmq-dashboard"><a href="#安装-rocketmq-dashboard" class="headerlink" title="安装 rocketmq-dashboard"></a>安装 rocketmq-dashboard</h2><p>启动 rocketmq-dashboard 容器：</p>
+<pre><code class="shell">docker run -d \
+  --name rocketmq-dashboard \
+  --network rocketmq \
+  -p 25061:8082 \
+  -e &quot;JAVA_OPTS=-Drocketmq.config.namesrvAddr=rocketmq-namesrv:9876&quot; \
+  apacherocketmq/rocketmq-dashboard:2.1.0
+</code></pre>
+<p>! 如果配置了防火墙需放行映射的宿主机端口。</p>
+<p>访问 <a target="_blank" rel="noopener" href="http://host:25061/">http://host:25061</a> 打开 dashboard 首页。</p>
+<h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><p>部署 dashboard 之后打开首页提示：</p>
+<pre><code>org.apache.rocketmq.remoting.exception.RemotingConnectException: connect to 127.0.0.1:10909 failed
+</code></pre>
+<p>以为是端口映射的问题，下载了源码下来查看，没有找到 10909 这个端口相关的代码。后面问了 AI，发现是 conf&#x2F;broker.conf 文件中配置有问题：</p>
+<pre><code class="properties">brokerIP1: 127.0.0.1
+</code></pre>
+<p>将此配置改为 broker 容器的名称，再重启 broker，刷新 dashboard 就正常展示数据了。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/friends/">友链</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Docker-%E5%8F%8A-Docker-Compose"><span class="toc-number">1.</span> <span class="toc-text">安装 Docker 及 Docker Compose</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="toc-number">2.</span> <span class="toc-text">拉取镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-namesrv-%E5%8F%8A-broker"><span class="toc-number">3.</span> <span class="toc-text">部署 namesrv 及 broker</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-rocketmq-dashboard"><span class="toc-number">4.</span> <span class="toc-text">安装 rocketmq-dashboard</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95"><span class="toc-number">5.</span> <span class="toc-text">问题记录</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251110/dc34ff3dae85/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&text=使用 Docker 部署 RocketMQ"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&title=使用 Docker 部署 RocketMQ"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&is_video=false&description=使用 Docker 部署 RocketMQ"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=使用 Docker 部署 RocketMQ&body=Check out this article: https://zhu.happy365.day/20251110/dc34ff3dae85/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&title=使用 Docker 部署 RocketMQ"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&title=使用 Docker 部署 RocketMQ"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&title=使用 Docker 部署 RocketMQ"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&title=使用 Docker 部署 RocketMQ"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251110/dc34ff3dae85/&name=使用 Docker 部署 RocketMQ&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251110/dc34ff3dae85/&t=使用 Docker 部署 RocketMQ"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    zhu
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/friends/">友链</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?8bdf047ae0a66729bd3b27e8bb56fe11";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+<!-- 51la Analytics -->
+
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+  LA.init({
+      id: '3I0QIERSX42bDzDc',
+      ck: '3I0QIERSX42bDzDc'
+  })
+  </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+ 
+    <script type="text/javascript">
+      var giscus_repo = 'lozhu20/my-blog-comments';
+      var giscus_repo_id = 'R_kgDOLq3geg';
+      var giscus_category = 'Announcements';
+      var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+      var giscus_mapping = 'pathname';
+      var giscus_strict = '0';
+      var giscus_reactions_enabled = '1';
+      var giscus_emit_metadata = '';
+      var giscus_input_position = 'top';
+      var giscus_theme = 'light';
+      var theme_lang = '';
+      var giscus_loading = 'lazy';
+      var giscus_crossorigin = 'anonymous';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://giscus.app/client.js';
+          script.setAttribute('data-repo', giscus_repo);
+          script.setAttribute('data-repo-id', giscus_repo_id);
+          script.setAttribute('data-category', giscus_category);
+          script.setAttribute('data-category-id', giscus_category_id);
+          script.setAttribute('data-mapping', giscus_mapping);
+          script.setAttribute('data-strict', giscus_strict);
+          script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+          script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+          script.setAttribute('data-input-position', giscus_input_position);
+          script.setAttribute('data-theme', giscus_theme);
+          script.setAttribute('data-lang', theme_lang);
+          script.setAttribute('data-loading', giscus_loading);
+          script.setAttribute('crossorigin', giscus_crossorigin);
+          script.async = true;
+          (document.getElementById('giscus_thread')).appendChild(script);
+      }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

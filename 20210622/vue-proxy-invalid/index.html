@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="上周周四和周五开发中遇到一个文件批量上传的需求，单纯的将文件上传到服务器、然后加上查询和删除功能。之前做过类似功能，但是没回去看代码，结果卡了一天。Element一次选择多个文件上传只会调用一次且是第一个文件上传后调用一次 on-success 函数，踩了坑耽误了开发进度。计划周末去加班的，但是因为这几天疫情严重，没有48h核酸检测不让进楼，没办法只能在家里新建一个demo研究一下，结果一开始就卡">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记Vue-proxyTable跨域代理配置失效问题">
+<meta property="og:url" content="https://zhu.happy365.day/20210622/vue-proxy-invalid/index.html">
+<meta property="og:site_name" content="zhu&#39;s blog">
+<meta property="og:description" content="上周周四和周五开发中遇到一个文件批量上传的需求，单纯的将文件上传到服务器、然后加上查询和删除功能。之前做过类似功能，但是没回去看代码，结果卡了一天。Element一次选择多个文件上传只会调用一次且是第一个文件上传后调用一次 on-success 函数，踩了坑耽误了开发进度。计划周末去加班的，但是因为这几天疫情严重，没有48h核酸检测不让进楼，没办法只能在家里新建一个demo研究一下，结果一开始就卡">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-21T16:00:50.000Z">
+<meta property="article:modified_time" content="2025-11-23T03:25:59.756Z">
+<meta property="article:author" content="zhu">
+<meta property="article:tag" content="Vue.js">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>记Vue-proxyTable跨域代理配置失效问题</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20210622/vue-proxy-invalid/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="zhu's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+          
+            <button id="btn-theme-switch" aria-label="Toggle dark mode" style="background: none; border: none; cursor: pointer; margin-left: auto">
+              ☀️
+            </button>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20210822/find-highest-temperature-by-hadoop/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20210613/auto-depolyment-with-gitlab-jenkins-docker/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20210622/vue-proxy-invalid/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&text=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&title=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&is_video=false&description=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=记Vue-proxyTable跨域代理配置失效问题&body=Check out this article: https://zhu.happy365.day/20210622/vue-proxy-invalid/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&title=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&title=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&title=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&title=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&name=记Vue-proxyTable跨域代理配置失效问题&description=&lt;p&gt;上周周四和周五开发中遇到一个文件批量上传的需求，单纯的将文件上传到服务器、然后加上查询和删除功能。之前做过类似功能，但是没回去看代码，结果卡了一天。Element一次选择多个文件上传只会调用一次且是第一个文件上传后调用一次 on-success 函数，踩了坑耽误了开发进度。计划周末去加班的，但是因为这几天疫情严重，没有48h核酸检测不让进楼，没办法只能在家里新建一个demo研究一下，结果一开始就卡在了代理配置上。&lt;/p&gt;
+&lt;h2 id=&#34;代理的配置&#34;&gt;&lt;a href=&#34;#代理的配置&#34; class=&#34;headerlink&#34; title=&#34;代理的配置&#34;&gt;&lt;/a&gt;代理的配置&lt;/h2&gt;&lt;p&gt;我用的是vue-cli + webpack + Element 的方式，配置在 &lt;code&gt;config/index.js&lt;/code&gt;,代理配置如下：&lt;/p&gt;
+&lt;figure class=&#34;highlight json&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;proxyTable&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    proxy&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &amp;#x27;/&amp;#x27;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            target&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &amp;#x27;http&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;comment&#34;&gt;//localhost:8081/&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            changeOrigin&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;true&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            pathRewrite&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &amp;#x27;^/&amp;#x27;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &amp;#x27;&amp;#x27;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;后台地址是：localhost:8081，浏览器直接访问后台地址能正常返回数据。但是通过axios访问却一直报404错误。&lt;/p&gt;
+&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;title function_&#34;&gt;sendAction&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;variable language_&#34;&gt;this&lt;/span&gt;.&lt;span class=&#34;property&#34;&gt;$axios&lt;/span&gt;.&lt;span class=&#34;title function_&#34;&gt;get&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;#x27;/name&amp;#x27;&lt;/span&gt;).&lt;span class=&#34;title function_&#34;&gt;then&lt;/span&gt;(&lt;span class=&#34;function&#34;&gt;(&lt;span class=&#34;params&#34;&gt;res&lt;/span&gt;) =&amp;gt;&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	    &lt;span class=&#34;variable language_&#34;&gt;console&lt;/span&gt;.&lt;span class=&#34;title function_&#34;&gt;log&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;#x27;res: &amp;#x27;&lt;/span&gt;, res)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&amp;#125;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+
+&lt;h2 id=&#34;各种尝试&#34;&gt;&lt;a href=&#34;#各种尝试&#34; class=&#34;headerlink&#34; title=&#34;各种尝试&#34;&gt;&lt;/a&gt;各种尝试&lt;/h2&gt;&lt;p&gt;周天花了一天研究这个问题，没找到解决方案，记得上次一个项目里也是遇到同样的问题，花了好几个晚上的时间都没解决，噩梦又来了，内心有点退缩了。&lt;/p&gt;
+&lt;p&gt;看了上次的项目配置，再加上百度、Bing、谷歌搜了个遍，找到几种最常见的解决方案：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;浏览器直接访问后端接口，看能否正常返回；&lt;/li&gt;
+&lt;li&gt;配置完跨域代理之后，一定要重启项目，&lt;code&gt;npm run ddev&lt;/code&gt; ;&lt;/li&gt;
+&lt;li&gt;确保配置没问题，并且请求中的URL在被代理正则替换之后是浏览器能正常访问返回数据的正确地址；&lt;/li&gt;
+&lt;li&gt;代理插件可能有缓存，删除 node_modules 之后，重新 &lt;code&gt;npm install&lt;/code&gt; ， &lt;code&gt;npm run dev&lt;/code&gt; ；&lt;/li&gt;
+&lt;li&gt;更换前端项目端口然后重启；&lt;/li&gt;
+&lt;li&gt;检查是否搭了梯子，代理可能会受到影响；&lt;/li&gt;
+&lt;li&gt;为 axios 配置 baseUrl …&lt;/li&gt;
+&lt;/ul&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20210622/vue-proxy-invalid/&t=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%90%86%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">代理的配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E7%A7%8D%E5%B0%9D%E8%AF%95"><span class="toc-number">2.</span> <span class="toc-text">各种尝试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E5%8E%9F%E5%9B%A0"><span class="toc-number">3.</span> <span class="toc-text">最终原因</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        记Vue-proxyTable跨域代理配置失效问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-06-21T16:00:50.000Z" class="dt-published" itemprop="datePublished">2021-06-22</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">解决方案</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Vue-js/" rel="tag">Vue.js</a> -->
+        <a class="category-link" href="/tags/Vue-js/" rel="tag">Vue.js</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">667 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">2  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>上周周四和周五开发中遇到一个文件批量上传的需求，单纯的将文件上传到服务器、然后加上查询和删除功能。之前做过类似功能，但是没回去看代码，结果卡了一天。Element一次选择多个文件上传只会调用一次且是第一个文件上传后调用一次 on-success 函数，踩了坑耽误了开发进度。计划周末去加班的，但是因为这几天疫情严重，没有48h核酸检测不让进楼，没办法只能在家里新建一个demo研究一下，结果一开始就卡在了代理配置上。</p>
+<h2 id="代理的配置"><a href="#代理的配置" class="headerlink" title="代理的配置"></a>代理的配置</h2><p>我用的是vue-cli + webpack + Element 的方式，配置在 <code>config/index.js</code>,代理配置如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">proxyTable<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    proxy<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        &#x27;/&#x27;<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            target<span class="punctuation">:</span> &#x27;http<span class="punctuation">:</span><span class="comment">//localhost:8081/&#x27;,</span></span><br><span class="line">            changeOrigin<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">            pathRewrite<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                &#x27;^/&#x27;<span class="punctuation">:</span> &#x27;&#x27;</span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>后台地址是：localhost:8081，浏览器直接访问后台地址能正常返回数据。但是通过axios访问却一直报404错误。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">sendAction</span>(<span class="params"></span>) &#123;</span><br><span class="line">	<span class="variable language_">this</span>.<span class="property">$axios</span>.<span class="title function_">get</span>(<span class="string">&#x27;/name&#x27;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">	    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;res: &#x27;</span>, res)</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="各种尝试"><a href="#各种尝试" class="headerlink" title="各种尝试"></a>各种尝试</h2><p>周天花了一天研究这个问题，没找到解决方案，记得上次一个项目里也是遇到同样的问题，花了好几个晚上的时间都没解决，噩梦又来了，内心有点退缩了。</p>
+<p>看了上次的项目配置，再加上百度、Bing、谷歌搜了个遍，找到几种最常见的解决方案：</p>
+<ul>
+<li>浏览器直接访问后端接口，看能否正常返回；</li>
+<li>配置完跨域代理之后，一定要重启项目，<code>npm run ddev</code> ;</li>
+<li>确保配置没问题，并且请求中的URL在被代理正则替换之后是浏览器能正常访问返回数据的正确地址；</li>
+<li>代理插件可能有缓存，删除 node_modules 之后，重新 <code>npm install</code> ， <code>npm run dev</code> ；</li>
+<li>更换前端项目端口然后重启；</li>
+<li>检查是否搭了梯子，代理可能会受到影响；</li>
+<li>为 axios 配置 baseUrl …</li>
+</ul>
+<p>大致找到以上常见的解决方案，除了配置 baseUrl，其他的我都尝试了，并且100%保证配置没问题，可是就是请求不过去。甚至想查一下怎么看代理以后的地址长什么样，可是没找到相关的方法。</p>
+<h2 id="最终原因"><a href="#最终原因" class="headerlink" title="最终原因"></a>最终原因</h2><p>今天晚上回来从10：50开始研究，去GitHub比对了和上次的配置差在哪里，一行一行比对，结果发现配置里的 json 多了一层 proxy！这个配置是我从网上博客里复制过来的，害死人了。</p>
+<p>当前配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">proxyTable<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    proxy<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        &#x27;/&#x27;<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            target<span class="punctuation">:</span> &#x27;http<span class="punctuation">:</span><span class="comment">//localhost:9002/&#x27;,</span></span><br><span class="line">            changeOrigin<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">            pathRewrite<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                &#x27;^/&#x27;<span class="punctuation">:</span> &#x27;&#x27;</span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>正确配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">proxyTable<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    &#x27;/&#x27;<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        target<span class="punctuation">:</span> &#x27;http<span class="punctuation">:</span><span class="comment">//localhost:9002/&#x27;,</span></span><br><span class="line">        changeOrigin<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        pathRewrite<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            &#x27;^/&#x27;<span class="punctuation">:</span> &#x27;&#x27;</span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>去掉proxy一层，重启前端项目，然后清除缓存，刷新页面，访问，成功返回数据。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+          
+            <button id="btn-theme-switch" aria-label="Toggle dark mode" style="background: none; border: none; cursor: pointer; margin-left: auto">
+              ☀️
+            </button>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%90%86%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">代理的配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E7%A7%8D%E5%B0%9D%E8%AF%95"><span class="toc-number">2.</span> <span class="toc-text">各种尝试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E5%8E%9F%E5%9B%A0"><span class="toc-number">3.</span> <span class="toc-text">最终原因</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20210622/vue-proxy-invalid/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&text=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&title=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&is_video=false&description=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=记Vue-proxyTable跨域代理配置失效问题&body=Check out this article: https://zhu.happy365.day/20210622/vue-proxy-invalid/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&title=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&title=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&title=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&title=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20210622/vue-proxy-invalid/&name=记Vue-proxyTable跨域代理配置失效问题&description=&lt;p&gt;上周周四和周五开发中遇到一个文件批量上传的需求，单纯的将文件上传到服务器、然后加上查询和删除功能。之前做过类似功能，但是没回去看代码，结果卡了一天。Element一次选择多个文件上传只会调用一次且是第一个文件上传后调用一次 on-success 函数，踩了坑耽误了开发进度。计划周末去加班的，但是因为这几天疫情严重，没有48h核酸检测不让进楼，没办法只能在家里新建一个demo研究一下，结果一开始就卡在了代理配置上。&lt;/p&gt;
+&lt;h2 id=&#34;代理的配置&#34;&gt;&lt;a href=&#34;#代理的配置&#34; class=&#34;headerlink&#34; title=&#34;代理的配置&#34;&gt;&lt;/a&gt;代理的配置&lt;/h2&gt;&lt;p&gt;我用的是vue-cli + webpack + Element 的方式，配置在 &lt;code&gt;config/index.js&lt;/code&gt;,代理配置如下：&lt;/p&gt;
+&lt;figure class=&#34;highlight json&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;proxyTable&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    proxy&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &amp;#x27;/&amp;#x27;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            target&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &amp;#x27;http&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;comment&#34;&gt;//localhost:8081/&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            changeOrigin&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;true&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            pathRewrite&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &amp;#x27;^/&amp;#x27;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &amp;#x27;&amp;#x27;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;后台地址是：localhost:8081，浏览器直接访问后台地址能正常返回数据。但是通过axios访问却一直报404错误。&lt;/p&gt;
+&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;title function_&#34;&gt;sendAction&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;variable language_&#34;&gt;this&lt;/span&gt;.&lt;span class=&#34;property&#34;&gt;$axios&lt;/span&gt;.&lt;span class=&#34;title function_&#34;&gt;get&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;#x27;/name&amp;#x27;&lt;/span&gt;).&lt;span class=&#34;title function_&#34;&gt;then&lt;/span&gt;(&lt;span class=&#34;function&#34;&gt;(&lt;span class=&#34;params&#34;&gt;res&lt;/span&gt;) =&amp;gt;&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	    &lt;span class=&#34;variable language_&#34;&gt;console&lt;/span&gt;.&lt;span class=&#34;title function_&#34;&gt;log&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;#x27;res: &amp;#x27;&lt;/span&gt;, res)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&amp;#125;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+
+&lt;h2 id=&#34;各种尝试&#34;&gt;&lt;a href=&#34;#各种尝试&#34; class=&#34;headerlink&#34; title=&#34;各种尝试&#34;&gt;&lt;/a&gt;各种尝试&lt;/h2&gt;&lt;p&gt;周天花了一天研究这个问题，没找到解决方案，记得上次一个项目里也是遇到同样的问题，花了好几个晚上的时间都没解决，噩梦又来了，内心有点退缩了。&lt;/p&gt;
+&lt;p&gt;看了上次的项目配置，再加上百度、Bing、谷歌搜了个遍，找到几种最常见的解决方案：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;浏览器直接访问后端接口，看能否正常返回；&lt;/li&gt;
+&lt;li&gt;配置完跨域代理之后，一定要重启项目，&lt;code&gt;npm run ddev&lt;/code&gt; ;&lt;/li&gt;
+&lt;li&gt;确保配置没问题，并且请求中的URL在被代理正则替换之后是浏览器能正常访问返回数据的正确地址；&lt;/li&gt;
+&lt;li&gt;代理插件可能有缓存，删除 node_modules 之后，重新 &lt;code&gt;npm install&lt;/code&gt; ， &lt;code&gt;npm run dev&lt;/code&gt; ；&lt;/li&gt;
+&lt;li&gt;更换前端项目端口然后重启；&lt;/li&gt;
+&lt;li&gt;检查是否搭了梯子，代理可能会受到影响；&lt;/li&gt;
+&lt;li&gt;为 axios 配置 baseUrl …&lt;/li&gt;
+&lt;/ul&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20210622/vue-proxy-invalid/&t=记Vue-proxyTable跨域代理配置失效问题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    zhu
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'lozhu20/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

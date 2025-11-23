@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="前言最近给博客添加了 Giscus 评论系统并从 Utterances 做了迁移。看到 Giscus 官网 上支持白天、夜间模式，在晚上浏览这个网站，系统自动调整到深色模式，整个网站和浏览器黑色主题融为一体，观感非常好。回到自己的站点，浏览器顶部是深色，网页确实非常刺眼的白色，非常不搭。正好趁着最近有空维护，顺带优化一下。 方案自定义深色模式 CSS 样式周六上午花了两个多小时的时间把深色模式的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为hexo-theme-cactus添加深色模式">
+<meta property="og:url" content="https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/index.html">
+<meta property="og:site_name" content="zhu&#39;s blog">
+<meta property="og:description" content="前言最近给博客添加了 Giscus 评论系统并从 Utterances 做了迁移。看到 Giscus 官网 上支持白天、夜间模式，在晚上浏览这个网站，系统自动调整到深色模式，整个网站和浏览器黑色主题融为一体，观感非常好。回到自己的站点，浏览器顶部是深色，网页确实非常刺眼的白色，非常不搭。正好趁着最近有空维护，顺带优化一下。 方案自定义深色模式 CSS 样式周六上午花了两个多小时的时间把深色模式的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-17T17:21:00.000Z">
+<meta property="article:modified_time" content="2025-11-23T03:25:59.753Z">
+<meta property="article:author" content="zhu">
+<meta property="article:tag" content="深色模式">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>为hexo-theme-cactus添加深色模式</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="zhu's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+          
+            <button id="btn-theme-switch" aria-label="Toggle dark mode" style="background: none; border: none; cursor: pointer; margin-left: auto">
+              ☀️
+            </button>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20251118/leetcode-6-z-convert/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20251116/use-giscus-comment-system/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&text=为hexo-theme-cactus添加深色模式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&title=为hexo-theme-cactus添加深色模式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&is_video=false&description=为hexo-theme-cactus添加深色模式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=为hexo-theme-cactus添加深色模式&body=Check out this article: https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&title=为hexo-theme-cactus添加深色模式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&title=为hexo-theme-cactus添加深色模式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&title=为hexo-theme-cactus添加深色模式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&title=为hexo-theme-cactus添加深色模式"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&name=为hexo-theme-cactus添加深色模式&description=&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近给博客添加了 Giscus 评论系统并从 Utterances 做了迁移。看到 &lt;a href=&#34;https://giscus.app/&#34;&gt;Giscus 官网&lt;/a&gt; 上支持白天、夜间模式，在晚上浏览这个网站，系统自动调整到深色模式，整个网站和浏览器黑色主题融为一体，观感非常好。回到自己的站点，浏览器顶部是深色，网页确实非常刺眼的白色，非常不搭。正好趁着最近有空维护，顺带优化一下。&lt;/p&gt;
+&lt;h2 id=&#34;方案&#34;&gt;&lt;a href=&#34;#方案&#34; class=&#34;headerlink&#34; title=&#34;方案&#34;&gt;&lt;/a&gt;方案&lt;/h2&gt;&lt;h3 id=&#34;自定义深色模式-CSS-样式&#34;&gt;&lt;a href=&#34;#自定义深色模式-CSS-样式&#34; class=&#34;headerlink&#34; title=&#34;自定义深色模式 CSS 样式&#34;&gt;&lt;/a&gt;自定义深色模式 CSS 样式&lt;/h3&gt;&lt;p&gt;周六上午花了两个多小时的时间把深色模式的 css 样式给写好了，准备加模式切换功能的时候才发现，原生主题的四种主题样式中就已经包含了深色模式。遂放弃了自定义深色模式样式，转用原生的深色主题。&lt;/p&gt;
+&lt;h3 id=&#34;样式切换&#34;&gt;&lt;a href=&#34;#样式切换&#34; class=&#34;headerlink&#34; title=&#34;样式切换&#34;&gt;&lt;/a&gt;样式切换&lt;/h3&gt;&lt;p&gt;初始进入站点时，根据用户系统偏好设置自动加载浅色或深色模式。在导航中增加一个按钮 ☀️ | 🌙 用来手动切换主题，新增一个 JavaScript 文件用于给按钮新增监听事件。手动切换之后，浏览器本地缓存设置，用于后续页面加载时加载对应的样式。&lt;/p&gt;
+&lt;p&gt;不过由于原主题浅色 &amp;#x2F; 深色模式样式是写在不同的文件中的，而 Hexo 默认只会编译其中一个样式。因此要想实现切换，就必须将所有主题样式都编译出来，再动态的通过 JavaScript 改变。&lt;br&gt;这里采用的方案是新增几个和主题色对应的 styl 文件，分别 import 对应的主题样式，然后在 &lt;code&gt;theme/_config.yml&lt;/code&gt; 文件中加入配置使几个样式文件同时编译：&lt;/p&gt;
+&lt;figure class=&#34;highlight yaml&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;stylus:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;include:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;bullet&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;#x27;source/css/theme-classic.styl&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;bullet&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;#x27;source/css/theme-dark.styl&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;bullet&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;#x27;source/css/theme-light.styl&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;bullet&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;#x27;source/css/theme-wihte.styl&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;样式文件如 theme-dark.styl 文件则在原样式名前增加一个前缀 theme–dark 以避免同时编译多个样式文件导致属性名称冲突报错。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&t=为hexo-theme-cactus添加深色模式"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F-CSS-%E6%A0%B7%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">自定义深色模式 CSS 样式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B7%E5%BC%8F%E5%88%87%E6%8D%A2"><span class="toc-number">2.2.</span> <span class="toc-text">样式切换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Giscus-%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%E5%88%87%E6%8D%A2"><span class="toc-number">3.</span> <span class="toc-text">Giscus 深色模式切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-number">4.</span> <span class="toc-text">踩坑记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%96%B0%E9%A1%B5%E9%9D%A2%E6%97%B6%E7%99%BD%E5%B1%8F%E9%97%AE%E9%A2%98"><span class="toc-number">4.1.</span> <span class="toc-text">加载新页面时白屏问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Giscus-%E6%A0%B7%E5%BC%8F%E5%88%87%E6%8D%A2%E4%B8%8D%E7%94%9F%E6%95%88"><span class="toc-number">4.2.</span> <span class="toc-text">Giscus 样式切换不生效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E4%BF%9D%E5%AD%98%E7%9A%84%E9%A2%9C%E8%89%B2%E6%A8%A1%E5%BC%8F%E6%9C%AA%E6%B8%85%E9%99%A4"><span class="toc-number">4.3.</span> <span class="toc-text">本地保存的颜色模式未清除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89-Giscus-%E6%A0%B7%E5%BC%8F"><span class="toc-number">4.4.</span> <span class="toc-text">自定义 Giscus 样式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E8%B0%83%E6%95%B4"><span class="toc-number">5.</span> <span class="toc-text">其他调整</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        为hexo-theme-cactus添加深色模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-11-17T17:21:00.000Z" class="dt-published" itemprop="datePublished">2025-11-18</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/">博客维护</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F/" rel="tag">深色模式</a> -->
+        <a class="category-link" href="/tags/%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F/" rel="tag">深色模式</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">1.1k words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">4  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近给博客添加了 Giscus 评论系统并从 Utterances 做了迁移。看到 <a target="_blank" rel="noopener" href="https://giscus.app/">Giscus 官网</a> 上支持白天、夜间模式，在晚上浏览这个网站，系统自动调整到深色模式，整个网站和浏览器黑色主题融为一体，观感非常好。回到自己的站点，浏览器顶部是深色，网页确实非常刺眼的白色，非常不搭。正好趁着最近有空维护，顺带优化一下。</p>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><h3 id="自定义深色模式-CSS-样式"><a href="#自定义深色模式-CSS-样式" class="headerlink" title="自定义深色模式 CSS 样式"></a>自定义深色模式 CSS 样式</h3><p>周六上午花了两个多小时的时间把深色模式的 css 样式给写好了，准备加模式切换功能的时候才发现，原生主题的四种主题样式中就已经包含了深色模式。遂放弃了自定义深色模式样式，转用原生的深色主题。</p>
+<h3 id="样式切换"><a href="#样式切换" class="headerlink" title="样式切换"></a>样式切换</h3><p>初始进入站点时，根据用户系统偏好设置自动加载浅色或深色模式。在导航中增加一个按钮 ☀️ | 🌙 用来手动切换主题，新增一个 JavaScript 文件用于给按钮新增监听事件。手动切换之后，浏览器本地缓存设置，用于后续页面加载时加载对应的样式。</p>
+<p>不过由于原主题浅色 &#x2F; 深色模式样式是写在不同的文件中的，而 Hexo 默认只会编译其中一个样式。因此要想实现切换，就必须将所有主题样式都编译出来，再动态的通过 JavaScript 改变。<br>这里采用的方案是新增几个和主题色对应的 styl 文件，分别 import 对应的主题样式，然后在 <code>theme/_config.yml</code> 文件中加入配置使几个样式文件同时编译：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">stylus:</span></span><br><span class="line">  <span class="attr">include:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;source/css/theme-classic.styl&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;source/css/theme-dark.styl&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;source/css/theme-light.styl&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;source/css/theme-wihte.styl&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>样式文件如 theme-dark.styl 文件则在原样式名前增加一个前缀 theme–dark 以避免同时编译多个样式文件导致属性名称冲突报错。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.theme--dark</span></span><br><span class="line">  <span class="keyword">@import</span> <span class="string">&quot;_variables&quot;</span></span><br><span class="line">  <span class="keyword">@import</span> <span class="string">&quot;_colors/dark&quot;</span></span><br><span class="line">  <span class="keyword">@import</span> <span class="string">&quot;_util&quot;</span></span><br><span class="line">  <span class="keyword">@import</span> <span class="string">&quot;_mixins&quot;</span></span><br><span class="line">  <span class="keyword">@import</span> <span class="string">&quot;_extend&quot;</span></span><br><span class="line">  <span class="keyword">@import</span> <span class="string">&quot;_fonts&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">global-reset</span>()</span><br><span class="line"></span><br><span class="line">  *, *<span class="selector-pseudo">:before</span>, *<span class="selector-pseudo">:after</span></span><br><span class="line">    <span class="attribute">box-sizing</span>: border-box</span><br><span class="line">  <span class="comment">// 省略原文件后续内容</span></span><br></pre></td></tr></table></figure>
+<p>这样编译完之后，在 public&#x2F;css 目录下就同时有了几套主题样式，别忘记在 head 相关的 ejs 文件中全部引入。</p>
+<p>核心功能放在 switch-theme.js 文件中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> themes = [</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&#x27;dark&#x27;</span>, <span class="attr">className</span>: <span class="string">&#x27;theme--dark&#x27;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&#x27;white&#x27;</span>, <span class="attr">className</span>: <span class="string">&#x27;theme--white&#x27;</span> &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> toggleButton = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;btn-theme-switch&#x27;</span>);</span><br><span class="line">  <span class="keyword">if</span> (!toggleButton) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 检查 localStorage 中的用户偏好</span></span><br><span class="line">  <span class="keyword">const</span> userPref = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&#x27;color-scheme&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> systemPref = <span class="variable language_">window</span>.<span class="title function_">matchMedia</span>(<span class="string">&#x27;(prefers-color-scheme: dark)&#x27;</span>).<span class="property">matches</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> isDark = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (userPref === <span class="string">&#x27;dark&#x27;</span>) &#123;</span><br><span class="line">    isDark = <span class="literal">true</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (userPref === <span class="string">&#x27;white&#x27;</span>) &#123;</span><br><span class="line">    isDark = <span class="literal">false</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 未设置时，跟随系统</span></span><br><span class="line">    isDark = systemPref;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> nextColorScheme = isDark ? <span class="string">&#x27;dark&#x27;</span> : <span class="string">&#x27;white&#x27;</span>; <span class="comment">// 修复单引号错误</span></span><br><span class="line">  <span class="keyword">const</span> nextTheme = themes.<span class="title function_">find</span>(<span class="function"><span class="params">t</span> =&gt;</span> t.<span class="property">name</span> === nextColorScheme);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setTheme</span>(<span class="literal">null</span>, nextTheme);</span><br><span class="line">  <span class="title function_">syncGiscusTheme</span>(nextTheme); <span class="comment">// 初始应该同步当前主题</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 切换按钮图标和行为</span></span><br><span class="line">  toggleButton.<span class="property">textContent</span> = isDark ? <span class="string">&#x27;☀️&#x27;</span> : <span class="string">&#x27;🌙&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  toggleButton.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 点击时应该基于当前isDark状态获取主题，而不是直接读localStorage</span></span><br><span class="line">    <span class="keyword">const</span> currentColorScheme = isDark ? <span class="string">&#x27;dark&#x27;</span> : <span class="string">&#x27;white&#x27;</span>; <span class="comment">// 切换前的主题</span></span><br><span class="line">    <span class="keyword">const</span> currentTheme = themes.<span class="title function_">find</span>(<span class="function"><span class="params">t</span> =&gt;</span> t.<span class="property">name</span> === currentColorScheme);</span><br><span class="line">    <span class="keyword">const</span> nextColorScheme = isDark ? <span class="string">&#x27;white&#x27;</span> : <span class="string">&#x27;dark&#x27;</span>; <span class="comment">// 切换后的主题</span></span><br><span class="line">    <span class="keyword">const</span> nextTheme = themes.<span class="title function_">find</span>(<span class="function"><span class="params">t</span> =&gt;</span> t.<span class="property">name</span> === nextColorScheme);</span><br><span class="line"></span><br><span class="line">    isDark = !isDark;</span><br><span class="line">    toggleButton.<span class="property">textContent</span> = isDark ? <span class="string">&#x27;☀️&#x27;</span> : <span class="string">&#x27;🌙&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">setTheme</span>(currentTheme, nextTheme);</span><br><span class="line">    <span class="title function_">syncGiscusTheme</span>(nextTheme);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&#x27;color-scheme&#x27;</span>, nextTheme.<span class="property">name</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;message&#x27;</span>, <span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (event.<span class="property">origin</span> !== <span class="string">&#x27;https://giscus.app&#x27;</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">const</span> colorScheme = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&#x27;color-scheme&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> theme = themes.<span class="title function_">find</span>(<span class="function"><span class="params">t</span> =&gt;</span> t.<span class="property">name</span> === colorScheme);</span><br><span class="line">    <span class="title function_">syncGiscusTheme</span>(theme);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> html = <span class="variable language_">document</span>.<span class="property">documentElement</span>;</span><br><span class="line">  <span class="keyword">const</span> observer = <span class="keyword">new</span> <span class="title class_">MutationObserver</span>(<span class="function">(<span class="params">mutations</span>) =&gt;</span> &#123;</span><br><span class="line">    mutations.<span class="title function_">forEach</span>(<span class="function">(<span class="params">mutation</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (mutation.<span class="property">attributeName</span> === <span class="string">&#x27;class&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> isDark = html.<span class="property">classList</span>.<span class="title function_">contains</span>(<span class="string">&#x27;theme--dark&#x27;</span>); <span class="comment">// 用主题类名判断更准确</span></span><br><span class="line">        <span class="title function_">syncGiscusTheme</span>(isDark ? themes[<span class="number">0</span>] : themes[<span class="number">1</span>]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">  observer.<span class="title function_">observe</span>(html, &#123; <span class="attr">attributes</span>: <span class="literal">true</span> &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置主题色</span></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">setTheme</span>(<span class="params">currentTheme, newTheme</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!newTheme) <span class="keyword">return</span>; <span class="comment">// 增加当前主题的校验</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (currentTheme) &#123;</span><br><span class="line">      <span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="property">classList</span>.<span class="title function_">remove</span>(currentTheme.<span class="property">className</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="property">classList</span>.<span class="title function_">add</span>(newTheme.<span class="property">className</span>);</span><br><span class="line">    <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&#x27;color-scheme&#x27;</span>, newTheme.<span class="property">name</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 设置评论区主题色</span></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">syncGiscusTheme</span>(<span class="params">theme</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!theme) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">const</span> giscusFrame = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;iframe.giscus-frame&#x27;</span>);</span><br><span class="line">    <span class="keyword">if</span> (!giscusFrame) &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">window</span>.<span class="property">giscusRetryCount</span> === <span class="literal">undefined</span>) <span class="variable language_">window</span>.<span class="property">giscusRetryCount</span> = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">window</span>.<span class="property">giscusRetryCount</span> &lt; <span class="number">10</span>) &#123;</span><br><span class="line">        <span class="variable language_">window</span>.<span class="property">giscusRetryCount</span>++;</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="title function_">syncGiscusTheme</span>(theme), <span class="number">100</span>); <span class="comment">// 这里传theme对象</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (giscusFrame.<span class="property">contentWindow</span>) &#123;</span><br><span class="line">      <span class="comment">// 从 iframe 的 src 中提取正确的 origin（避免跨域错误）</span></span><br><span class="line">      <span class="keyword">const</span> frameOrigin = <span class="keyword">new</span> <span class="title function_">URL</span>(giscusFrame.<span class="property">src</span>).<span class="property">origin</span>;</span><br><span class="line"></span><br><span class="line">      giscusFrame.<span class="property">contentWindow</span>.<span class="title function_">postMessage</span>(&#123;</span><br><span class="line">        <span class="attr">giscus</span>: &#123;</span><br><span class="line">          <span class="attr">setConfig</span>: &#123;</span><br><span class="line">            <span class="attr">defaultCommentOrder</span>: <span class="string">&quot;newest&quot;</span>,</span><br><span class="line">            <span class="attr">theme</span>: theme.<span class="property">name</span> === <span class="string">&#x27;white&#x27;</span> ? <span class="string">&#x27;light&#x27;</span> : <span class="string">&#x27;dark&#x27;</span> <span class="comment">// 使用主题对象的name属性</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;, frameOrigin);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 延迟重试</span></span><br><span class="line">      <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="title function_">syncGiscusTheme</span>(themeName), <span class="number">100</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 避免页面加载时的白屏问题</span></span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">style</span>.<span class="property">visibility</span> = <span class="string">&#x27;visible&#x27;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Giscus-深色模式切换"><a href="#Giscus-深色模式切换" class="headerlink" title="Giscus 深色模式切换"></a>Giscus 深色模式切换</h2><p>前面引入的 Giscus 使用 data-theme 预先定义好了主题样式。要手动切换，需要通过监听按钮事件，向 iframe 传递消息来实现。逻辑如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置评论区主题色</span></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">syncGiscusTheme</span>(<span class="params">theme</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!theme) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">const</span> giscusFrame = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;iframe.giscus-frame&#x27;</span>);</span><br><span class="line">    <span class="keyword">if</span> (!giscusFrame) &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">window</span>.<span class="property">giscusRetryCount</span> === <span class="literal">undefined</span>) <span class="variable language_">window</span>.<span class="property">giscusRetryCount</span> = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">window</span>.<span class="property">giscusRetryCount</span> &lt; <span class="number">10</span>) &#123;</span><br><span class="line">        <span class="variable language_">window</span>.<span class="property">giscusRetryCount</span>++;</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="title function_">syncGiscusTheme</span>(theme), <span class="number">100</span>); <span class="comment">// 这里传theme对象</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (giscusFrame.<span class="property">contentWindow</span>) &#123;</span><br><span class="line">      <span class="comment">// 从 iframe 的 src 中提取正确的 origin（避免跨域错误）</span></span><br><span class="line">      <span class="keyword">const</span> frameOrigin = <span class="keyword">new</span> <span class="title function_">URL</span>(giscusFrame.<span class="property">src</span>).<span class="property">origin</span>;</span><br><span class="line"></span><br><span class="line">      giscusFrame.<span class="property">contentWindow</span>.<span class="title function_">postMessage</span>(&#123;</span><br><span class="line">        <span class="attr">giscus</span>: &#123;</span><br><span class="line">          <span class="attr">setConfig</span>: &#123;</span><br><span class="line">            <span class="attr">defaultCommentOrder</span>: <span class="string">&quot;newest&quot;</span>,</span><br><span class="line">            <span class="attr">theme</span>: theme.<span class="property">name</span> === <span class="string">&#x27;white&#x27;</span> ? <span class="string">&#x27;light&#x27;</span> : <span class="string">&#x27;dark&#x27;</span> <span class="comment">// 使用主题对象的name属性</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;, frameOrigin);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 延迟重试</span></span><br><span class="line">      <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="title function_">syncGiscusTheme</span>(themeName), <span class="number">100</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="加载新页面时白屏问题"><a href="#加载新页面时白屏问题" class="headerlink" title="加载新页面时白屏问题"></a>加载新页面时白屏问题</h3><p>测试的时候发现在深色模式下进入其他页面时，在页面加载的时候会出现白屏，页面加载完成后才会变成指定的颜色模式。</p>
+<p>参考 <a target="_blank" rel="noopener" href="https://n1uf.github.io/function/2024/11/23/DayNightExchange.html">日夜间模式切换功能</a> 提出的优化方案，在 head 部分增加一个 style，给 body 设置一个不可见属性，页面加载完成后去掉这个不可见属性，顺利的解决了白屏问题。<br>head.ejs</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line">  <span class="selector-tag">body</span> &#123; <span class="attribute">visibility</span>: hidden; &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<p>theme-switch.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">	<span class="comment">// 避免页面加载时的白屏问题</span></span><br><span class="line">	<span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">style</span>.<span class="property">visibility</span> = <span class="string">&#x27;visible&#x27;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Giscus-样式切换不生效"><a href="#Giscus-样式切换不生效" class="headerlink" title="Giscus 样式切换不生效"></a>Giscus 样式切换不生效</h3><p>本站点的颜色切换 OK，就是 Giscus 评论区一直不能动态切换，控制台报错 <a target="_blank" rel="noopener" href="https://giscus.app/white">https://giscus.app/white</a> 返回 404。<br>在参考 <a target="_blank" rel="noopener" href="https://boiltask.com/knowledge/hugo-giscus/">Hogo 中 Giscus 配置</a> 时，发现该站点可以正常切换。原想发个评论请教一下怎么做的，随便打开控制台切换了两下，看到网络请求地址是 <a target="_blank" rel="noopener" href="https://giscus.app/theme/dark.css">https://giscus.app/theme/dark.css</a> 和 <a target="_blank" rel="noopener" href="https://giscus.app/theme/light.css">https://giscus.app/theme/light.css</a> 。回到我的站点确认后发现我调用的地址是 <a target="_blank" rel="noopener" href="https://giscus.app/theme/white.css">https://giscus.app/theme/white.css</a> ，是我的浅色主题名称和 Giscus 浅色主题名称不一致导致请求 404。做了名称转换就没问题了。</p>
+<h3 id="本地保存的颜色模式未清除"><a href="#本地保存的颜色模式未清除" class="headerlink" title="本地保存的颜色模式未清除"></a>本地保存的颜色模式未清除</h3><p>本地保存的颜色模式没有自动清理机制，导致在深色模式访问过站点，第二天白天访问时仍然读取到上一次的深色模式标识，没有自动切换主题颜色。</p>
+<p>这个问题很好解决，每次加载页面保存颜色模式到本地时，另外保存一个有效期：30分钟。每次进入站点时自动检查该变量是够过期，如果过期则删除，走跟随系统主题颜色的逻辑即可。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化处理：检查是否有过期的color-theme并清除</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">initColorThemeStorage</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> storedTheme = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&#x27;color-scheme&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> expiryTime = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&#x27;color-scheme-expiry&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 如果存在存储且已过期，清除它</span></span><br><span class="line">  <span class="keyword">if</span> (storedTheme &amp;&amp; expiryTime &amp;&amp; <span class="title class_">Date</span>.<span class="title function_">now</span>() &gt; <span class="title class_">Number</span>(expiryTime)) &#123;</span><br><span class="line">    <span class="variable language_">localStorage</span>.<span class="title function_">removeItem</span>(<span class="string">&#x27;color-scheme&#x27;</span>);</span><br><span class="line">    <span class="variable language_">localStorage</span>.<span class="title function_">removeItem</span>(<span class="string">&#x27;color-scheme-expiry&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 保存color-theme时同时设置30分钟过期时间</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">saveColorTheme</span>(<span class="params">theme</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> expiry = <span class="title class_">Date</span>.<span class="title function_">now</span>() + <span class="number">30</span> * <span class="number">60</span> * <span class="number">1000</span>; <span class="comment">// 30分钟后过期</span></span><br><span class="line">  <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&#x27;color-scheme&#x27;</span>, theme);</span><br><span class="line">  <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&#x27;color-scheme-expiry&#x27;</span>, expiry.<span class="title function_">toString</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="自定义-Giscus-样式"><a href="#自定义-Giscus-样式" class="headerlink" title="自定义 Giscus 样式"></a>自定义 Giscus 样式</h3><p>研究了许久未能实现，暂时放弃。</p>
+<h2 id="其他调整"><a href="#其他调整" class="headerlink" title="其他调整"></a>其他调整</h2><p>将首页的 description 换成了一些自己喜欢的句子，并可以在 <code>source/_data/sentence.json</code> 中定义，每次进入页面随机展示其中一句。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+          
+            <button id="btn-theme-switch" aria-label="Toggle dark mode" style="background: none; border: none; cursor: pointer; margin-left: auto">
+              ☀️
+            </button>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F-CSS-%E6%A0%B7%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">自定义深色模式 CSS 样式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B7%E5%BC%8F%E5%88%87%E6%8D%A2"><span class="toc-number">2.2.</span> <span class="toc-text">样式切换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Giscus-%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%E5%88%87%E6%8D%A2"><span class="toc-number">3.</span> <span class="toc-text">Giscus 深色模式切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-number">4.</span> <span class="toc-text">踩坑记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%96%B0%E9%A1%B5%E9%9D%A2%E6%97%B6%E7%99%BD%E5%B1%8F%E9%97%AE%E9%A2%98"><span class="toc-number">4.1.</span> <span class="toc-text">加载新页面时白屏问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Giscus-%E6%A0%B7%E5%BC%8F%E5%88%87%E6%8D%A2%E4%B8%8D%E7%94%9F%E6%95%88"><span class="toc-number">4.2.</span> <span class="toc-text">Giscus 样式切换不生效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E4%BF%9D%E5%AD%98%E7%9A%84%E9%A2%9C%E8%89%B2%E6%A8%A1%E5%BC%8F%E6%9C%AA%E6%B8%85%E9%99%A4"><span class="toc-number">4.3.</span> <span class="toc-text">本地保存的颜色模式未清除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89-Giscus-%E6%A0%B7%E5%BC%8F"><span class="toc-number">4.4.</span> <span class="toc-text">自定义 Giscus 样式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E8%B0%83%E6%95%B4"><span class="toc-number">5.</span> <span class="toc-text">其他调整</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&text=为hexo-theme-cactus添加深色模式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&title=为hexo-theme-cactus添加深色模式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&is_video=false&description=为hexo-theme-cactus添加深色模式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=为hexo-theme-cactus添加深色模式&body=Check out this article: https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&title=为hexo-theme-cactus添加深色模式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&title=为hexo-theme-cactus添加深色模式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&title=为hexo-theme-cactus添加深色模式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&title=为hexo-theme-cactus添加深色模式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&name=为hexo-theme-cactus添加深色模式&description=&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近给博客添加了 Giscus 评论系统并从 Utterances 做了迁移。看到 &lt;a href=&#34;https://giscus.app/&#34;&gt;Giscus 官网&lt;/a&gt; 上支持白天、夜间模式，在晚上浏览这个网站，系统自动调整到深色模式，整个网站和浏览器黑色主题融为一体，观感非常好。回到自己的站点，浏览器顶部是深色，网页确实非常刺眼的白色，非常不搭。正好趁着最近有空维护，顺带优化一下。&lt;/p&gt;
+&lt;h2 id=&#34;方案&#34;&gt;&lt;a href=&#34;#方案&#34; class=&#34;headerlink&#34; title=&#34;方案&#34;&gt;&lt;/a&gt;方案&lt;/h2&gt;&lt;h3 id=&#34;自定义深色模式-CSS-样式&#34;&gt;&lt;a href=&#34;#自定义深色模式-CSS-样式&#34; class=&#34;headerlink&#34; title=&#34;自定义深色模式 CSS 样式&#34;&gt;&lt;/a&gt;自定义深色模式 CSS 样式&lt;/h3&gt;&lt;p&gt;周六上午花了两个多小时的时间把深色模式的 css 样式给写好了，准备加模式切换功能的时候才发现，原生主题的四种主题样式中就已经包含了深色模式。遂放弃了自定义深色模式样式，转用原生的深色主题。&lt;/p&gt;
+&lt;h3 id=&#34;样式切换&#34;&gt;&lt;a href=&#34;#样式切换&#34; class=&#34;headerlink&#34; title=&#34;样式切换&#34;&gt;&lt;/a&gt;样式切换&lt;/h3&gt;&lt;p&gt;初始进入站点时，根据用户系统偏好设置自动加载浅色或深色模式。在导航中增加一个按钮 ☀️ | 🌙 用来手动切换主题，新增一个 JavaScript 文件用于给按钮新增监听事件。手动切换之后，浏览器本地缓存设置，用于后续页面加载时加载对应的样式。&lt;/p&gt;
+&lt;p&gt;不过由于原主题浅色 &amp;#x2F; 深色模式样式是写在不同的文件中的，而 Hexo 默认只会编译其中一个样式。因此要想实现切换，就必须将所有主题样式都编译出来，再动态的通过 JavaScript 改变。&lt;br&gt;这里采用的方案是新增几个和主题色对应的 styl 文件，分别 import 对应的主题样式，然后在 &lt;code&gt;theme/_config.yml&lt;/code&gt; 文件中加入配置使几个样式文件同时编译：&lt;/p&gt;
+&lt;figure class=&#34;highlight yaml&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;stylus:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;include:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;bullet&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;#x27;source/css/theme-classic.styl&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;bullet&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;#x27;source/css/theme-dark.styl&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;bullet&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;#x27;source/css/theme-light.styl&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;bullet&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;#x27;source/css/theme-wihte.styl&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;样式文件如 theme-dark.styl 文件则在原样式名前增加一个前缀 theme–dark 以避免同时编译多个样式文件导致属性名称冲突报错。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251118/add-dark-mode-to-hexo-theme-cactus/&t=为hexo-theme-cactus添加深色模式"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    zhu
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'lozhu20/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

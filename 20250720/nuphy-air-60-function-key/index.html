@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="问题目前给 Mac mini 配的是 Nuphy AIR 60 二代矮轴机械键盘，这个键盘只有 60 个键位，当初就是看中了它小巧精致的外观才选的这个键盘。最近调试程序的频率比较高，需要使用到 F 功能键，这个键盘 F1 到 F12 默认是媒体功能。认为 FN 组合对应的 F 功能键就能使用 F 功能本来是一件自然而然的事情，没想到我还是高估了这个键盘的易用性。 可尝试的方法在 Reddit 上看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuphy AIR 60 机械键盘 F 功能键问题">
+<meta property="og:url" content="https://zhu.happy365.day/20250720/nuphy-air-60-function-key/index.html">
+<meta property="og:site_name" content="zhu&#39;s blog">
+<meta property="og:description" content="问题目前给 Mac mini 配的是 Nuphy AIR 60 二代矮轴机械键盘，这个键盘只有 60 个键位，当初就是看中了它小巧精致的外观才选的这个键盘。最近调试程序的频率比较高，需要使用到 F 功能键，这个键盘 F1 到 F12 默认是媒体功能。认为 FN 组合对应的 F 功能键就能使用 F 功能本来是一件自然而然的事情，没想到我还是高估了这个键盘的易用性。 可尝试的方法在 Reddit 上看">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-20T11:29:00.000Z">
+<meta property="article:modified_time" content="2025-11-23T03:25:59.751Z">
+<meta property="article:author" content="zhu">
+<meta property="article:tag" content="机械键盘">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Nuphy AIR 60 机械键盘 F 功能键问题</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20250720/nuphy-air-60-function-key/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="zhu's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+          
+            <button id="btn-theme-switch" aria-label="Toggle dark mode" style="background: none; border: none; cursor: pointer; margin-left: auto">
+              ☀️
+            </button>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20250724/remote-login-debian12-failed-by-ssh/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20250719/learn-about-curl/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&text=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&title=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&is_video=false&description=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Nuphy AIR 60 机械键盘 F 功能键问题&body=Check out this article: https://zhu.happy365.day/20250720/nuphy-air-60-function-key/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&title=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&title=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&title=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&title=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&name=Nuphy AIR 60 机械键盘 F 功能键问题&description=&lt;h2 id=&#34;问题&#34;&gt;&lt;a href=&#34;#问题&#34; class=&#34;headerlink&#34; title=&#34;问题&#34;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;目前给 Mac mini 配的是 Nuphy AIR 60 二代矮轴机械键盘，这个键盘只有 60 个键位，当初就是看中了它小巧精致的外观才选的这个键盘。最近调试程序的频率比较高，需要使用到 F 功能键，这个键盘 F1 到 F12 默认是媒体功能。认为 FN 组合对应的 F 功能键就能使用 F 功能本来是一件自然而然的事情，没想到我还是高估了这个键盘的易用性。&lt;/p&gt;
+&lt;h2 id=&#34;可尝试的方法&#34;&gt;&lt;a href=&#34;#可尝试的方法&#34; class=&#34;headerlink&#34; title=&#34;可尝试的方法&#34;&gt;&lt;/a&gt;可尝试的方法&lt;/h2&gt;&lt;p&gt;在 Reddit 上看到 3 年前一位老哥也遇到了同样的问题：&lt;a href=&#34;https://www.reddit.com/r/NuPhy/comments/w58nmi/function_keys_on_mac/&#34;&gt;Function keys on mac&lt;/a&gt; ，下面有好几个回答，大概有下面这几种方案。&lt;/p&gt;
+&lt;h3 id=&#34;FN-Tab-F-功能键&#34;&gt;&lt;a href=&#34;#FN-Tab-F-功能键&#34; class=&#34;headerlink&#34; title=&#34;FN + Tab + F 功能键&#34;&gt;&lt;/a&gt;FN + Tab + F 功能键&lt;/h3&gt;&lt;p&gt;用 FN + Tab + F 功能键组合来实现 F 功能键（开始我还以为是 FN + Tab + F 键可以在功能键和媒体功能之间切换），但是我试了几次，没有生效，FN + Tab + F12 还是增加音量。&lt;/p&gt;
+&lt;h3 id=&#34;FN-X-F-功能键&#34;&gt;&lt;a href=&#34;#FN-X-F-功能键&#34; class=&#34;headerlink&#34; title=&#34;FN + X + F 功能键&#34;&gt;&lt;/a&gt;FN + X + F 功能键&lt;/h3&gt;&lt;p&gt;这个组合键需要先在 系统设置 &amp;gt; 键盘 &amp;gt; 快捷键 &amp;gt; 功能键 中开启选项“使用 F1… 功能键“选项。不过我试了这个组合键在我这里也不生效。&lt;/p&gt;
+&lt;h3 id=&#34;FN-Shift-F-功能键&#34;&gt;&lt;a href=&#34;#FN-Shift-F-功能键&#34; class=&#34;headerlink&#34; title=&#34;FN + Shift + F 功能键&#34;&gt;&lt;/a&gt;FN + Shift + F 功能键&lt;/h3&gt;&lt;p&gt;这个组合键终于能用了，不过测试了几下感觉键位太多了，使用起来比较累，还是没有直接 FN + F 使用起来方便。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&t=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E5%B0%9D%E8%AF%95%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">可尝试的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FN-Tab-F-%E5%8A%9F%E8%83%BD%E9%94%AE"><span class="toc-number">2.1.</span> <span class="toc-text">FN + Tab + F 功能键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FN-X-F-%E5%8A%9F%E8%83%BD%E9%94%AE"><span class="toc-number">2.2.</span> <span class="toc-text">FN + X + F 功能键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FN-Shift-F-%E5%8A%9F%E8%83%BD%E9%94%AE"><span class="toc-number">2.3.</span> <span class="toc-text">FN + Shift + F 功能键</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">4.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E6%98%BE%E7%A4%BA%E6%A1%8C%E9%9D%A2%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">4.1.</span> <span class="toc-text">关闭显示桌面快捷键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E7%BD%91%E7%AB%99%E6%8E%A8%E8%8D%90"><span class="toc-number">4.2.</span> <span class="toc-text">工具网站推荐</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Nuphy AIR 60 机械键盘 F 功能键问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zhu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-07-20T11:29:00.000Z" class="dt-published" itemprop="datePublished">2025-07-20</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">解决方案</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/%E6%9C%BA%E6%A2%B0%E9%94%AE%E7%9B%98/" rel="tag">机械键盘</a> -->
+        <a class="category-link" href="/tags/%E6%9C%BA%E6%A2%B0%E9%94%AE%E7%9B%98/" rel="tag">机械键盘</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">711 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">3  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>目前给 Mac mini 配的是 Nuphy AIR 60 二代矮轴机械键盘，这个键盘只有 60 个键位，当初就是看中了它小巧精致的外观才选的这个键盘。最近调试程序的频率比较高，需要使用到 F 功能键，这个键盘 F1 到 F12 默认是媒体功能。认为 FN 组合对应的 F 功能键就能使用 F 功能本来是一件自然而然的事情，没想到我还是高估了这个键盘的易用性。</p>
+<h2 id="可尝试的方法"><a href="#可尝试的方法" class="headerlink" title="可尝试的方法"></a>可尝试的方法</h2><p>在 Reddit 上看到 3 年前一位老哥也遇到了同样的问题：<a target="_blank" rel="noopener" href="https://www.reddit.com/r/NuPhy/comments/w58nmi/function_keys_on_mac/">Function keys on mac</a> ，下面有好几个回答，大概有下面这几种方案。</p>
+<h3 id="FN-Tab-F-功能键"><a href="#FN-Tab-F-功能键" class="headerlink" title="FN + Tab + F 功能键"></a>FN + Tab + F 功能键</h3><p>用 FN + Tab + F 功能键组合来实现 F 功能键（开始我还以为是 FN + Tab + F 键可以在功能键和媒体功能之间切换），但是我试了几次，没有生效，FN + Tab + F12 还是增加音量。</p>
+<h3 id="FN-X-F-功能键"><a href="#FN-X-F-功能键" class="headerlink" title="FN + X + F 功能键"></a>FN + X + F 功能键</h3><p>这个组合键需要先在 系统设置 &gt; 键盘 &gt; 快捷键 &gt; 功能键 中开启选项“使用 F1… 功能键“选项。不过我试了这个组合键在我这里也不生效。</p>
+<h3 id="FN-Shift-F-功能键"><a href="#FN-Shift-F-功能键" class="headerlink" title="FN + Shift + F 功能键"></a>FN + Shift + F 功能键</h3><p>这个组合键终于能用了，不过测试了几下感觉键位太多了，使用起来比较累，还是没有直接 FN + F 使用起来方便。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>Reddit 上的方案都尝试了一遍，没找到理想的解决方案。</p>
+<p>在 V2EX 上看到几个月前的一个帖子：<a target="_blank" rel="noopener" href="https://www.v2ex.com/t/1094555">macOS 如何使用 标准 F1~F12 的功能</a> ，很多号称支持 Mac 的键盘，FN 功能键是残废的。不过帖子里有人提供了一个简单的方法：将键盘改回 win 模式，然后在 系统设置 &gt; 键盘 &gt; 键盘快捷键 &gt; 修饰键 中，将 Command 键映射成 Option 键，将 Option 键映射为 Command 键，至此这个问题完美解决。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="关闭显示桌面快捷键"><a href="#关闭显示桌面快捷键" class="headerlink" title="关闭显示桌面快捷键"></a>关闭显示桌面快捷键</h3><p>系统设置中默认 F11 是显示桌面的快捷键，在这里关闭：系统设置 &gt; 键盘 &gt; 快捷键 &gt; 调度中心，取消勾选显示桌面。</p>
+<h3 id="工具网站推荐"><a href="#工具网站推荐" class="headerlink" title="工具网站推荐"></a>工具网站推荐</h3><p>在线键盘测试网站：因为尝试各种方案的时候，不知道 FN 键生效没生效，在 <a target="_blank" rel="noopener" href="https://www.zfrontier.com/lab/keyboardTester">在线键盘测试</a> 这个网站中，可以实时看到自己按下了哪个键，很实用。</p>
+<p>快捷键网：这个机械键盘的灯效、亮度、设备切换等功能需要使用 FN 加上某些快捷键来实现，又不常用，常常用到的时候需要临时翻下说明书，很麻烦。终于发现个网站：<a target="_blank" rel="noopener" href="http://www.kjjw.cc/nuphy-air60/">快捷键网</a> ，这里可以查到常见厂家的机械键盘的快捷键，很实用。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+          
+            <button id="btn-theme-switch" aria-label="Toggle dark mode" style="background: none; border: none; cursor: pointer; margin-left: auto">
+              ☀️
+            </button>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E5%B0%9D%E8%AF%95%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">可尝试的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FN-Tab-F-%E5%8A%9F%E8%83%BD%E9%94%AE"><span class="toc-number">2.1.</span> <span class="toc-text">FN + Tab + F 功能键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FN-X-F-%E5%8A%9F%E8%83%BD%E9%94%AE"><span class="toc-number">2.2.</span> <span class="toc-text">FN + X + F 功能键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FN-Shift-F-%E5%8A%9F%E8%83%BD%E9%94%AE"><span class="toc-number">2.3.</span> <span class="toc-text">FN + Shift + F 功能键</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">4.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E6%98%BE%E7%A4%BA%E6%A1%8C%E9%9D%A2%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">4.1.</span> <span class="toc-text">关闭显示桌面快捷键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E7%BD%91%E7%AB%99%E6%8E%A8%E8%8D%90"><span class="toc-number">4.2.</span> <span class="toc-text">工具网站推荐</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&text=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&title=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&is_video=false&description=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Nuphy AIR 60 机械键盘 F 功能键问题&body=Check out this article: https://zhu.happy365.day/20250720/nuphy-air-60-function-key/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&title=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&title=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&title=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&title=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&name=Nuphy AIR 60 机械键盘 F 功能键问题&description=&lt;h2 id=&#34;问题&#34;&gt;&lt;a href=&#34;#问题&#34; class=&#34;headerlink&#34; title=&#34;问题&#34;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;目前给 Mac mini 配的是 Nuphy AIR 60 二代矮轴机械键盘，这个键盘只有 60 个键位，当初就是看中了它小巧精致的外观才选的这个键盘。最近调试程序的频率比较高，需要使用到 F 功能键，这个键盘 F1 到 F12 默认是媒体功能。认为 FN 组合对应的 F 功能键就能使用 F 功能本来是一件自然而然的事情，没想到我还是高估了这个键盘的易用性。&lt;/p&gt;
+&lt;h2 id=&#34;可尝试的方法&#34;&gt;&lt;a href=&#34;#可尝试的方法&#34; class=&#34;headerlink&#34; title=&#34;可尝试的方法&#34;&gt;&lt;/a&gt;可尝试的方法&lt;/h2&gt;&lt;p&gt;在 Reddit 上看到 3 年前一位老哥也遇到了同样的问题：&lt;a href=&#34;https://www.reddit.com/r/NuPhy/comments/w58nmi/function_keys_on_mac/&#34;&gt;Function keys on mac&lt;/a&gt; ，下面有好几个回答，大概有下面这几种方案。&lt;/p&gt;
+&lt;h3 id=&#34;FN-Tab-F-功能键&#34;&gt;&lt;a href=&#34;#FN-Tab-F-功能键&#34; class=&#34;headerlink&#34; title=&#34;FN + Tab + F 功能键&#34;&gt;&lt;/a&gt;FN + Tab + F 功能键&lt;/h3&gt;&lt;p&gt;用 FN + Tab + F 功能键组合来实现 F 功能键（开始我还以为是 FN + Tab + F 键可以在功能键和媒体功能之间切换），但是我试了几次，没有生效，FN + Tab + F12 还是增加音量。&lt;/p&gt;
+&lt;h3 id=&#34;FN-X-F-功能键&#34;&gt;&lt;a href=&#34;#FN-X-F-功能键&#34; class=&#34;headerlink&#34; title=&#34;FN + X + F 功能键&#34;&gt;&lt;/a&gt;FN + X + F 功能键&lt;/h3&gt;&lt;p&gt;这个组合键需要先在 系统设置 &amp;gt; 键盘 &amp;gt; 快捷键 &amp;gt; 功能键 中开启选项“使用 F1… 功能键“选项。不过我试了这个组合键在我这里也不生效。&lt;/p&gt;
+&lt;h3 id=&#34;FN-Shift-F-功能键&#34;&gt;&lt;a href=&#34;#FN-Shift-F-功能键&#34; class=&#34;headerlink&#34; title=&#34;FN + Shift + F 功能键&#34;&gt;&lt;/a&gt;FN + Shift + F 功能键&lt;/h3&gt;&lt;p&gt;这个组合键终于能用了，不过测试了几下感觉键位太多了，使用起来比较累，还是没有直接 FN + F 使用起来方便。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20250720/nuphy-air-60-function-key/&t=Nuphy AIR 60 机械键盘 F 功能键问题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    zhu
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'lozhu20/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

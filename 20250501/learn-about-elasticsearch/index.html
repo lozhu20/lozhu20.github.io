@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="参考资料感谢知乎上大数据梦想家分享的入门教程，很实用。教程地址：从 0 到 1 学习 elasticsearch ，这一篇就够了！(建议收藏) Elasticsearch 是什么Elasticsearch 简称 ES，是一个开源的高扩展的分布式全文检索引擎，可以近实时的存储、检索数据。ES 使用 Lucene 作为其核心来实现所有索引及搜索的功能，使用 RESTful API来隐藏 Lucene">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch入门">
+<meta property="og:url" content="https://zhu.happy365.day/20250501/learn-about-elasticsearch/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="参考资料感谢知乎上大数据梦想家分享的入门教程，很实用。教程地址：从 0 到 1 学习 elasticsearch ，这一篇就够了！(建议收藏) Elasticsearch 是什么Elasticsearch 简称 ES，是一个开源的高扩展的分布式全文检索引擎，可以近实时的存储、检索数据。ES 使用 Lucene 作为其核心来实现所有索引及搜索的功能，使用 RESTful API来隐藏 Lucene">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-01T12:32:30.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.216Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="ElasticSearch">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Elasticsearch入门</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20250501/learn-about-elasticsearch/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20250503/cannot-create-documents-directory-on-icloud/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20250501/cannot-verify-app-from-malware-on-macos/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20250501/learn-about-elasticsearch/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&text=Elasticsearch入门"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&title=Elasticsearch入门"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&is_video=false&description=Elasticsearch入门"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Elasticsearch入门&body=Check out this article: https://zhu.happy365.day/20250501/learn-about-elasticsearch/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&title=Elasticsearch入门"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&title=Elasticsearch入门"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&title=Elasticsearch入门"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&title=Elasticsearch入门"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&name=Elasticsearch入门&description=&lt;h2 id=&#34;参考资料&#34;&gt;&lt;a href=&#34;#参考资料&#34; class=&#34;headerlink&#34; title=&#34;参考资料&#34;&gt;&lt;/a&gt;参考资料&lt;/h2&gt;&lt;p&gt;感谢知乎上大数据梦想家分享的入门教程，很实用。教程地址：&lt;a href=&#34;https://zhuanlan.zhihu.com/p/358744225&#34;&gt;从 0 到 1 学习 elasticsearch ，这一篇就够了！(建议收藏)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;Elasticsearch-是什么&#34;&gt;&lt;a href=&#34;#Elasticsearch-是什么&#34; class=&#34;headerlink&#34; title=&#34;Elasticsearch 是什么&#34;&gt;&lt;/a&gt;Elasticsearch 是什么&lt;/h2&gt;&lt;p&gt;Elasticsearch 简称 ES，是一个开源的高扩展的分布式全文检索引擎，可以近实时的存储、检索数据。ES 使用 Lucene 作为其核心来实现所有索引及搜索的功能，使用 RESTful API来隐藏 Lucene 的复杂性，从而使全文检索变得简单易用。&lt;/p&gt;
+&lt;h2 id=&#34;Elasticsearch-与-Solr-的比较&#34;&gt;&lt;a href=&#34;#Elasticsearch-与-Solr-的比较&#34; class=&#34;headerlink&#34; title=&#34;Elasticsearch 与 Solr 的比较&#34;&gt;&lt;/a&gt;Elasticsearch 与 Solr 的比较&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;ES 和 Solr 都基于 Lucene。&lt;/li&gt;
+&lt;li&gt;ES 自带分布式协调管理功能，Solr 依赖 Zookeeper 进行分布式管理。&lt;/li&gt;
+&lt;li&gt;ES 只支持 json 格式，Solr 支持 json、XML、CSV 等格式。&lt;/li&gt;
+&lt;li&gt;ES 很多功能需要第三方插件支持，Solr 本身功能较为丰富。&lt;/li&gt;
+&lt;li&gt;ES 建立索引快，适用于实时性较强的场景；Solr 查询较快，但是索引更新慢，适用于电商等查询较多的场景。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;Elastisearch-安装及启动&#34;&gt;&lt;a href=&#34;#Elastisearch-安装及启动&#34; class=&#34;headerlink&#34; title=&#34;Elastisearch 安装及启动&#34;&gt;&lt;/a&gt;Elastisearch 安装及启动&lt;/h2&gt;&lt;p&gt;从官网 &lt;a href=&#34;https://www.elastic.co/downloads/elasticsearch&#34;&gt;Download Elasticsearch&lt;/a&gt; 根据平台选择对应的版本进行下载。下载完成后将下载压缩包文件拷贝到安装路径（~&amp;#x2F;.opt&amp;#x2F;elasticsearch）并解压，在该目录下新建 data 目录用于存储索引。&lt;/p&gt;
+&lt;p&gt;修改配置文件 $ES_HOME&amp;#x2F;config&amp;#x2F;elasticsearch.yml 文件：&lt;/p&gt;
+&lt;figure class=&#34;highlight yaml&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;cluster.name:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;demo-elasticsearch&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;node.name:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;node01&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;path.data:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;~/.opt/elasticsearch/data&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;path.logs:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;~/.opt/elasticsearch/logs&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;network.host:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;0.0&lt;/span&gt;&lt;span class=&#34;number&#34;&gt;.0&lt;/span&gt;&lt;span class=&#34;number&#34;&gt;.0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;host.port:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;9200&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;cluster.initial_master_nodes:&lt;/span&gt; [&lt;span class=&#34;string&#34;&gt;&amp;quot;node01&amp;quot;&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;xpack.security.enabled:&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;xpack.security.enrollment.enabled:&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;xpack.security.http.ssl:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;attr&#34;&gt;enabled:&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;attr&#34;&gt;keystore.path:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;certs/http.p12&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&t=Elasticsearch入门"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">1.</span> <span class="toc-text">参考资料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elasticsearch-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">Elasticsearch 是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elasticsearch-%E4%B8%8E-Solr-%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">3.</span> <span class="toc-text">Elasticsearch 与 Solr 的比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elastisearch-%E5%AE%89%E8%A3%85%E5%8F%8A%E5%90%AF%E5%8A%A8"><span class="toc-number">4.</span> <span class="toc-text">Elastisearch 安装及启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elasticsearch-head-%E5%AE%89%E8%A3%85"><span class="toc-number">5.</span> <span class="toc-text">Elasticsearch-head 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kibana-%E5%AE%89%E8%A3%85"><span class="toc-number">6.</span> <span class="toc-text">kibana 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#kibana-%E5%AE%89%E8%A3%85-1"><span class="toc-number">6.1.</span> <span class="toc-text">kibana 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ik-%E5%88%86%E8%AF%8D%E5%99%A8%E5%AE%89%E8%A3%85"><span class="toc-number">6.2.</span> <span class="toc-text">ik 分词器安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elasticsearch-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">7.</span> <span class="toc-text">Elasticsearch 基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE"><span class="toc-number">7.1.</span> <span class="toc-text">查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%81%A5%E5%BA%B7%E4%BF%A1%E6%81%AF"><span class="toc-number">7.2.</span> <span class="toc-text">查看健康信息</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Elasticsearch入门
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-05-01T12:32:30.000Z" class="dt-published" itemprop="datePublished">2025-05-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/ElasticSearch/" rel="tag">ElasticSearch</a> -->
+        <a class="category-link" href="/tags/ElasticSearch/" rel="tag">ElasticSearch</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">1.1k words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">4  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>感谢知乎上大数据梦想家分享的入门教程，很实用。教程地址：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/358744225">从 0 到 1 学习 elasticsearch ，这一篇就够了！(建议收藏)</a></p>
+<h2 id="Elasticsearch-是什么"><a href="#Elasticsearch-是什么" class="headerlink" title="Elasticsearch 是什么"></a>Elasticsearch 是什么</h2><p>Elasticsearch 简称 ES，是一个开源的高扩展的分布式全文检索引擎，可以近实时的存储、检索数据。ES 使用 Lucene 作为其核心来实现所有索引及搜索的功能，使用 RESTful API来隐藏 Lucene 的复杂性，从而使全文检索变得简单易用。</p>
+<h2 id="Elasticsearch-与-Solr-的比较"><a href="#Elasticsearch-与-Solr-的比较" class="headerlink" title="Elasticsearch 与 Solr 的比较"></a>Elasticsearch 与 Solr 的比较</h2><ul>
+<li>ES 和 Solr 都基于 Lucene。</li>
+<li>ES 自带分布式协调管理功能，Solr 依赖 Zookeeper 进行分布式管理。</li>
+<li>ES 只支持 json 格式，Solr 支持 json、XML、CSV 等格式。</li>
+<li>ES 很多功能需要第三方插件支持，Solr 本身功能较为丰富。</li>
+<li>ES 建立索引快，适用于实时性较强的场景；Solr 查询较快，但是索引更新慢，适用于电商等查询较多的场景。</li>
+</ul>
+<h2 id="Elastisearch-安装及启动"><a href="#Elastisearch-安装及启动" class="headerlink" title="Elastisearch 安装及启动"></a>Elastisearch 安装及启动</h2><p>从官网 <a target="_blank" rel="noopener" href="https://www.elastic.co/downloads/elasticsearch">Download Elasticsearch</a> 根据平台选择对应的版本进行下载。下载完成后将下载压缩包文件拷贝到安装路径（~&#x2F;.opt&#x2F;elasticsearch）并解压，在该目录下新建 data 目录用于存储索引。</p>
+<p>修改配置文件 $ES_HOME&#x2F;config&#x2F;elasticsearch.yml 文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cluster.name:</span> <span class="string">demo-elasticsearch</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">node01</span></span><br><span class="line"><span class="attr">path.data:</span> <span class="string">~/.opt/elasticsearch/data</span></span><br><span class="line"><span class="attr">path.logs:</span> <span class="string">~/.opt/elasticsearch/logs</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="attr">host.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="attr">cluster.initial_master_nodes:</span> [<span class="string">&quot;node01&quot;</span>]</span><br><span class="line"><span class="attr">xpack.security.enabled:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">xpack.security.enrollment.enabled:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">xpack.security.http.ssl:</span></span><br><span class="line">	<span class="attr">enabled:</span> <span class="literal">false</span></span><br><span class="line">	<span class="attr">keystore.path:</span> <span class="string">certs/http.p12</span></span><br></pre></td></tr></table></figure>
+
+<p>修改 jvm.options 文件中的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-Xms1g</span><br><span class="line">-Xmx1g</span><br></pre></td></tr></table></figure>
+
+<p>据说 Elasticsearch 不允许使用 root 用户操作，需要新建 elsearch 用户组及 elsearch 用户进行集群的操作，但是我在 macOS 上直接使用 admin 账号操作没遇到什么问题，并且在 macOS 上新建用户组和用户和 Linux 上的命令不通用，所以跳过新建用户这一步。</p>
+<p>启动 es：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/elasticsearch</span><br></pre></td></tr></table></figure>
+
+<p>启动之后，可以访问 <a target="_blank" rel="noopener" href="http://localhost:9200/">http://localhost:9200</a> 查看。如果没有关闭 xpack.security.http.ssl 配置的话，需要访问 <a href="https://localhost:9200。">https://localhost:9200。</a></p>
+<p>这个页面会返回一些集群相关的信息：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;node01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;cluster_name&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;demo-elasticsearch&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;cluster_uuid&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;2pFl_UiuQFSwsGD-6CTtMQ&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;number&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;9.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build_flavor&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;default&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build_type&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build_hash&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;112859b85d50de2a7e63f73c8fc70b99eea24291&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build_date&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;2025-04-08T15:13:46.049795831Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build_snapshot&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;lucene_version&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;10.1.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;minimum_wire_compatibility_version&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;8.18.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;minimum_index_compatibility_version&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;8.0.0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;tagline&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;You Know, for Search&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Elasticsearch-head-安装"><a href="#Elasticsearch-head-安装" class="headerlink" title="Elasticsearch-head 安装"></a>Elasticsearch-head 安装</h2><p>Elasticsearch-head 是 Elasticsearch 的一个开源的图形化界面，在 GitHub 上可以获取：<a target="_blank" rel="noopener" href="https://github.com/mobz/elasticsearch-head">https://github.com/mobz/elasticsearch-head</a>。将源码克隆到本地，然后通过 npm 启动。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> elasticsearch-head</span><br><span class="line"></span><br><span class="line">npm install </span><br><span class="line"></span><br><span class="line">npm start</span><br></pre></td></tr></table></figure>
+
+<p>因为跨域的原因，需要在 elasticsearch.yml 中增加相关的配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">&quot;*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>修改配置后，重启 es，访问 <a href="http://localhost:9100，就能看到">http://localhost:9100，就能看到</a> es-head 页面了，可以查看索引和查询之类的功能。</p>
+<h2 id="kibana-安装"><a href="#kibana-安装" class="headerlink" title="kibana 安装"></a>kibana 安装</h2><h3 id="kibana-安装-1"><a href="#kibana-安装-1" class="headerlink" title="kibana 安装"></a>kibana 安装</h3><p>kibana 可以将更友好的展示和分析 es 的数据。在 es 官网可以进行下载：<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/downloads/kibana%EF%BC%8C%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E6%98%AF%EF%BC%8Ckibana">https://www.elastic.co/cn/downloads/kibana，要注意的是，kibana</a> 的版本需要和 es 的版本保持一致。</p>
+<p>下载后放到指定路径 ~&#x2F;.opt&#x2F;kibana 并解压。</p>
+<p>修改配置文件：~&#x2F;.opt&#x2F;kibana&#x2F;config&#x2F;kibana.yml：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port:</span> <span class="number">5601</span></span><br><span class="line"><span class="attr">server.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="attr">elasticsearch.hosts:</span> [<span class="string">&quot;http://localhost:9200&quot;</span>]</span><br><span class="line"><span class="attr">elasticsearch.username:</span> <span class="string">&quot;elsearch&quot;</span></span><br><span class="line"><span class="attr">elasticsearch.password:</span> <span class="string">&quot;elsearch&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>bin/kibana</code> 启动 kibana。</p>
+<p>访问 <a target="_blank" rel="noopener" href="http://localhost:5601/">http://localhost:5601</a> 访问 kibana 页面。</p>
+<h3 id="ik-分词器安装"><a href="#ik-分词器安装" class="headerlink" title="ik 分词器安装"></a>ik 分词器安装</h3><p>原下载地址：<a target="_blank" rel="noopener" href="https://github.com/infinilabs/analysis-ik/releases%EF%BC%8C%E4%BD%86%E6%98%AF%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E5%B7%B2%E4%B8%8D%E5%9C%A8">https://github.com/infinilabs/analysis-ik/releases，但是最新版本已不在</a> GitHub 更新，需要到 <a target="_blank" rel="noopener" href="https://release.infinilabs.com/analysis-ik/stable/">https://release.infinilabs.com/analysis-ik/stable/</a> 进行下载。</p>
+<p>下载后拷贝到 $ES_HOME&#x2F;plugins&#x2F;ik 路径下，重启 kibana。</p>
+<p>测试分词器（最少切分）：梦想家</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">	&quot;analyzer&quot;: &quot;ik_smart&quot;,</span><br><span class="line">	&quot;text&quot;: &quot;梦想家&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最细粒度切分：梦想家、梦想、想家</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">	&quot;analyzer&quot;: &quot;ik_max_word&quot;,</span><br><span class="line">	&quot;text&quot;: &quot;梦想家&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分词器自定义词典：</p>
+<p>在 $ES_HOME&#x2F;plugins&#x2F;ik&#x2F;config 路径下新建文件 my.dic，写入需要被识别成一个词的词。</p>
+<p>修改 IKAnalyzer.cfg.xml 文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">comment</span>&gt;</span>IK Analyzer 扩展配置<span class="tag">&lt;/<span class="name">comment</span>&gt;</span> <span class="comment">&lt;!-- 用户可以在这里配置自己的扩展字典 --&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">&quot;ext_dict&quot;</span>&gt;</span>my.dic<span class="tag">&lt;/<span class="name">entry</span>&gt;</span> <span class="comment">&lt;!-- 用户可以在这里配置自己的扩展停止词字典 --&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">&quot;ext_stopwords&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>修改完成保存并重启 es，此时 my.dic 中的词就不会再被切分。</p>
+<h2 id="Elasticsearch-基本操作"><a href="#Elasticsearch-基本操作" class="headerlink" title="Elasticsearch 基本操作"></a>Elasticsearch 基本操作</h2><p>创建文档：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PUT /test1/_doc/<span class="number">1</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;大数据梦想家&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="number">24</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>创建成功后可在 es-head 页面浏览数据标签页中看到对应的索引 test1。</p>
+<p>创建索引并指定字段类型：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">PUT /test2</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;mappings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;long&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;birthday&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;date&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>查看刚才创建的索引：</p>
+<p><code>GET /test2</code></p>
+<p>向该索引增加数据：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PUT /test2/_doc/<span class="number">1</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;大数据梦想家&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="number">21</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;birthday&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2020-01-01&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>查看文档信息：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /test2/_doc/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>修改文档：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PUT /test2/_update/<span class="number">1</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;doc&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;大数据梦想家1&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>修改文档也可以使用和新增同样的方式进行，但是会覆盖元来的数据，不推荐使用。</p>
+<p>删除文档：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE /test2/_doc/1</span><br></pre></td></tr></table></figure>
+
+<p>删除索引：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE /test2</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h3><p>先增加几条测试数据：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">PUT /demo/_doc/<span class="number">1</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;爱丽丝&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="number">21</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;desc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;在最美的年华，做最好的自己&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;tags&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;技术宅&quot;</span><span class="punctuation">,</span> <span class="string">&quot;温暖&quot;</span><span class="punctuation">,</span> <span class="string">&quot;思维活跃&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">PUT /demo/_doc/<span class="number">2</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;鲍勃&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="number">25</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;desc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;逍遥自在&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;tags&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;交友&quot;</span><span class="punctuation">,</span> <span class="string">&quot;理性&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">PUT /demo/_doc/<span class="number">3</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;露西&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="number">30</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;desc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;人越讨厌明天，就睡得越晚&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;tags&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;社会&quot;</span><span class="punctuation">,</span> <span class="string">&quot;科学&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">PUT /demo/_doc/<span class="number">4</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Alice爱学Python&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="number">21</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;desc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;人生苦短，我用Python&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;tags&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;好学&quot;</span><span class="punctuation">,</span> <span class="string">&quot;勤奋刻苦&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">PUT /demo/_doc/<span class="number">5</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Alice爱学Java&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="number">18</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;desc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;技术成就自我&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;tags&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;思维敏捷&quot;</span><span class="punctuation">,</span> <span class="string">&quot;喜欢学习&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>按 name 查找，返回 name、age、desc 列，结果按 age 升序排序，从第二个结果开始返回1个结果：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">GET /demo/_search</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;爱丽丝&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;age&quot;</span><span class="punctuation">,</span> <span class="string">&quot;desc&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sort&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;order&quot;</span><span class="punctuation">:</span> <span class="string">&quot;asc&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;from&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">1</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>OR：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">GET /demo/_search</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;bool&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;should&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;爱丽丝&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="number">25</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>AND：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">GET /demo/_search</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;bool&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;must&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;爱丽丝&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;filter&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;range&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">              <span class="attr">&quot;lte&quot;</span><span class="punctuation">:</span> <span class="number">18</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>按多个值查找：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET /demo/_search</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;tags&quot;</span><span class="punctuation">:</span> <span class="string">&quot;男 学习&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>text 字段在查找时会被先被分词然后再进行查找，keyword 类型的字段会进行精确查找，不会被分词。</p>
+<p>对结果进行高亮显示：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">GET /demo/_search</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;match&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;鲍勃&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;highlight&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;pre_tags&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;b class=&#x27;key&#x27; style=&#x27;color: red&#x27;&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;post_tags&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;/b&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fields&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>关于分词：</p>
+<ul>
+<li>term：不经过分词，直接查询精确的值</li>
+<li>match：会使用分词器解析</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET /demo/_search</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;term&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;爱&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="查看健康信息"><a href="#查看健康信息" class="headerlink" title="查看健康信息"></a>查看健康信息</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET _cat/health</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET _cat/indicies?v</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">1.</span> <span class="toc-text">参考资料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elasticsearch-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">Elasticsearch 是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elasticsearch-%E4%B8%8E-Solr-%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">3.</span> <span class="toc-text">Elasticsearch 与 Solr 的比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elastisearch-%E5%AE%89%E8%A3%85%E5%8F%8A%E5%90%AF%E5%8A%A8"><span class="toc-number">4.</span> <span class="toc-text">Elastisearch 安装及启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elasticsearch-head-%E5%AE%89%E8%A3%85"><span class="toc-number">5.</span> <span class="toc-text">Elasticsearch-head 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kibana-%E5%AE%89%E8%A3%85"><span class="toc-number">6.</span> <span class="toc-text">kibana 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#kibana-%E5%AE%89%E8%A3%85-1"><span class="toc-number">6.1.</span> <span class="toc-text">kibana 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ik-%E5%88%86%E8%AF%8D%E5%99%A8%E5%AE%89%E8%A3%85"><span class="toc-number">6.2.</span> <span class="toc-text">ik 分词器安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elasticsearch-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">7.</span> <span class="toc-text">Elasticsearch 基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE"><span class="toc-number">7.1.</span> <span class="toc-text">查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%81%A5%E5%BA%B7%E4%BF%A1%E6%81%AF"><span class="toc-number">7.2.</span> <span class="toc-text">查看健康信息</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20250501/learn-about-elasticsearch/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&text=Elasticsearch入门"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&title=Elasticsearch入门"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&is_video=false&description=Elasticsearch入门"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Elasticsearch入门&body=Check out this article: https://zhu.happy365.day/20250501/learn-about-elasticsearch/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&title=Elasticsearch入门"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&title=Elasticsearch入门"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&title=Elasticsearch入门"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&title=Elasticsearch入门"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&name=Elasticsearch入门&description=&lt;h2 id=&#34;参考资料&#34;&gt;&lt;a href=&#34;#参考资料&#34; class=&#34;headerlink&#34; title=&#34;参考资料&#34;&gt;&lt;/a&gt;参考资料&lt;/h2&gt;&lt;p&gt;感谢知乎上大数据梦想家分享的入门教程，很实用。教程地址：&lt;a href=&#34;https://zhuanlan.zhihu.com/p/358744225&#34;&gt;从 0 到 1 学习 elasticsearch ，这一篇就够了！(建议收藏)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;Elasticsearch-是什么&#34;&gt;&lt;a href=&#34;#Elasticsearch-是什么&#34; class=&#34;headerlink&#34; title=&#34;Elasticsearch 是什么&#34;&gt;&lt;/a&gt;Elasticsearch 是什么&lt;/h2&gt;&lt;p&gt;Elasticsearch 简称 ES，是一个开源的高扩展的分布式全文检索引擎，可以近实时的存储、检索数据。ES 使用 Lucene 作为其核心来实现所有索引及搜索的功能，使用 RESTful API来隐藏 Lucene 的复杂性，从而使全文检索变得简单易用。&lt;/p&gt;
+&lt;h2 id=&#34;Elasticsearch-与-Solr-的比较&#34;&gt;&lt;a href=&#34;#Elasticsearch-与-Solr-的比较&#34; class=&#34;headerlink&#34; title=&#34;Elasticsearch 与 Solr 的比较&#34;&gt;&lt;/a&gt;Elasticsearch 与 Solr 的比较&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;ES 和 Solr 都基于 Lucene。&lt;/li&gt;
+&lt;li&gt;ES 自带分布式协调管理功能，Solr 依赖 Zookeeper 进行分布式管理。&lt;/li&gt;
+&lt;li&gt;ES 只支持 json 格式，Solr 支持 json、XML、CSV 等格式。&lt;/li&gt;
+&lt;li&gt;ES 很多功能需要第三方插件支持，Solr 本身功能较为丰富。&lt;/li&gt;
+&lt;li&gt;ES 建立索引快，适用于实时性较强的场景；Solr 查询较快，但是索引更新慢，适用于电商等查询较多的场景。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;Elastisearch-安装及启动&#34;&gt;&lt;a href=&#34;#Elastisearch-安装及启动&#34; class=&#34;headerlink&#34; title=&#34;Elastisearch 安装及启动&#34;&gt;&lt;/a&gt;Elastisearch 安装及启动&lt;/h2&gt;&lt;p&gt;从官网 &lt;a href=&#34;https://www.elastic.co/downloads/elasticsearch&#34;&gt;Download Elasticsearch&lt;/a&gt; 根据平台选择对应的版本进行下载。下载完成后将下载压缩包文件拷贝到安装路径（~&amp;#x2F;.opt&amp;#x2F;elasticsearch）并解压，在该目录下新建 data 目录用于存储索引。&lt;/p&gt;
+&lt;p&gt;修改配置文件 $ES_HOME&amp;#x2F;config&amp;#x2F;elasticsearch.yml 文件：&lt;/p&gt;
+&lt;figure class=&#34;highlight yaml&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;cluster.name:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;demo-elasticsearch&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;node.name:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;node01&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;path.data:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;~/.opt/elasticsearch/data&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;path.logs:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;~/.opt/elasticsearch/logs&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;network.host:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;0.0&lt;/span&gt;&lt;span class=&#34;number&#34;&gt;.0&lt;/span&gt;&lt;span class=&#34;number&#34;&gt;.0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;host.port:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;9200&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;cluster.initial_master_nodes:&lt;/span&gt; [&lt;span class=&#34;string&#34;&gt;&amp;quot;node01&amp;quot;&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;xpack.security.enabled:&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;xpack.security.enrollment.enabled:&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;attr&#34;&gt;xpack.security.http.ssl:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;attr&#34;&gt;enabled:&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;attr&#34;&gt;keystore.path:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;certs/http.p12&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20250501/learn-about-elasticsearch/&t=Elasticsearch入门"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

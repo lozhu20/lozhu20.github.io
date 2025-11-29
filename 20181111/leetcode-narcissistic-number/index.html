@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="1. 水仙花数用来描述一个 N 位非负整数，其各位数字的 N 次方和等于该数本身。 这里定义的N&#x3D;3。 2. 问题描述春天是鲜花的季节，水仙花就是其中最迷人的代表，数学上有个水仙花数，他是这样定义的： “水仙花数”是指一个三位数，它的各位数字的立方和等于其本身，比如：153&#x3D;1^3+5^3+3^3。 现在要求输出所有在m和n范围内的水仙花数。 对于每个测试实例，要求输出所有在给">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode-水仙花数">
+<meta property="og:url" content="https://zhu.happy365.day/20181111/leetcode-narcissistic-number/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="1. 水仙花数用来描述一个 N 位非负整数，其各位数字的 N 次方和等于该数本身。 这里定义的N&#x3D;3。 2. 问题描述春天是鲜花的季节，水仙花就是其中最迷人的代表，数学上有个水仙花数，他是这样定义的： “水仙花数”是指一个三位数，它的各位数字的立方和等于其本身，比如：153&#x3D;1^3+5^3+3^3。 现在要求输出所有在m和n范围内的水仙花数。 对于每个测试实例，要求输出所有在给">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images2.imgbox.com/be/68/HnUhQ8il_o.png">
+<meta property="article:published_time" content="2018-11-11T10:18:46.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.218Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="LeetCode">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images2.imgbox.com/be/68/HnUhQ8il_o.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>LeetCode-水仙花数</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20181111/leetcode-narcissistic-number/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20181116/leetcode-linked-list-insertion-sort/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&text=LeetCode-水仙花数"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&title=LeetCode-水仙花数"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&is_video=false&description=LeetCode-水仙花数"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=LeetCode-水仙花数&body=Check out this article: https://zhu.happy365.day/20181111/leetcode-narcissistic-number/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&title=LeetCode-水仙花数"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&title=LeetCode-水仙花数"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&title=LeetCode-水仙花数"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&title=LeetCode-水仙花数"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&name=LeetCode-水仙花数&description=&lt;h2 id=&#34;1-水仙花数&#34;&gt;&lt;a href=&#34;#1-水仙花数&#34; class=&#34;headerlink&#34; title=&#34;1. 水仙花数&#34;&gt;&lt;/a&gt;1. 水仙花数&lt;/h2&gt;&lt;p&gt;用来描述一个 N 位非负整数，其各位数字的 N 次方和等于该数本身。&lt;/p&gt;
+&lt;p&gt;这里定义的N&amp;#x3D;3。&lt;/p&gt;
+&lt;h2 id=&#34;2-问题描述&#34;&gt;&lt;a href=&#34;#2-问题描述&#34; class=&#34;headerlink&#34; title=&#34;2. 问题描述&#34;&gt;&lt;/a&gt;2. 问题描述&lt;/h2&gt;&lt;p&gt;春天是鲜花的季节，水仙花就是其中最迷人的代表，数学上有个水仙花数，他是这样定义的： “水仙花数”是指一个三位数，它的各位数字的立方和等于其本身，比如：153&amp;#x3D;1^3+5^3+3^3。 现在要求输出所有在m和n范围内的水仙花数。&lt;/p&gt;
+&lt;p&gt;对于每个测试实例，要求输出所有在给定范围内的水仙花数，就是说，输出的水仙花数必须大于等于m,并且小于等于n，如果有多个，则要求从小到大排列在一行内输出，之间用一个空格隔开;&lt;br&gt;如果给定的范围内不存在水仙花数，则输出no;&lt;br&gt;每个测试实例的输出占一行。&lt;/p&gt;
+&lt;p&gt;输入：&lt;br&gt;100 120&lt;br&gt;300 380&lt;/p&gt;
+&lt;p&gt;输出：&lt;br&gt;no&lt;br&gt;370 371&lt;/p&gt;
+&lt;h2 id=&#34;3-问题分析&#34;&gt;&lt;a href=&#34;#3-问题分析&#34; class=&#34;headerlink&#34; title=&#34;3. 问题分析&#34;&gt;&lt;/a&gt;3. 问题分析&lt;/h2&gt;&lt;p&gt;我的解决思路：先将给出的数字按照个位十位百位的顺序拆解，然后计算各数位三次方之和，再和原数进行比较比较。思路比较简单。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&t=LeetCode-水仙花数"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%B0%B4%E4%BB%99%E8%8A%B1%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">1. 水仙花数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">2. 问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">3. 问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">4. 代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%BB%96%E5%B1%B1%E4%B9%8B%E7%9F%B3"><span class="toc-number">5.</span> <span class="toc-text">5. 他山之石</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        LeetCode-水仙花数
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-11-11T10:18:46.000Z" class="dt-published" itemprop="datePublished">2018-11-11</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%A7%A3%E9%A2%98%E8%AE%B0%E5%BD%95/">解题记录</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/LeetCode/" rel="tag">LeetCode</a> -->
+        <a class="category-link" href="/tags/LeetCode/" rel="tag">LeetCode</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">348 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">1  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="1-水仙花数"><a href="#1-水仙花数" class="headerlink" title="1. 水仙花数"></a>1. 水仙花数</h2><p>用来描述一个 N 位非负整数，其各位数字的 N 次方和等于该数本身。</p>
+<p>这里定义的N&#x3D;3。</p>
+<h2 id="2-问题描述"><a href="#2-问题描述" class="headerlink" title="2. 问题描述"></a>2. 问题描述</h2><p>春天是鲜花的季节，水仙花就是其中最迷人的代表，数学上有个水仙花数，他是这样定义的： “水仙花数”是指一个三位数，它的各位数字的立方和等于其本身，比如：153&#x3D;1^3+5^3+3^3。 现在要求输出所有在m和n范围内的水仙花数。</p>
+<p>对于每个测试实例，要求输出所有在给定范围内的水仙花数，就是说，输出的水仙花数必须大于等于m,并且小于等于n，如果有多个，则要求从小到大排列在一行内输出，之间用一个空格隔开;<br>如果给定的范围内不存在水仙花数，则输出no;<br>每个测试实例的输出占一行。</p>
+<p>输入：<br>100 120<br>300 380</p>
+<p>输出：<br>no<br>370 371</p>
+<h2 id="3-问题分析"><a href="#3-问题分析" class="headerlink" title="3. 问题分析"></a>3. 问题分析</h2><p>我的解决思路：先将给出的数字按照个位十位百位的顺序拆解，然后计算各数位三次方之和，再和原数进行比较比较。思路比较简单。</p>
+<h2 id="4-代码实现"><a href="#4-代码实现" class="headerlink" title="4. 代码实现"></a>4. 代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.odd.number;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> zhulongkun20@163.com</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 2018/11/3 下午12:58</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;Integer&gt; <span class="title function_">getNumbers</span><span class="params">(<span class="type">int</span> start, <span class="type">int</span> end)</span> &#123;</span><br><span class="line">        List&lt;Integer&gt; comps = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        List&lt;Integer&gt; result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="type">double</span> num;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> start; i &lt;= end; i++) &#123;</span><br><span class="line">            num = <span class="number">0</span>;</span><br><span class="line">            comps.clear();</span><br><span class="line">            comps = getNumberComponent(i);</span><br><span class="line">            <span class="keyword">for</span> (Integer comp : comps) &#123;</span><br><span class="line">                num += Math.pow(comp, <span class="number">3</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (num == i) &#123;</span><br><span class="line">                result.add(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;Integer&gt; <span class="title function_">getNumberComponent</span><span class="params">(<span class="type">int</span> number)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">base</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line">        <span class="type">int</span> comp;</span><br><span class="line">        <span class="type">int</span> lastComp;</span><br><span class="line">        List&lt;Integer&gt; components = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span> (number % (base / <span class="number">10</span>) != number) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">power</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            lastComp = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (Integer index : components) &#123;</span><br><span class="line">                lastComp += index * Math.pow(<span class="number">10</span>, power);</span><br><span class="line">                power += <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            comp = ((number - lastComp) % base) / (base / <span class="number">10</span>);</span><br><span class="line">            components.add(comp);</span><br><span class="line">            base *= <span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> components;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        List&lt;Integer&gt; result;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">input</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="keyword">while</span> (input.hasNextLine()) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> input.nextLine();</span><br><span class="line">            String[] numbers = str.split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">start</span> <span class="operator">=</span> Integer.valueOf(numbers[i]);</span><br><span class="line">                <span class="type">int</span> <span class="variable">end</span> <span class="operator">=</span> Integer.valueOf(numbers[i + <span class="number">1</span>]);</span><br><span class="line">                result = getNumbers(start, end);</span><br><span class="line">                <span class="keyword">if</span> (result.isEmpty()) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;no&quot;</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (Integer aResult : result) &#123;</span><br><span class="line">                        System.out.print(aResult + <span class="string">&quot; &quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    System.out.println();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="5-他山之石"><a href="#5-他山之石" class="headerlink" title="5. 他山之石"></a>5. 他山之石</h2><p>貌似在评论区里看到了有用python解决的：</p>
+<p><img src="https://images2.imgbox.com/be/68/HnUhQ8il_o.png" alt="图片"></p>
+<p>没太看懂。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%B0%B4%E4%BB%99%E8%8A%B1%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">1. 水仙花数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">2. 问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">3. 问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">4. 代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%BB%96%E5%B1%B1%E4%B9%8B%E7%9F%B3"><span class="toc-number">5.</span> <span class="toc-text">5. 他山之石</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&text=LeetCode-水仙花数"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&title=LeetCode-水仙花数"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&is_video=false&description=LeetCode-水仙花数"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=LeetCode-水仙花数&body=Check out this article: https://zhu.happy365.day/20181111/leetcode-narcissistic-number/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&title=LeetCode-水仙花数"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&title=LeetCode-水仙花数"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&title=LeetCode-水仙花数"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&title=LeetCode-水仙花数"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&name=LeetCode-水仙花数&description=&lt;h2 id=&#34;1-水仙花数&#34;&gt;&lt;a href=&#34;#1-水仙花数&#34; class=&#34;headerlink&#34; title=&#34;1. 水仙花数&#34;&gt;&lt;/a&gt;1. 水仙花数&lt;/h2&gt;&lt;p&gt;用来描述一个 N 位非负整数，其各位数字的 N 次方和等于该数本身。&lt;/p&gt;
+&lt;p&gt;这里定义的N&amp;#x3D;3。&lt;/p&gt;
+&lt;h2 id=&#34;2-问题描述&#34;&gt;&lt;a href=&#34;#2-问题描述&#34; class=&#34;headerlink&#34; title=&#34;2. 问题描述&#34;&gt;&lt;/a&gt;2. 问题描述&lt;/h2&gt;&lt;p&gt;春天是鲜花的季节，水仙花就是其中最迷人的代表，数学上有个水仙花数，他是这样定义的： “水仙花数”是指一个三位数，它的各位数字的立方和等于其本身，比如：153&amp;#x3D;1^3+5^3+3^3。 现在要求输出所有在m和n范围内的水仙花数。&lt;/p&gt;
+&lt;p&gt;对于每个测试实例，要求输出所有在给定范围内的水仙花数，就是说，输出的水仙花数必须大于等于m,并且小于等于n，如果有多个，则要求从小到大排列在一行内输出，之间用一个空格隔开;&lt;br&gt;如果给定的范围内不存在水仙花数，则输出no;&lt;br&gt;每个测试实例的输出占一行。&lt;/p&gt;
+&lt;p&gt;输入：&lt;br&gt;100 120&lt;br&gt;300 380&lt;/p&gt;
+&lt;p&gt;输出：&lt;br&gt;no&lt;br&gt;370 371&lt;/p&gt;
+&lt;h2 id=&#34;3-问题分析&#34;&gt;&lt;a href=&#34;#3-问题分析&#34; class=&#34;headerlink&#34; title=&#34;3. 问题分析&#34;&gt;&lt;/a&gt;3. 问题分析&lt;/h2&gt;&lt;p&gt;我的解决思路：先将给出的数字按照个位十位百位的顺序拆解，然后计算各数位三次方之和，再和原数进行比较比较。思路比较简单。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20181111/leetcode-narcissistic-number/&t=LeetCode-水仙花数"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

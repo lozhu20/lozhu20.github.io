@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="什么是 KMP 算法KMP 算法是一种用于字符串模式匹配的高效算法，由 Knuth、Morris、Pratt 三位大佬于 1977 年提出，算法名称来源于这几个人的名字首字母。可以将时间复杂度从傻瓜式的暴力匹配的 O(m x n) 降低到 O(m + n) 级别，效率提升非常大。 暴力匹配傻瓜式的暴力匹配原理很简单，对于 text 的第 i 个字符，分别用 p、t 指针分别指向 text 的第 i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KMP算法">
+<meta property="og:url" content="https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="什么是 KMP 算法KMP 算法是一种用于字符串模式匹配的高效算法，由 Knuth、Morris、Pratt 三位大佬于 1977 年提出，算法名称来源于这几个人的名字首字母。可以将时间复杂度从傻瓜式的暴力匹配的 O(m x n) 降低到 O(m + n) 级别，效率提升非常大。 暴力匹配傻瓜式的暴力匹配原理很简单，对于 text 的第 i 个字符，分别用 p、t 指针分别指向 text 的第 i">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.happy365.day/25/10/iShot_2025-10-25_11.51.33.png">
+<meta property="og:image" content="https://images.happy365.day/25/10/iShot_2025-10-25_11.55.49.png">
+<meta property="og:image" content="https://images.happy365.day/25/10/iShot_2025-10-25_11.56.57.png">
+<meta property="og:image" content="https://images.happy365.day/25/10/iShot_2025-10-25_11.51.33.png">
+<meta property="og:image" content="https://images.happy365.day/25/10/iShot_2025-10-25_12.28.49.png">
+<meta property="og:image" content="https://images.happy365.day/25/10/iShot_2025-10-25_12.54.12.png">
+<meta property="article:published_time" content="2025-10-24T15:56:20.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.217Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="KMP算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.happy365.day/25/10/iShot_2025-10-25_11.51.33.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>KMP算法</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20251029/leetcode-7-reverse-integer/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20251024/extract-interval-row-from-excel/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&text=KMP算法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&title=KMP算法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&is_video=false&description=KMP算法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=KMP算法&body=Check out this article: https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&title=KMP算法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&title=KMP算法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&title=KMP算法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&title=KMP算法"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&name=KMP算法&description=&lt;h2 id=&#34;什么是-KMP-算法&#34;&gt;&lt;a href=&#34;#什么是-KMP-算法&#34; class=&#34;headerlink&#34; title=&#34;什么是 KMP 算法&#34;&gt;&lt;/a&gt;什么是 KMP 算法&lt;/h2&gt;&lt;p&gt;KMP 算法是一种用于字符串模式匹配的高效算法，由 Knuth、Morris、Pratt 三位大佬于 1977 年提出，算法名称来源于这几个人的名字首字母。可以将时间复杂度从傻瓜式的暴力匹配的 O(m x n) 降低到 O(m + n) 级别，效率提升非常大。&lt;/p&gt;
+&lt;h2 id=&#34;暴力匹配&#34;&gt;&lt;a href=&#34;#暴力匹配&#34; class=&#34;headerlink&#34; title=&#34;暴力匹配&#34;&gt;&lt;/a&gt;暴力匹配&lt;/h2&gt;&lt;p&gt;傻瓜式的暴力匹配原理很简单，对于 text 的第 i 个字符，分别用 p、t 指针分别指向 text 的第 i 个字符、pattern 的起始字符，然后判断两个下标指针位置的字符是否相等；如果相等，则两个下标指针后移一位；如果不相等，则对 text 字符串的第 （i + 1)  个字符循环上述过程，直到 pattern 中的字符全部匹配成功或者到达 text 的最后一个字符。&lt;/p&gt;
+&lt;p&gt;第一轮：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/25/10/iShot_2025-10-25_11.51.33.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;第二轮：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/25/10/iShot_2025-10-25_11.55.49.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;第三轮：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/25/10/iShot_2025-10-25_11.56.57.png&#34;&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&t=KMP算法"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-KMP-%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">什么是 KMP 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9A%B4%E5%8A%9B%E5%8C%B9%E9%85%8D"><span class="toc-number">2.</span> <span class="toc-text">暴力匹配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KMP-%E7%AE%97%E6%B3%95%E7%9A%84%E5%8C%B9%E9%85%8D%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">KMP 算法的匹配过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#next-%E6%95%B0%E7%BB%84"><span class="toc-number">4.</span> <span class="toc-text">next 数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-next-%E6%95%B0%E7%BB%84%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="toc-number">5.</span> <span class="toc-text">代码实现 next 数组的计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-KMP-%E7%AE%97%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">代码实现 KMP 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">7.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        KMP算法
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-10-24T15:56:20.000Z" class="dt-published" itemprop="datePublished">2025-10-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/KMP%E7%AE%97%E6%B3%95/" rel="tag">KMP算法</a>, <a class="p-category" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a> -->
+        <a class="category-link" href="/tags/KMP%E7%AE%97%E6%B3%95/" rel="tag">KMP算法</a>, <a class="category-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">1.6k words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">6  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="什么是-KMP-算法"><a href="#什么是-KMP-算法" class="headerlink" title="什么是 KMP 算法"></a>什么是 KMP 算法</h2><p>KMP 算法是一种用于字符串模式匹配的高效算法，由 Knuth、Morris、Pratt 三位大佬于 1977 年提出，算法名称来源于这几个人的名字首字母。可以将时间复杂度从傻瓜式的暴力匹配的 O(m x n) 降低到 O(m + n) 级别，效率提升非常大。</p>
+<h2 id="暴力匹配"><a href="#暴力匹配" class="headerlink" title="暴力匹配"></a>暴力匹配</h2><p>傻瓜式的暴力匹配原理很简单，对于 text 的第 i 个字符，分别用 p、t 指针分别指向 text 的第 i 个字符、pattern 的起始字符，然后判断两个下标指针位置的字符是否相等；如果相等，则两个下标指针后移一位；如果不相等，则对 text 字符串的第 （i + 1)  个字符循环上述过程，直到 pattern 中的字符全部匹配成功或者到达 text 的最后一个字符。</p>
+<p>第一轮：</p>
+<p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_11.51.33.png"></p>
+<p>第二轮：</p>
+<p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_11.55.49.png"></p>
+<p>第三轮：</p>
+<p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_11.56.57.png"></p>
+<p>代码实现如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">match</span>(<span class="params">text, pattern</span>):</span><br><span class="line">    text_list = <span class="built_in">list</span>(text)</span><br><span class="line">    pattern_list = <span class="built_in">list</span>(pattern)</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(text_list):</span><br><span class="line">        t = i</span><br><span class="line">        p = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> t &lt; <span class="built_in">len</span>(pattern_list):</span><br><span class="line">            <span class="keyword">if</span> (text_list[t] == pattern_list[p]):</span><br><span class="line">                t += <span class="number">1</span></span><br><span class="line">                p += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> p == <span class="built_in">len</span>(pattern_list):</span><br><span class="line">            <span class="keyword">return</span> i</span><br><span class="line">        <span class="keyword">elif</span> t == <span class="built_in">len</span>(text_list):</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>这种匹配方式实现起来非常简单，时间复杂度为 O(m x n)。 但是这样的匹配方式存在回溯问题，每次遇到不匹配的字符时需要回退到 text 的第 i + 1 个字符。</p>
+<h2 id="KMP-算法的匹配过程"><a href="#KMP-算法的匹配过程" class="headerlink" title="KMP 算法的匹配过程"></a>KMP 算法的匹配过程</h2><p>KMP 算法消除了暴力匹配的回溯问题。</p>
+<p>观察匹配过程：</p>
+<p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_11.51.33.png"></p>
+<p>直到第 5 个字符： A、C 不匹配时，前面的 4 个字符都是匹配的，并且观察可以发现前 4 个字符中存在重复的序列 AB，因为前 4 个字符是匹配的，所有同样重复的序列在 pattern 中同样存在。于是可以想有没有可能不回溯 text，而是将 pattern 向右移动，移动时跳过重复的 AB 字符？如下图，这样就能保证在当前匹配到的第 5 个位置之前的字符都是匹配的，然后就可以继续往后匹配了，从而节省回溯 text 之后的几次重复无用匹配。</p>
+<p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_12.28.49.png"></p>
+<p>这就是 KMP 算法的思想，利用 pattern 中子串重复的信息来指示当遇到不匹配字符时 pattern 串应该跳过多少次匹配（也就是跳过多少个存在重复的最长子串），确保 text 不回溯，从而提高匹配的效率。</p>
+<p>next 数组就是用来保存 pattern 串中截止到每个字符最长的重复子串信息的。</p>
+<h2 id="next-数组"><a href="#next-数组" class="headerlink" title="next 数组"></a>next 数组</h2><p>上面提到，next 数组是用来保存 pattern 串中截止到当前字符最长重复子串长度信息的。</p>
+<p>要计算 next 数组，需要几个概念：最长前缀、最长后缀和最长公共前后缀。</p>
+<p><strong>最长前缀</strong></p>
+<p>前缀是指所有以第二个字符开始的连续子串，最长前缀就是这些连续子串中最长的一个。</p>
+<p>比如 ABAB ，前缀有：A、AB、ABA，最长前缀为 ABA。</p>
+<p><strong>最长后缀</strong></p>
+<p>后缀是指所有以倒数第二个字符结尾的连续子串，最长后缀就是这些连续子串中最长的一个。</p>
+<p>比如 ABAB 中，后缀有：A、BA、ABA。</p>
+<p><strong>最长公共前后缀</strong></p>
+<p>就是字符串对应的最长前缀和最长后缀的交集中长度最长的一个。</p>
+<p>比如 ABAB 中，公共前缀和后缀有：A、ABA，最长的公共前后缀就是 ABA。</p>
+<p><strong>next 数组</strong></p>
+<p>next 数组是指字符串中以第一个字符开始，以每个字符结尾的子串对应的最长公共前缀的长度为元素的数组。</p>
+<p>比如 ABABC 中：</p>
+<p>A：不存在公共前后缀，所以长度为 0。</p>
+<p>B：子串为 AB，不存在公共前后缀，所以长度为 0。</p>
+<p>A：子串为 ABA，最长公共前后缀为 B，长度为 1。</p>
+<p>B：子串为 ABAB，最长公共前后缀为 BA，长度为 2。</p>
+<p>C：字串为 ABABC，不存在公共前后缀，所以长度为 0。</p>
+<p>于是得到 ABABC 的 next 数组如下。</p>
+<p><img src="https://images.happy365.day/25/10/iShot_2025-10-25_12.54.12.png"></p>
+<h2 id="代码实现-next-数组的计算"><a href="#代码实现-next-数组的计算" class="headerlink" title="代码实现 next 数组的计算"></a>代码实现 next 数组的计算</h2><p>可以使用暴力求解，遍历 pattern 字符串，对于每个字符，向前找出所有的前缀、向后找出所有的后缀，求两个集合的交集，如果交集为空，则返回 0，否则取出交集中最长的子串的长度即为结果。</p>
+<p>在网上看到有效率更高的方法，采用动态规划，从左到右来求最长公共前后缀。大致过程如下：</p>
+<ol>
+<li>用 next 数组记录结果，用 i 记录当前字符的下标位置，用 lenth 来记录两个指针已经连续匹配上多少个字符，即 text 中对应字符的 next 值。</li>
+<li>初始化时，next[0] &#x3D; 0 且 i &#x3D; 1（即默认第一个字符 next 值为 0，从第 2 个字符开始进行计算），length &#x3D; 0，lenth 用来记录前一个字符的 next 值，并且可以用作第 2 个指针。</li>
+<li>对于 text 中的每个字符：<ol>
+<li>如果 text[i] &#x3D;&#x3D; text[len]，说明当前字符在前面出现过，于是 length + 1，并且两个指针都往后移动一位，即 i + 1，lenth 已经也加过 1。</li>
+<li>如果 text[i] !&#x3D; text[length]，说明重复序列结束了，即 text[0] 至 text[length - 1] 这个子串和 text[i - length] 至 text[i - 1] 这个字串相同，但是 text[0] 至 text[length] 这个子串和 text[i - length] 至 text[i] 这个子串最后一位不相同，相同序列结束了，让 length 指针退回到重复序列之前，即 lenth &#x3D; next[length - 1]，再重复上面的步骤，如果 length 退回到了起始位置，说明当前字符对应的最长公共子串为 0。</li>
+</ol>
+</li>
+</ol>
+<p>代码实现如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">next</span>(<span class="params">pattern</span>):</span><br><span class="line">    pattern_list = <span class="built_in">list</span>(pattern)</span><br><span class="line">    <span class="built_in">next</span> = []</span><br><span class="line">    <span class="built_in">next</span>.append(<span class="number">0</span>)</span><br><span class="line">    i = <span class="number">1</span></span><br><span class="line">    lenth = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(pattern_list):</span><br><span class="line">        <span class="keyword">if</span> pattern_list[i] == pattern_list[lenth]:</span><br><span class="line">            lenth += <span class="number">1</span></span><br><span class="line">            <span class="built_in">next</span>.insert(i, lenth)</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> lenth == <span class="number">0</span>:</span><br><span class="line">                <span class="built_in">next</span>.insert(i, <span class="number">0</span>)</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                lenth = <span class="built_in">next</span>[lenth - <span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">next</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="代码实现-KMP-算法"><a href="#代码实现-KMP-算法" class="headerlink" title="代码实现 KMP 算法"></a>代码实现 KMP 算法</h2><p>求出 next 数组之后，text 中的指针只管往后走，每当遇到不匹配的字符时，只需要将 pattern 中的 p 指针移动到 p - next[p - 1] 的位置处，跳过 next[p - 1] 次比较即可。循环上面的过程，如果 p 指针走到了最后，说明匹配到结果；如果 i 指针走到了最后并且 p 指针没走到最后，则匹配失败。</p>
+<p>Python 代码如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">kmp_match</span>(<span class="params">self, text, pattern</span>):</span><br><span class="line">    <span class="built_in">next</span> = <span class="variable language_">self</span>.<span class="built_in">next</span>(pattern)</span><br><span class="line">    text_list = <span class="built_in">list</span>(text)</span><br><span class="line">    pattern_list = <span class="built_in">list</span>(pattern)</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    p = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(text_list) <span class="keyword">and</span> p &lt; <span class="built_in">len</span>(pattern_list):</span><br><span class="line">        <span class="keyword">if</span> text_list[i] == pattern_list[p]:</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">            p += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            p = p - <span class="built_in">next</span>[p - <span class="number">1</span>]</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">if</span> p == <span class="built_in">len</span>(pattern_list):</span><br><span class="line">            <span class="keyword">return</span> i - p</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span> </span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>这个算法比较难理解，这次花了很长时间才算是勉强搞明白其中的原理。</p>
+<p>可以参考一下这些讲得很不错资料：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Higurashi-kagome/p/18013626">图文详解 KMP 算法</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_62982856/article/details/128003067">KMP算法——通俗易懂讲好KMP算法</a></li>
+</ul>
+<p>B 站上也有一些视频，结合视频动画理解匹配过程会更容易理解。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-KMP-%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">什么是 KMP 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9A%B4%E5%8A%9B%E5%8C%B9%E9%85%8D"><span class="toc-number">2.</span> <span class="toc-text">暴力匹配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KMP-%E7%AE%97%E6%B3%95%E7%9A%84%E5%8C%B9%E9%85%8D%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">KMP 算法的匹配过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#next-%E6%95%B0%E7%BB%84"><span class="toc-number">4.</span> <span class="toc-text">next 数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-next-%E6%95%B0%E7%BB%84%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="toc-number">5.</span> <span class="toc-text">代码实现 next 数组的计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-KMP-%E7%AE%97%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">代码实现 KMP 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">7.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&text=KMP算法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&title=KMP算法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&is_video=false&description=KMP算法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=KMP算法&body=Check out this article: https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&title=KMP算法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&title=KMP算法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&title=KMP算法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&title=KMP算法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&name=KMP算法&description=&lt;h2 id=&#34;什么是-KMP-算法&#34;&gt;&lt;a href=&#34;#什么是-KMP-算法&#34; class=&#34;headerlink&#34; title=&#34;什么是 KMP 算法&#34;&gt;&lt;/a&gt;什么是 KMP 算法&lt;/h2&gt;&lt;p&gt;KMP 算法是一种用于字符串模式匹配的高效算法，由 Knuth、Morris、Pratt 三位大佬于 1977 年提出，算法名称来源于这几个人的名字首字母。可以将时间复杂度从傻瓜式的暴力匹配的 O(m x n) 降低到 O(m + n) 级别，效率提升非常大。&lt;/p&gt;
+&lt;h2 id=&#34;暴力匹配&#34;&gt;&lt;a href=&#34;#暴力匹配&#34; class=&#34;headerlink&#34; title=&#34;暴力匹配&#34;&gt;&lt;/a&gt;暴力匹配&lt;/h2&gt;&lt;p&gt;傻瓜式的暴力匹配原理很简单，对于 text 的第 i 个字符，分别用 p、t 指针分别指向 text 的第 i 个字符、pattern 的起始字符，然后判断两个下标指针位置的字符是否相等；如果相等，则两个下标指针后移一位；如果不相等，则对 text 字符串的第 （i + 1)  个字符循环上述过程，直到 pattern 中的字符全部匹配成功或者到达 text 的最后一个字符。&lt;/p&gt;
+&lt;p&gt;第一轮：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/25/10/iShot_2025-10-25_11.51.33.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;第二轮：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/25/10/iShot_2025-10-25_11.55.49.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;第三轮：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/25/10/iShot_2025-10-25_11.56.57.png&#34;&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251024/learn-about-kmp-pattern-match/&t=KMP算法"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

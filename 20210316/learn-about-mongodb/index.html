@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="MongoDB的安装 MongoDB官网下载地址 下载安装包并解压到mongo&#x2F;  创建mongo&#x2F;db目录和&#x2F;mongo&#x2F;log&#x2F;mongodb.log文件  创建配置文件mongo&#x2F;mongodb.conf 1234567891011121314# 数据文件存放目录dbpath&#x3D;&#x2F;Users&#x2F;youyou-2608&#x2F;Downloads">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB入门">
+<meta property="og:url" content="https://zhu.happy365.day/20210316/learn-about-mongodb/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="MongoDB的安装 MongoDB官网下载地址 下载安装包并解压到mongo&#x2F;  创建mongo&#x2F;db目录和&#x2F;mongo&#x2F;log&#x2F;mongodb.log文件  创建配置文件mongo&#x2F;mongodb.conf 1234567891011121314# 数据文件存放目录dbpath&#x3D;&#x2F;Users&#x2F;youyou-2608&#x2F;Downloads">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-15T17:21:48.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.219Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="MongoDB">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>MongoDB入门</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20210316/learn-about-mongodb/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20210427/learn-about-mybatis-generator/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20210307/integrate-redis-in-spring/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20210316/learn-about-mongodb/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&text=MongoDB入门"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&title=MongoDB入门"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&is_video=false&description=MongoDB入门"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=MongoDB入门&body=Check out this article: https://zhu.happy365.day/20210316/learn-about-mongodb/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&title=MongoDB入门"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&title=MongoDB入门"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&title=MongoDB入门"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&title=MongoDB入门"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&name=MongoDB入门&description=&lt;h2 id=&#34;MongoDB的安装&#34;&gt;&lt;a href=&#34;#MongoDB的安装&#34; class=&#34;headerlink&#34; title=&#34;MongoDB的安装&#34;&gt;&lt;/a&gt;MongoDB的安装&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.mongodb.com/try/download/community&#34;&gt;MongoDB官网下载地址&lt;/a&gt; 下载安装包并解压到mongo&amp;#x2F;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;创建mongo&amp;#x2F;db目录和&amp;#x2F;mongo&amp;#x2F;log&amp;#x2F;mongodb.log文件&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;创建配置文件mongo&amp;#x2F;mongodb.conf&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# 数据文件存放目录&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;dbpath=/Users/youyou-2608/Downloads/mongodb/db&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 日志文件存放目录&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;logpath=/Users/youyou-2608/Downloads/mongodb/log/mongodb.log&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 以追加的方式记录日志&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;logappend=true&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 默认端口27017&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;port=27017&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 对访问ip地址不做限制，默认为本地地址&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;bind_ip=0.0.0.0&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 以守护进程的方式启用，即在后台运行&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;fork=true&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 默认开启身份认证&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;auth=true&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;配置环境变量及服务的启动和停止&#34;&gt;&lt;a href=&#34;#配置环境变量及服务的启动和停止&#34; class=&#34;headerlink&#34; title=&#34;配置环境变量及服务的启动和停止&#34;&gt;&lt;/a&gt;配置环境变量及服务的启动和停止&lt;/h2&gt;&lt;p&gt;~&amp;#x2F;.bash_profile文件中：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;built_in&#34;&gt;export&lt;/span&gt; PATH = mongo/bin:&lt;span class=&#34;variable&#34;&gt;$PATH&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;执行 sourcce ~&amp;#x2F;.bash_profile&lt;/p&gt;
+&lt;p&gt;启动及停止：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# 启动&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;mongod -f mongo/mongodb.conf&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 停止&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;kill 9 -pid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;use amdin;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;db.shutdownServer();&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+&lt;p&gt;关闭MongoDB报错：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Error: shutdownServer failed: {&lt;/p&gt;
+&lt;p&gt;​	“ok” : 0,&lt;/p&gt;
+&lt;p&gt;​	“errmsg” : “not authorized on admin to execute command { shutdown: 1.0, lsid: { id: UUID(&amp;quot;4d11f7c3-3b79-458d-b857-2aac4816cd17&amp;quot;) }, $db: &amp;quot;admin&amp;quot; }”,&lt;/p&gt;
+&lt;p&gt;​	“code” : 13,&lt;/p&gt;
+&lt;p&gt;​	“codeName” : “Unauthorized”&lt;/p&gt;
+&lt;p&gt;}&lt;/p&gt;
+&lt;/blockquote&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20210316/learn-about-mongodb/&t=MongoDB入门"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">MongoDB的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8F%8A%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2"><span class="toc-number">2.</span> <span class="toc-text">配置环境变量及服务的启动和停止</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81"><span class="toc-number">3.</span> <span class="toc-text">登录认证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">增删改查及常用命令</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        MongoDB入门
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-03-15T17:21:48.000Z" class="dt-published" itemprop="datePublished">2021-03-16</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/MongoDB/" rel="tag">MongoDB</a>, <a class="p-category" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a> -->
+        <a class="category-link" href="/tags/MongoDB/" rel="tag">MongoDB</a>, <a class="category-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">134 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">1  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="MongoDB的安装"><a href="#MongoDB的安装" class="headerlink" title="MongoDB的安装"></a>MongoDB的安装</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.mongodb.com/try/download/community">MongoDB官网下载地址</a> 下载安装包并解压到mongo&#x2F;</p>
+</li>
+<li><p>创建mongo&#x2F;db目录和&#x2F;mongo&#x2F;log&#x2F;mongodb.log文件</p>
+</li>
+<li><p>创建配置文件mongo&#x2F;mongodb.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 数据文件存放目录</span><br><span class="line">dbpath=/Users/youyou-2608/Downloads/mongodb/db</span><br><span class="line"># 日志文件存放目录</span><br><span class="line">logpath=/Users/youyou-2608/Downloads/mongodb/log/mongodb.log</span><br><span class="line"># 以追加的方式记录日志</span><br><span class="line">logappend=true</span><br><span class="line"># 默认端口27017</span><br><span class="line">port=27017</span><br><span class="line"># 对访问ip地址不做限制，默认为本地地址</span><br><span class="line">bind_ip=0.0.0.0</span><br><span class="line"># 以守护进程的方式启用，即在后台运行</span><br><span class="line">fork=true</span><br><span class="line"># 默认开启身份认证</span><br><span class="line">auth=true</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="配置环境变量及服务的启动和停止"><a href="#配置环境变量及服务的启动和停止" class="headerlink" title="配置环境变量及服务的启动和停止"></a>配置环境变量及服务的启动和停止</h2><p>~&#x2F;.bash_profile文件中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH = mongo/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+
+<p>执行 sourcce ~&#x2F;.bash_profile</p>
+<p>启动及停止：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 启动</span><br><span class="line">mongod -f mongo/mongodb.conf</span><br><span class="line"></span><br><span class="line"># 停止</span><br><span class="line">kill 9 -pid</span><br><span class="line"></span><br><span class="line">use amdin;</span><br><span class="line">db.shutdownServer();</span><br></pre></td></tr></table></figure>
+
+
+<p>关闭MongoDB报错：</p>
+<blockquote>
+<p>Error: shutdownServer failed: {</p>
+<p>​	“ok” : 0,</p>
+<p>​	“errmsg” : “not authorized on admin to execute command { shutdown: 1.0, lsid: { id: UUID(&quot;4d11f7c3-3b79-458d-b857-2aac4816cd17&quot;) }, $db: &quot;admin&quot; }”,</p>
+<p>​	“code” : 13,</p>
+<p>​	“codeName” : “Unauthorized”</p>
+<p>}</p>
+</blockquote>
+<p>因为没有 hostManager 权限所以报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">use admin;</span><br><span class="line">db.grantRolesToUser(&quot;uadd&quot;, [&#123;role: &quot;hostManager&quot;, db: &quot;admin&quot;&#125;]);</span><br><span class="line"></span><br><span class="line"># 授权后再执行</span><br><span class="line">db.shutdownServer()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="登录认证"><a href="#登录认证" class="headerlink" title="登录认证"></a>登录认证</h2><p>登录及创建用户：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&gt; use admin;</span><br><span class="line">&gt; db.auth(&quot;uadd&quot;, &quot;uadd&quot;)</span><br><span class="line"></span><br><span class="line">use admin;</span><br><span class="line"># 创建管理员用户</span><br><span class="line">db.createUser(</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;user&quot;: &quot;testuser&quot;,</span><br><span class="line">        &quot;pwd&quot;: &quot;123456&quot;,</span><br><span class="line">        &quot;roles&quot;: [</span><br><span class="line">            &#123;</span><br><span class="line">                &quot;role&quot;: &quot;userAdminAnyDatabase&quot;,</span><br><span class="line">                &quot;db&quot;: &quot;admin&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"># 创建普通用户</span><br><span class="line">use test;</span><br><span class="line">db.createUser(</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;user&quot;: &quot;testuser&quot;,</span><br><span class="line">        &quot;pwd&quot;: &quot;123456&quot;,</span><br><span class="line">        &quot;roles&quot;: [</span><br><span class="line">            &#123;</span><br><span class="line">                &quot;role&quot;: &quot;readWrite&quot;,</span><br><span class="line">                &quot;db&quot;: &quot;test&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="增删改查及常用命令"><a href="#增删改查及常用命令" class="headerlink" title="增删改查及常用命令"></a>增删改查及常用命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">use database;</span><br><span class="line">show dbs;</span><br><span class="line">show users;</span><br><span class="line"></span><br><span class="line">db.user.insert(&#123;&quot;name&quot;: &quot;zhangsan&quot;&#125;);</span><br><span class="line">db.user.insertMany([]);</span><br><span class="line">db.user.deleteOne(&#123;&quot;name&quot;: &quot;zhangsan&quot;&#125;)</span><br><span class="line">db.user.deleteMany(&quot;_id&quot;: &#123;&quot;$gte&quot;: 3&#125;)</span><br><span class="line">db.user.find(&quot;age&quot;: &#123;&quot;$gte&quot;: 3, &quot;$lte&quot;: 20&#125;)</span><br><span class="line"></span><br><span class="line">db.user.drop();</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">MongoDB的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8F%8A%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2"><span class="toc-number">2.</span> <span class="toc-text">配置环境变量及服务的启动和停止</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81"><span class="toc-number">3.</span> <span class="toc-text">登录认证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">增删改查及常用命令</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20210316/learn-about-mongodb/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&text=MongoDB入门"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&title=MongoDB入门"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&is_video=false&description=MongoDB入门"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=MongoDB入门&body=Check out this article: https://zhu.happy365.day/20210316/learn-about-mongodb/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&title=MongoDB入门"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&title=MongoDB入门"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&title=MongoDB入门"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&title=MongoDB入门"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20210316/learn-about-mongodb/&name=MongoDB入门&description=&lt;h2 id=&#34;MongoDB的安装&#34;&gt;&lt;a href=&#34;#MongoDB的安装&#34; class=&#34;headerlink&#34; title=&#34;MongoDB的安装&#34;&gt;&lt;/a&gt;MongoDB的安装&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.mongodb.com/try/download/community&#34;&gt;MongoDB官网下载地址&lt;/a&gt; 下载安装包并解压到mongo&amp;#x2F;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;创建mongo&amp;#x2F;db目录和&amp;#x2F;mongo&amp;#x2F;log&amp;#x2F;mongodb.log文件&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;创建配置文件mongo&amp;#x2F;mongodb.conf&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# 数据文件存放目录&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;dbpath=/Users/youyou-2608/Downloads/mongodb/db&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 日志文件存放目录&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;logpath=/Users/youyou-2608/Downloads/mongodb/log/mongodb.log&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 以追加的方式记录日志&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;logappend=true&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 默认端口27017&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;port=27017&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 对访问ip地址不做限制，默认为本地地址&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;bind_ip=0.0.0.0&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 以守护进程的方式启用，即在后台运行&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;fork=true&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 默认开启身份认证&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;auth=true&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;配置环境变量及服务的启动和停止&#34;&gt;&lt;a href=&#34;#配置环境变量及服务的启动和停止&#34; class=&#34;headerlink&#34; title=&#34;配置环境变量及服务的启动和停止&#34;&gt;&lt;/a&gt;配置环境变量及服务的启动和停止&lt;/h2&gt;&lt;p&gt;~&amp;#x2F;.bash_profile文件中：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;built_in&#34;&gt;export&lt;/span&gt; PATH = mongo/bin:&lt;span class=&#34;variable&#34;&gt;$PATH&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;执行 sourcce ~&amp;#x2F;.bash_profile&lt;/p&gt;
+&lt;p&gt;启动及停止：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# 启动&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;mongod -f mongo/mongodb.conf&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 停止&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;kill 9 -pid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;use amdin;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;db.shutdownServer();&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+&lt;p&gt;关闭MongoDB报错：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Error: shutdownServer failed: {&lt;/p&gt;
+&lt;p&gt;​	“ok” : 0,&lt;/p&gt;
+&lt;p&gt;​	“errmsg” : “not authorized on admin to execute command { shutdown: 1.0, lsid: { id: UUID(&amp;quot;4d11f7c3-3b79-458d-b857-2aac4816cd17&amp;quot;) }, $db: &amp;quot;admin&amp;quot; }”,&lt;/p&gt;
+&lt;p&gt;​	“code” : 13,&lt;/p&gt;
+&lt;p&gt;​	“codeName” : “Unauthorized”&lt;/p&gt;
+&lt;p&gt;}&lt;/p&gt;
+&lt;/blockquote&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20210316/learn-about-mongodb/&t=MongoDB入门"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

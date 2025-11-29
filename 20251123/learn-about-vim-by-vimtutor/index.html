@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="从 2015 年接触 vim 到现在，正好十年时间。使用 macOS 系统之后，更是每天都在使用这个文本编辑器。遗憾的是，还从来没有系统的学习过。最近无意间了解到 vimtutor 这个 vim 自带的教程，就系统的学习了一下。 打开方式：在终端输入 vimtutor 即可进入教程，教程本身就是一个可编辑的文本文件，教程里还提供了例子方便学习者跟着操作，做得很不错。 移动光标 h 往左一个字符 l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vim 学习笔记">
+<meta property="og:url" content="https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="从 2015 年接触 vim 到现在，正好十年时间。使用 macOS 系统之后，更是每天都在使用这个文本编辑器。遗憾的是，还从来没有系统的学习过。最近无意间了解到 vimtutor 这个 vim 自带的教程，就系统的学习了一下。 打开方式：在终端输入 vimtutor 即可进入教程，教程本身就是一个可编辑的文本文件，教程里还提供了例子方便学习者跟着操作，做得很不错。 移动光标 h 往左一个字符 l">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-23T03:49:00.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.220Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="Vim">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Vim 学习笔记</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20251119/migrate-blog-from-github-to-cloudflare/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&text=Vim 学习笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&title=Vim 学习笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&is_video=false&description=Vim 学习笔记"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Vim 学习笔记&body=Check out this article: https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&title=Vim 学习笔记"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&title=Vim 学习笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&title=Vim 学习笔记"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&title=Vim 学习笔记"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&name=Vim 学习笔记&description=&lt;p&gt;从 2015 年接触 vim 到现在，正好十年时间。使用 macOS 系统之后，更是每天都在使用这个文本编辑器。遗憾的是，还从来没有系统的学习过。最近无意间了解到 vimtutor 这个 vim 自带的教程，就系统的学习了一下。&lt;/p&gt;
+&lt;p&gt;打开方式：在终端输入 &lt;code&gt;vimtutor&lt;/code&gt; 即可进入教程，教程本身就是一个可编辑的文本文件，教程里还提供了例子方便学习者跟着操作，做得很不错。&lt;/p&gt;
+&lt;h2 id=&#34;移动光标&#34;&gt;&lt;a href=&#34;#移动光标&#34; class=&#34;headerlink&#34; title=&#34;移动光标&#34;&gt;&lt;/a&gt;移动光标&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;h&lt;/code&gt; 往左一个字符&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;l&lt;/code&gt; 往右一个字符&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;j&lt;/code&gt; 字形向下带一个小勾，所以是往下。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;k&lt;/code&gt; 与 &lt;code&gt;j&lt;/code&gt; 相反，记住了 &lt;code&gt;j&lt;/code&gt;，自然就记住了 &lt;code&gt;k&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;按住以上按键会自动进行重复。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;w&lt;/code&gt; 移动光标到下一个单词的起始。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;e&lt;/code&gt; 移动光标到下一个单词的结尾。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;b&lt;/code&gt; 移动光标到上一个单词的起始。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ge&lt;/code&gt; 移动光标到上一个单词的结尾。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$&lt;/code&gt; 移动光标到行尾。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;0&lt;/code&gt; 移动光标到行首。&lt;/li&gt;
+&lt;li&gt;以上命令均可以与数字搭配使用，比如 &lt;code&gt;3w&lt;/code&gt; 会将光标移动到后面第 3 个单词的起始位置。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;可以使用 &lt;code&gt;:set number&lt;/code&gt; 开启行号显示，使用 &lt;code&gt;:500&lt;/code&gt; 数字直接跳转到指定行。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;gg&lt;/code&gt; 跳转到文件第一行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;G&lt;/code&gt; 跳转到文件最后一行。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;另外还有几个自己从其他地方学到的指令：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;H&lt;/code&gt; 将光标移动到当前页面的第一行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M&lt;/code&gt; 将光标移动到当前页面的中间一行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;L&lt;/code&gt; 将光标移动到当前页面的最后一行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;zz&lt;/code&gt; 将光标所在行移动到屏幕中央。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;zt&lt;/code&gt; 将光标所在行移动到屏幕顶部。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;zb&lt;/code&gt; 将光标所在行移动到屏幕底部。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;翻页&#34;&gt;&lt;a href=&#34;#翻页&#34; class=&#34;headerlink&#34; title=&#34;翻页&#34;&gt;&lt;/a&gt;翻页&lt;/h2&gt;&lt;p&gt;翻页主要有以下几个命令：&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&t=Vim 学习笔记"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%85%89%E6%A0%87"><span class="toc-number">1.</span> <span class="toc-text">移动光标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BF%BB%E9%A1%B5"><span class="toc-number">2.</span> <span class="toc-text">翻页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E4%B8%AD"><span class="toc-number">3.</span> <span class="toc-text">选中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%9D%E5%AD%98%E4%B8%8E%E9%80%80%E5%87%BA"><span class="toc-number">4.</span> <span class="toc-text">保存与退出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%911"><span class="toc-number">5.</span> <span class="toc-text">文本编辑1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%912"><span class="toc-number">6.</span> <span class="toc-text">文本编辑2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E4%B8%8E%E6%9B%BF%E6%8D%A2"><span class="toc-number">7.</span> <span class="toc-text">查找与替换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%8A%B6%E6%80%81"><span class="toc-number">8.</span> <span class="toc-text">文件状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="toc-number">9.</span> <span class="toc-text">执行命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%A5%E5%85%A8"><span class="toc-number">10.</span> <span class="toc-text">命令补全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">11.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Vim 学习笔记
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-11-23T03:49:00.000Z" class="dt-published" itemprop="datePublished">2025-11-23</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Vim/" rel="tag">Vim</a> -->
+        <a class="category-link" href="/tags/Vim/" rel="tag">Vim</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">1.4k words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">5  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>从 2015 年接触 vim 到现在，正好十年时间。使用 macOS 系统之后，更是每天都在使用这个文本编辑器。遗憾的是，还从来没有系统的学习过。最近无意间了解到 vimtutor 这个 vim 自带的教程，就系统的学习了一下。</p>
+<p>打开方式：在终端输入 <code>vimtutor</code> 即可进入教程，教程本身就是一个可编辑的文本文件，教程里还提供了例子方便学习者跟着操作，做得很不错。</p>
+<h2 id="移动光标"><a href="#移动光标" class="headerlink" title="移动光标"></a>移动光标</h2><ul>
+<li><code>h</code> 往左一个字符</li>
+<li><code>l</code> 往右一个字符</li>
+<li><code>j</code> 字形向下带一个小勾，所以是往下。</li>
+<li><code>k</code> 与 <code>j</code> 相反，记住了 <code>j</code>，自然就记住了 <code>k</code>。</li>
+<li>按住以上按键会自动进行重复。</li>
+<li><code>w</code> 移动光标到下一个单词的起始。</li>
+<li><code>e</code> 移动光标到下一个单词的结尾。</li>
+<li><code>b</code> 移动光标到上一个单词的起始。</li>
+<li><code>ge</code> 移动光标到上一个单词的结尾。</li>
+<li><code>$</code> 移动光标到行尾。</li>
+<li><code>0</code> 移动光标到行首。</li>
+<li>以上命令均可以与数字搭配使用，比如 <code>3w</code> 会将光标移动到后面第 3 个单词的起始位置。</li>
+</ul>
+<p>可以使用 <code>:set number</code> 开启行号显示，使用 <code>:500</code> 数字直接跳转到指定行。</p>
+<ul>
+<li><code>gg</code> 跳转到文件第一行。</li>
+<li><code>G</code> 跳转到文件最后一行。</li>
+</ul>
+<p>另外还有几个自己从其他地方学到的指令：</p>
+<ul>
+<li><code>H</code> 将光标移动到当前页面的第一行。</li>
+<li><code>M</code> 将光标移动到当前页面的中间一行。</li>
+<li><code>L</code> 将光标移动到当前页面的最后一行。</li>
+<li><code>zz</code> 将光标所在行移动到屏幕中央。</li>
+<li><code>zt</code> 将光标所在行移动到屏幕顶部。</li>
+<li><code>zb</code> 将光标所在行移动到屏幕底部。</li>
+</ul>
+<h2 id="翻页"><a href="#翻页" class="headerlink" title="翻页"></a>翻页</h2><p>翻页主要有以下几个命令：</p>
+<ul>
+<li><code>Ctrl</code> + <code>d</code> 向下翻半页。</li>
+<li><code>Ctrl</code> + <code>u</code> 向上翻半页。</li>
+<li><code>Ctrl</code> + <code>f</code> 向下翻一页。</li>
+<li><code>Ctrl</code> + <code>b</code> 向上翻一页。</li>
+</ul>
+<h2 id="选中"><a href="#选中" class="headerlink" title="选中"></a>选中</h2><p>选中需要进入 visual 模式，按下 <code>v</code> 即可进入 visual 模式。进入 visual 模式之后，移动光标即可进行选中。比如可以结合下面的 <code>:w</code> + file_name 命令将选中的内容写入到另外一个文件中，也可以进行删除等。</p>
+<h2 id="保存与退出"><a href="#保存与退出" class="headerlink" title="保存与退出"></a>保存与退出</h2><ul>
+<li><code>:q!</code> 丢弃更改，直接退出。</li>
+<li><code>:wq</code> 保存更改并退出。</li>
+<li><code>:w</code> + file_name 将文件写入 file_name 中。</li>
+<li><code>:r</code> + file_name 将 file_name 文件的内容导入到光标位置之后。</li>
+</ul>
+<h2 id="文本编辑1"><a href="#文本编辑1" class="headerlink" title="文本编辑1"></a>文本编辑1</h2><ul>
+<li><code>x</code> 将剪切当前光标所在位置的字符。</li>
+<li><code>i</code> 进入编辑模式。</li>
+<li><code>a</code> 进入追加模式，即进入编辑模式并将光标移动当前字符之后。</li>
+<li><code>A</code> 进入行尾追加。</li>
+<li><code>o</code> 在下一行进行插入。</li>
+<li><code>O</code> 在上一行进行插入。</li>
+<li><code>r</code> 替换光标处的字符。</li>
+<li><code>R</code> 进入替换模式，输入的字符将依次替换光标后的字符。</li>
+<li><code>dw</code> 删除当前光标位置到单词结尾的字符，如果光标在单词起始位置，就是删除整个单词，包括单词后的空白。</li>
+<li><code>de</code> 删除当前光标位置到单词结尾的字符，如果光标在单词起始位置，就是删除整个单词，不包括单词后的空白。</li>
+<li><code>dd</code> 删除当前行。</li>
+<li><code>y</code> 表示复制。</li>
+<li><code>p</code> 表示粘贴。上面的删除操作会将内容保留在剪贴板上，按下 <code>p</code> 就能进行粘贴。</li>
+</ul>
+<p>✅ <code>d</code> 和 <code>y</code> 可以与光标移动的几个命令搭配使用，原理都是一样的。比如 <code>d3j</code> 表示删除当前行及下面的 3 行；<code>y3w</code> 表示复制后面的 3 个单词。</p>
+<h2 id="文本编辑2"><a href="#文本编辑2" class="headerlink" title="文本编辑2"></a>文本编辑2</h2><ul>
+<li><code>u</code> 撤销上一部操作。</li>
+<li><code>U</code> 撤销所有操作。</li>
+<li><code>Ctrl</code> + <code>r</code> 撤销上一部撤销，类似于 Windows 中的 <code>Ctrl</code> + <code>y</code>。</li>
+</ul>
+<h2 id="查找与替换"><a href="#查找与替换" class="headerlink" title="查找与替换"></a>查找与替换</h2><p>vim 中的查找支持正则表达式。</p>
+<ul>
+<li><code>%</code> 跳转到匹配的括号：<code>()[]&#123;&#125;</code>。</li>
+<li><code>/</code> 进行基本查找。使用 <code>n</code> 跳转到下一个匹配的位置，<code>N</code> 跳转到上一个匹配的位置。</li>
+<li><code>?</code> 进行反向查找。</li>
+<li><code>/pattern\c</code> 其中 <code>\c</code> 表示忽略大小写。</li>
+<li><code>set ic</code> 忽略大小写。</li>
+<li><code>set noic</code> 关闭忽略大小写。</li>
+<li><code>set hls</code> 会高亮所有匹配项。</li>
+<li><code>set nohls</code> 关闭高亮。</li>
+<li><code>:s/old_string/new_string</code> 将当前行中的第一个 old_string 替换成 new_string。</li>
+<li><code>:s/old_string/new_string/g</code> 将当前行中所有 old_string 替换成 new_string。</li>
+<li><code>:s/old_string/new_string/gc</code> 将当前行中所有 old_string 替换成 new_string，每次替换都需要确认。</li>
+<li><code>:%s/old_string/new_string/g</code> 将文件中所有 old_string 替换成 new_string。</li>
+<li><code>:#1,#2s/old_string/new_string</code> 将 #1 行到 #2 行的 old_string 替换成 new_string，其他形式的替换和上面类似。</li>
+</ul>
+<h2 id="文件状态"><a href="#文件状态" class="headerlink" title="文件状态"></a>文件状态</h2><p>使用 <code>Ctrl</code> + <code>g</code> 查看文件信息，包括文件名、修改状态、当前行、列以及文件总行数等。</p>
+<h2 id="执行命令"><a href="#执行命令" class="headerlink" title="执行命令"></a>执行命令</h2><p>使用 <code>:!</code> 表示执行外部命令，比如 <code>:!pwd</code> 会开一个窗口输出当前工作路径，按回车关闭窗口即可回到编辑器，全程不用离开编辑器。</p>
+<h2 id="命令补全"><a href="#命令补全" class="headerlink" title="命令补全"></a>命令补全</h2><p>如果遇到记不全的命令，可以使用 <code>Ctrl</code> + <code>d</code> 进行查找。</p>
+<p>比如输入 <code>:e</code> 之后想看一下以 e 开头的命令有哪些，这是只要按下 <code>Ctrl</code> + <code>d</code> 就会列出所有以字母 e 开头的命令，使用 <code>tab</code> 进行补全。 </p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>平时就是遇到不会的了就搜一下，其实可能有更简单的操作，并且这些命令的设计也遵循一定的规律，多用就不会忘记了。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%85%89%E6%A0%87"><span class="toc-number">1.</span> <span class="toc-text">移动光标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BF%BB%E9%A1%B5"><span class="toc-number">2.</span> <span class="toc-text">翻页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E4%B8%AD"><span class="toc-number">3.</span> <span class="toc-text">选中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%9D%E5%AD%98%E4%B8%8E%E9%80%80%E5%87%BA"><span class="toc-number">4.</span> <span class="toc-text">保存与退出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%911"><span class="toc-number">5.</span> <span class="toc-text">文本编辑1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%912"><span class="toc-number">6.</span> <span class="toc-text">文本编辑2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E4%B8%8E%E6%9B%BF%E6%8D%A2"><span class="toc-number">7.</span> <span class="toc-text">查找与替换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%8A%B6%E6%80%81"><span class="toc-number">8.</span> <span class="toc-text">文件状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="toc-number">9.</span> <span class="toc-text">执行命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%A5%E5%85%A8"><span class="toc-number">10.</span> <span class="toc-text">命令补全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">11.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&text=Vim 学习笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&title=Vim 学习笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&is_video=false&description=Vim 学习笔记"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Vim 学习笔记&body=Check out this article: https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&title=Vim 学习笔记"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&title=Vim 学习笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&title=Vim 学习笔记"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&title=Vim 学习笔记"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&name=Vim 学习笔记&description=&lt;p&gt;从 2015 年接触 vim 到现在，正好十年时间。使用 macOS 系统之后，更是每天都在使用这个文本编辑器。遗憾的是，还从来没有系统的学习过。最近无意间了解到 vimtutor 这个 vim 自带的教程，就系统的学习了一下。&lt;/p&gt;
+&lt;p&gt;打开方式：在终端输入 &lt;code&gt;vimtutor&lt;/code&gt; 即可进入教程，教程本身就是一个可编辑的文本文件，教程里还提供了例子方便学习者跟着操作，做得很不错。&lt;/p&gt;
+&lt;h2 id=&#34;移动光标&#34;&gt;&lt;a href=&#34;#移动光标&#34; class=&#34;headerlink&#34; title=&#34;移动光标&#34;&gt;&lt;/a&gt;移动光标&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;h&lt;/code&gt; 往左一个字符&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;l&lt;/code&gt; 往右一个字符&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;j&lt;/code&gt; 字形向下带一个小勾，所以是往下。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;k&lt;/code&gt; 与 &lt;code&gt;j&lt;/code&gt; 相反，记住了 &lt;code&gt;j&lt;/code&gt;，自然就记住了 &lt;code&gt;k&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;按住以上按键会自动进行重复。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;w&lt;/code&gt; 移动光标到下一个单词的起始。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;e&lt;/code&gt; 移动光标到下一个单词的结尾。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;b&lt;/code&gt; 移动光标到上一个单词的起始。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ge&lt;/code&gt; 移动光标到上一个单词的结尾。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$&lt;/code&gt; 移动光标到行尾。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;0&lt;/code&gt; 移动光标到行首。&lt;/li&gt;
+&lt;li&gt;以上命令均可以与数字搭配使用，比如 &lt;code&gt;3w&lt;/code&gt; 会将光标移动到后面第 3 个单词的起始位置。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;可以使用 &lt;code&gt;:set number&lt;/code&gt; 开启行号显示，使用 &lt;code&gt;:500&lt;/code&gt; 数字直接跳转到指定行。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;gg&lt;/code&gt; 跳转到文件第一行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;G&lt;/code&gt; 跳转到文件最后一行。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;另外还有几个自己从其他地方学到的指令：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;H&lt;/code&gt; 将光标移动到当前页面的第一行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M&lt;/code&gt; 将光标移动到当前页面的中间一行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;L&lt;/code&gt; 将光标移动到当前页面的最后一行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;zz&lt;/code&gt; 将光标所在行移动到屏幕中央。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;zt&lt;/code&gt; 将光标所在行移动到屏幕顶部。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;zb&lt;/code&gt; 将光标所在行移动到屏幕底部。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;翻页&#34;&gt;&lt;a href=&#34;#翻页&#34; class=&#34;headerlink&#34; title=&#34;翻页&#34;&gt;&lt;/a&gt;翻页&lt;/h2&gt;&lt;p&gt;翻页主要有以下几个命令：&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251123/learn-about-vim-by-vimtutor/&t=Vim 学习笔记"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

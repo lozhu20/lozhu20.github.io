@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="之前一直用七牛云做博客图床，七牛云做得还是挺不错的，速度快、稳定并且还有免费空间和流量。但是前段时间备案的域名被删除了。 域名删除影响非常大，之前在博客里引用的图片无法查看，并且登录到七牛云后台也无法预览、下载图片，整个服务完全不可用了。于是在网上查了许多资料找到了解决方法。 官方开发了工具来管理存储的文件，其中一个命令行工具叫“qrsctl”。可以通过命令行来做一些上传下载、移动复制和空间管理等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="七牛云备案域名过期导致图片无法查看和下载">
+<meta property="og:url" content="https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="之前一直用七牛云做博客图床，七牛云做得还是挺不错的，速度快、稳定并且还有免费空间和流量。但是前段时间备案的域名被删除了。 域名删除影响非常大，之前在博客里引用的图片无法查看，并且登录到七牛云后台也无法预览、下载图片，整个服务完全不可用了。于是在网上查了许多资料找到了解决方法。 官方开发了工具来管理存储的文件，其中一个命令行工具叫“qrsctl”。可以通过命令行来做一些上传下载、移动复制和空间管理等">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-30T07:02:23.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.221Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="七牛云">
+<meta property="article:tag" content="图床">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>七牛云备案域名过期导致图片无法查看和下载</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20201008/learn-about-java-thread/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20200922/serifu-of-a-place-further-than-universe/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&text=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&title=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&is_video=false&description=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=七牛云备案域名过期导致图片无法查看和下载&body=Check out this article: https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&title=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&title=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&title=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&title=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&name=七牛云备案域名过期导致图片无法查看和下载&description=&lt;p&gt;之前一直用七牛云做博客图床，七牛云做得还是挺不错的，速度快、稳定并且还有免费空间和流量。但是前段时间备案的域名被删除了。&lt;/p&gt;
+&lt;p&gt;域名删除影响非常大，之前在博客里引用的图片无法查看，并且登录到七牛云后台也无法预览、下载图片，整个服务完全不可用了。于是在网上查了许多资料找到了解决方法。&lt;/p&gt;
+&lt;p&gt;官方开发了工具来管理存储的文件，其中一个命令行工具叫“qrsctl”。可以通过命令行来做一些上传下载、移动复制和空间管理等操作。&lt;/p&gt;
+&lt;p&gt;安装及使用方法 &amp;gt;&amp;gt;  &lt;a href=&#34;https://developer.qiniu.com/kodo/tools/1300/qrsctl&#34;&gt;命令行辅助工具(qrsctl)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;使用下面的shell脚本：&lt;/p&gt;
+&lt;figure class=&#34;highlight shell&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta prompt_&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;language-bash&#34;&gt;!/bin/bash&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta prompt_&#34;&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta prompt_&#34;&gt;# &lt;/span&gt;&lt;span class=&#34;language-bash&#34;&gt;将存储空间名称换为自己的空间名称&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;imgs=`./qrsctl listprefix youyou-2608 &amp;#x27;&amp;#x27;`&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;i=0 &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;echo $imgs | tr &amp;quot; &amp;quot; &amp;quot;\n&amp;quot; | while read line&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;do&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    if(($i&amp;gt;0))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    then&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        echo $line&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        ./qrsctl get youyou-2608 $line ./$line&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    fi&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    i=$(($i+1))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;done&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;给脚本添加执行权限，然后运行即可。&lt;/p&gt;
+&lt;p&gt;但是用脚本下载图片时遇到一个问题：名称中带有“&amp;#x2F;”这种在Linux系统被用作目录分隔符的图片无法下载，会报“找不到该文件”的错误，因为它把“&amp;#x2F;”前的部分当作目录、而把后半部分当作文件名，当然找不到文件了。&lt;/p&gt;
+&lt;p&gt;在七牛云提了工单之后，七牛云的工程师说是这个工具本身有问题。没办法，最后只能一个一个去改文件名（域名被删除后还能改文件名），然后再下载。不得不说，工作量不是一般的大。&lt;/p&gt;
+&lt;p&gt;最后就是图床的问题了，看了许多网上推荐的图床感觉都不太靠谱，倒下一个图床又需要重新折腾一遍。想着后面有时间自己搭建一个图床，这样比较安心一些。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&t=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        七牛云备案域名过期导致图片无法查看和下载
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-09-30T07:02:23.000Z" class="dt-published" itemprop="datePublished">2020-09-30</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">解决方案</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/%E4%B8%83%E7%89%9B%E4%BA%91/" rel="tag">七牛云</a>, <a class="p-category" href="/tags/%E5%9B%BE%E5%BA%8A/" rel="tag">图床</a> -->
+        <a class="category-link" href="/tags/%E4%B8%83%E7%89%9B%E4%BA%91/" rel="tag">七牛云</a>, <a class="category-link" href="/tags/%E5%9B%BE%E5%BA%8A/" rel="tag">图床</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">441 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">2  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>之前一直用七牛云做博客图床，七牛云做得还是挺不错的，速度快、稳定并且还有免费空间和流量。但是前段时间备案的域名被删除了。</p>
+<p>域名删除影响非常大，之前在博客里引用的图片无法查看，并且登录到七牛云后台也无法预览、下载图片，整个服务完全不可用了。于是在网上查了许多资料找到了解决方法。</p>
+<p>官方开发了工具来管理存储的文件，其中一个命令行工具叫“qrsctl”。可以通过命令行来做一些上传下载、移动复制和空间管理等操作。</p>
+<p>安装及使用方法 &gt;&gt;  <a target="_blank" rel="noopener" href="https://developer.qiniu.com/kodo/tools/1300/qrsctl">命令行辅助工具(qrsctl)</a></p>
+<p>使用下面的shell脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将存储空间名称换为自己的空间名称</span></span><br><span class="line">imgs=`./qrsctl listprefix youyou-2608 &#x27;&#x27;`</span><br><span class="line"></span><br><span class="line">i=0 </span><br><span class="line">echo $imgs | tr &quot; &quot; &quot;\n&quot; | while read line</span><br><span class="line">do</span><br><span class="line">    if(($i&gt;0))</span><br><span class="line">    then</span><br><span class="line">        echo $line</span><br><span class="line">        ./qrsctl get youyou-2608 $line ./$line</span><br><span class="line">    fi</span><br><span class="line">    i=$(($i+1))</span><br><span class="line">done</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>给脚本添加执行权限，然后运行即可。</p>
+<p>但是用脚本下载图片时遇到一个问题：名称中带有“&#x2F;”这种在Linux系统被用作目录分隔符的图片无法下载，会报“找不到该文件”的错误，因为它把“&#x2F;”前的部分当作目录、而把后半部分当作文件名，当然找不到文件了。</p>
+<p>在七牛云提了工单之后，七牛云的工程师说是这个工具本身有问题。没办法，最后只能一个一个去改文件名（域名被删除后还能改文件名），然后再下载。不得不说，工作量不是一般的大。</p>
+<p>最后就是图床的问题了，看了许多网上推荐的图床感觉都不太靠谱，倒下一个图床又需要重新折腾一遍。想着后面有时间自己搭建一个图床，这样比较安心一些。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&text=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&title=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&is_video=false&description=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=七牛云备案域名过期导致图片无法查看和下载&body=Check out this article: https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&title=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&title=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&title=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&title=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&name=七牛云备案域名过期导致图片无法查看和下载&description=&lt;p&gt;之前一直用七牛云做博客图床，七牛云做得还是挺不错的，速度快、稳定并且还有免费空间和流量。但是前段时间备案的域名被删除了。&lt;/p&gt;
+&lt;p&gt;域名删除影响非常大，之前在博客里引用的图片无法查看，并且登录到七牛云后台也无法预览、下载图片，整个服务完全不可用了。于是在网上查了许多资料找到了解决方法。&lt;/p&gt;
+&lt;p&gt;官方开发了工具来管理存储的文件，其中一个命令行工具叫“qrsctl”。可以通过命令行来做一些上传下载、移动复制和空间管理等操作。&lt;/p&gt;
+&lt;p&gt;安装及使用方法 &amp;gt;&amp;gt;  &lt;a href=&#34;https://developer.qiniu.com/kodo/tools/1300/qrsctl&#34;&gt;命令行辅助工具(qrsctl)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;使用下面的shell脚本：&lt;/p&gt;
+&lt;figure class=&#34;highlight shell&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta prompt_&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;language-bash&#34;&gt;!/bin/bash&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta prompt_&#34;&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta prompt_&#34;&gt;# &lt;/span&gt;&lt;span class=&#34;language-bash&#34;&gt;将存储空间名称换为自己的空间名称&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;imgs=`./qrsctl listprefix youyou-2608 &amp;#x27;&amp;#x27;`&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;i=0 &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;echo $imgs | tr &amp;quot; &amp;quot; &amp;quot;\n&amp;quot; | while read line&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;do&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    if(($i&amp;gt;0))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    then&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        echo $line&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        ./qrsctl get youyou-2608 $line ./$line&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    fi&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    i=$(($i+1))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;done&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;给脚本添加执行权限，然后运行即可。&lt;/p&gt;
+&lt;p&gt;但是用脚本下载图片时遇到一个问题：名称中带有“&amp;#x2F;”这种在Linux系统被用作目录分隔符的图片无法下载，会报“找不到该文件”的错误，因为它把“&amp;#x2F;”前的部分当作目录、而把后半部分当作文件名，当然找不到文件了。&lt;/p&gt;
+&lt;p&gt;在七牛云提了工单之后，七牛云的工程师说是这个工具本身有问题。没办法，最后只能一个一个去改文件名（域名被删除后还能改文件名），然后再下载。不得不说，工作量不是一般的大。&lt;/p&gt;
+&lt;p&gt;最后就是图床的问题了，看了许多网上推荐的图床感觉都不太靠谱，倒下一个图床又需要重新折腾一遍。想着后面有时间自己搭建一个图床，这样比较安心一些。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20200930/cannot-download-images-from-qiniuyun/&t=七牛云备案域名过期导致图片无法查看和下载"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

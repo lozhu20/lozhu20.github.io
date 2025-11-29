@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="前言时至今日也没有系统深入的学习过JavaScript，虽然常用，但是也只停留在最基础的使用上。没有系统深入的了解，必然要踩一些前端众所周知，却让小白绞尽脑汁地大坑！ 今天又在坑里摸了一天，记录一下，权当是写日记了。 最近连续加班，确实有些身心俱疲；加上昨天下午的“午后小睡”导致晚上失眠，到快四点钟才睡着，今天早上快十点钟还躺在床上。 需求正在逛Twitter，做毕设地学妹给我提了两个需求：  登">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript中的坑">
+<meta property="og:url" content="https://zhu.happy365.day/20190519/mathematical-operation-error/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="前言时至今日也没有系统深入的学习过JavaScript，虽然常用，但是也只停留在最基础的使用上。没有系统深入的了解，必然要踩一些前端众所周知，却让小白绞尽脑汁地大坑！ 今天又在坑里摸了一天，记录一下，权当是写日记了。 最近连续加班，确实有些身心俱疲；加上昨天下午的“午后小睡”导致晚上失眠，到快四点钟才睡着，今天早上快十点钟还躺在床上。 需求正在逛Twitter，做毕设地学妹给我提了两个需求：  登">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-05-19T10:38:49.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.217Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>JavaScript中的坑</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20190519/mathematical-operation-error/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20190611/install-ubuntu-to-raspberry-pi/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20190515/example-for-java-annotation/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20190519/mathematical-operation-error/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&text=JavaScript中的坑"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&title=JavaScript中的坑"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&is_video=false&description=JavaScript中的坑"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=JavaScript中的坑&body=Check out this article: https://zhu.happy365.day/20190519/mathematical-operation-error/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&title=JavaScript中的坑"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&title=JavaScript中的坑"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&title=JavaScript中的坑"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&title=JavaScript中的坑"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&name=JavaScript中的坑&description=&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;时至今日也没有系统深入的学习过JavaScript，虽然常用，但是也只停留在最基础的使用上。没有系统深入的了解，必然要踩一些前端众所周知，却让小白绞尽脑汁地大坑！&lt;/p&gt;
+&lt;p&gt;今天又在坑里摸了一天，记录一下，权当是写日记了。&lt;/p&gt;
+&lt;p&gt;最近连续加班，确实有些身心俱疲；加上昨天下午的“午后小睡”导致晚上失眠，到快四点钟才睡着，今天早上快十点钟还躺在床上。&lt;/p&gt;
+&lt;h2 id=&#34;需求&#34;&gt;&lt;a href=&#34;#需求&#34; class=&#34;headerlink&#34; title=&#34;需求&#34;&gt;&lt;/a&gt;需求&lt;/h2&gt;&lt;p&gt;正在逛Twitter，做毕设地学妹给我提了两个需求：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;登陆页面的表单检验；&lt;/li&gt;
+&lt;li&gt;注册页面的重复用户名检测。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;问题：从Ajax中返回值&#34;&gt;&lt;a href=&#34;#问题：从Ajax中返回值&#34; class=&#34;headerlink&#34; title=&#34;问题：从Ajax中返回值&#34;&gt;&lt;/a&gt;问题：从Ajax中返回值&lt;/h2&gt;&lt;p&gt;用JQuery.validate插件给登陆表单加了校验，挺简单，同样的方法给注册界面加个校验，唯一不同的是需要使用ajax从后台请求到用户名是否已经存在，也挺简单。&lt;/p&gt;
+&lt;p&gt;于是乎，有了下面这段代码：&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20190519/mathematical-operation-error/&t=JavaScript中的坑"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82"><span class="toc-number">2.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E4%BB%8EAjax%E4%B8%AD%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">3.</span> <span class="toc-text">问题：从Ajax中返回值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ajax%E4%B8%ADreturn%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">Ajax中return的结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ajax%E5%90%8C%E6%AD%A5%E5%92%8C%E5%BC%82%E6%AD%A5"><span class="toc-number">5.</span> <span class="toc-text">Ajax同步和异步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JavaScript%E6%B5%AE%E7%82%B9%E8%BF%90%E7%AE%97"><span class="toc-number">6.</span> <span class="toc-text">JavaScript浮点运算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AF%9D"><span class="toc-number">7.</span> <span class="toc-text">后话</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        JavaScript中的坑
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-19T10:38:49.000Z" class="dt-published" itemprop="datePublished">2019-05-19</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">解决方案</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/JavaScript/" rel="tag">JavaScript</a> -->
+        <a class="category-link" href="/tags/JavaScript/" rel="tag">JavaScript</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">839 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">3  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>时至今日也没有系统深入的学习过JavaScript，虽然常用，但是也只停留在最基础的使用上。没有系统深入的了解，必然要踩一些前端众所周知，却让小白绞尽脑汁地大坑！</p>
+<p>今天又在坑里摸了一天，记录一下，权当是写日记了。</p>
+<p>最近连续加班，确实有些身心俱疲；加上昨天下午的“午后小睡”导致晚上失眠，到快四点钟才睡着，今天早上快十点钟还躺在床上。</p>
+<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>正在逛Twitter，做毕设地学妹给我提了两个需求：</p>
+<ul>
+<li>登陆页面的表单检验；</li>
+<li>注册页面的重复用户名检测。</li>
+</ul>
+<h2 id="问题：从Ajax中返回值"><a href="#问题：从Ajax中返回值" class="headerlink" title="问题：从Ajax中返回值"></a>问题：从Ajax中返回值</h2><p>用JQuery.validate插件给登陆表单加了校验，挺简单，同样的方法给注册界面加个校验，唯一不同的是需要使用ajax从后台请求到用户名是否已经存在，也挺简单。</p>
+<p>于是乎，有了下面这段代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// do something</span></span><br><span class="line">$.validator.<span class="title function_">addMethod</span>(<span class="string">&quot;checkUniqueUsername&quot;</span>, <span class="keyword">function</span>(<span class="params">value, element, params</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">optional</span>(element) || <span class="title function_">checkUniqueUsername</span>(value);</span><br><span class="line">&#125;, <span class="string">&quot;用户名已被占用！&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">checkUniqueUsername</span>(<span class="params">username</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (username !== <span class="literal">null</span> &amp;&amp; username !== <span class="literal">undefined</span> &amp;&amp; username !== <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> data = &#123;<span class="string">&#x27;loginname&#x27;</span>: username&#125;;</span><br><span class="line">        $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">            <span class="attr">url</span>: <span class="string">&#x27;/checkloginname&#x27;</span>,</span><br><span class="line">            <span class="attr">data</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(data),</span><br><span class="line">            <span class="attr">dataType</span>: <span class="string">&#x27;json&#x27;</span>,</span><br><span class="line">            <span class="attr">contentType</span>: <span class="string">&#x27;application/json&#x27;</span>,</span><br><span class="line">            <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">res</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> (<span class="built_in">parseInt</span>(res.<span class="property">tip</span>) === <span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>三五分钟，就写完了代码，跑一跑测一下准备验收了。诡异的事情出现了，<code>checkUniqueUsername()</code>总是返回false。</p>
+<h2 id="Ajax中return的结果"><a href="#Ajax中return的结果" class="headerlink" title="Ajax中return的结果"></a>Ajax中return的结果</h2><p>没事，静下心来慢慢调，就这几行代码，怎么说也要给你调得明明白白的。调试后发现<code>parseInt(res.tip)===0</code>是true，可是return 之后函数的返回值是false，这没道理啊！</p>
+<p>网上查了一下，原来是在<strong>ajax中直接return并不是return到外层函数中</strong>，不深究，改个写法，于是有了v2版本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// do something</span></span><br><span class="line">$.validator.<span class="title function_">addMethod</span>(<span class="string">&quot;checkUniqueUsername&quot;</span>, <span class="keyword">function</span>(<span class="params">value, element, params</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">optional</span>(element) || <span class="title function_">checkUniqueUsername</span>(value);</span><br><span class="line">&#125;, <span class="string">&quot;用户名已被占用！&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">checkUniqueUsername</span>(<span class="params">username</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (username !== <span class="literal">null</span> &amp;&amp; username !== <span class="literal">undefined</span> &amp;&amp; username !== <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">var</span> data = &#123;<span class="string">&#x27;loginname&#x27;</span>: username&#125;;</span><br><span class="line">        $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">            <span class="attr">url</span>: <span class="string">&#x27;/checkloginname&#x27;</span>,</span><br><span class="line">            <span class="attr">data</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(data),</span><br><span class="line">            <span class="attr">dataType</span>: <span class="string">&#x27;json&#x27;</span>,</span><br><span class="line">            <span class="attr">contentType</span>: <span class="string">&#x27;application/json&#x27;</span>,</span><br><span class="line">            <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">res</span>) &#123;</span><br><span class="line">                result = (<span class="built_in">parseInt</span>(res.<span class="property">tip</span>) === <span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>检查了一下，再也想不出还能有什么问题了，那就跑一下吧。诡异的结果又出现了，函数返回值依旧是false，心态崩了，这就好比 <code>var count = 1; console.log(count);</code>却输出了2一样，难以置信！</p>
+<h2 id="Ajax同步和异步"><a href="#Ajax同步和异步" class="headerlink" title="Ajax同步和异步"></a>Ajax同步和异步</h2><p>查了半天，终于看到一个答案：<strong>ajax的同步和异步。</strong>可谓是一语惊醒梦中人，我责备自己为什么调试了这么久，却没有想到这个方向，而且同步异步的坑已经不是第一次踩了。v3版本终于解决了这个问题，失之毫厘，差之千里。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// do something</span></span><br><span class="line">$.validator.<span class="title function_">addMethod</span>(<span class="string">&quot;checkUniqueUsername&quot;</span>, <span class="keyword">function</span>(<span class="params">value, element, params</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">optional</span>(element) || <span class="title function_">checkUniqueUsername</span>(value);</span><br><span class="line">&#125;, <span class="string">&quot;用户名已被占用！&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">checkUniqueUsername</span>(<span class="params">username</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (username !== <span class="literal">null</span> &amp;&amp; username !== <span class="literal">undefined</span> &amp;&amp; username !== <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">var</span> data = &#123;<span class="string">&#x27;loginname&#x27;</span>: username&#125;;</span><br><span class="line">        $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">            <span class="attr">url</span>: <span class="string">&#x27;/checkloginname&#x27;</span>,</span><br><span class="line">            <span class="attr">data</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(data),</span><br><span class="line">            <span class="attr">dataType</span>: <span class="string">&#x27;json&#x27;</span>,</span><br><span class="line">            <span class="attr">contentType</span>: <span class="string">&#x27;application/json&#x27;</span>,</span><br><span class="line">            <span class="attr">async</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">res</span>) &#123;</span><br><span class="line">                result = (<span class="built_in">parseInt</span>(res.<span class="property">tip</span>) === <span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是每次运行控制台都会出现JQuery的提示：<strong>使用同步会降低用户体验</strong>，总归是有个解决办法，有时间再深究一下吧。</p>
+<h2 id="JavaScript浮点运算"><a href="#JavaScript浮点运算" class="headerlink" title="JavaScript浮点运算"></a>JavaScript浮点运算</h2><p>今天的经历让我回想起了去年遇到的一个JavaScript的问题，当时在做一个现金流管理系统，遇到一个需求是根据固定利息和浮动利息自动计算出最终利息，随便输了几组数据测试，没有出现异样，但是最后一组数据的时候出现了诡异的结果！<code>4.1 + 4.3 = 8.399999999999999</code>，这真是见了鬼了。。很久之前学过的知识这分钟哪里回想得起来。上网查了才发现原来是JavaScript的设计缺陷导致的问题，也都提出了几种解决方案。</p>
+<h2 id="后话"><a href="#后话" class="headerlink" title="后话"></a>后话</h2><p>平时用Java习惯了，思维方式有些不灵活，从对Python的理解中也能看出来。</p>
+<p>总之，遇到问题，要发散思维，尽量快速的去确定调查的方向，最终尽快的解决问题。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82"><span class="toc-number">2.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E4%BB%8EAjax%E4%B8%AD%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">3.</span> <span class="toc-text">问题：从Ajax中返回值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ajax%E4%B8%ADreturn%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">Ajax中return的结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ajax%E5%90%8C%E6%AD%A5%E5%92%8C%E5%BC%82%E6%AD%A5"><span class="toc-number">5.</span> <span class="toc-text">Ajax同步和异步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JavaScript%E6%B5%AE%E7%82%B9%E8%BF%90%E7%AE%97"><span class="toc-number">6.</span> <span class="toc-text">JavaScript浮点运算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AF%9D"><span class="toc-number">7.</span> <span class="toc-text">后话</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20190519/mathematical-operation-error/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&text=JavaScript中的坑"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&title=JavaScript中的坑"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&is_video=false&description=JavaScript中的坑"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=JavaScript中的坑&body=Check out this article: https://zhu.happy365.day/20190519/mathematical-operation-error/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&title=JavaScript中的坑"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&title=JavaScript中的坑"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&title=JavaScript中的坑"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&title=JavaScript中的坑"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20190519/mathematical-operation-error/&name=JavaScript中的坑&description=&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;时至今日也没有系统深入的学习过JavaScript，虽然常用，但是也只停留在最基础的使用上。没有系统深入的了解，必然要踩一些前端众所周知，却让小白绞尽脑汁地大坑！&lt;/p&gt;
+&lt;p&gt;今天又在坑里摸了一天，记录一下，权当是写日记了。&lt;/p&gt;
+&lt;p&gt;最近连续加班，确实有些身心俱疲；加上昨天下午的“午后小睡”导致晚上失眠，到快四点钟才睡着，今天早上快十点钟还躺在床上。&lt;/p&gt;
+&lt;h2 id=&#34;需求&#34;&gt;&lt;a href=&#34;#需求&#34; class=&#34;headerlink&#34; title=&#34;需求&#34;&gt;&lt;/a&gt;需求&lt;/h2&gt;&lt;p&gt;正在逛Twitter，做毕设地学妹给我提了两个需求：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;登陆页面的表单检验；&lt;/li&gt;
+&lt;li&gt;注册页面的重复用户名检测。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;问题：从Ajax中返回值&#34;&gt;&lt;a href=&#34;#问题：从Ajax中返回值&#34; class=&#34;headerlink&#34; title=&#34;问题：从Ajax中返回值&#34;&gt;&lt;/a&gt;问题：从Ajax中返回值&lt;/h2&gt;&lt;p&gt;用JQuery.validate插件给登陆表单加了校验，挺简单，同样的方法给注册界面加个校验，唯一不同的是需要使用ajax从后台请求到用户名是否已经存在，也挺简单。&lt;/p&gt;
+&lt;p&gt;于是乎，有了下面这段代码：&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20190519/mathematical-operation-error/&t=JavaScript中的坑"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="在公司用了半年的 SpringCloud + Docker + Jenkins 的技术框架，现在流行持续集成，还没有抽点时间自己实际走一下全流程开发环境的搭建，正好赶上端午节，可以宅在出租屋里好好研究一下，特此记录一下实践过程中遇到的问题及解决方案。 搭建测试项目请求接口 搭建一个简单的SpringBoot项目，创建一个接口用来测试。   chenxii81&#x2F;springboot-dem">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gitlab+Jenkins+Docker自动部署SpringBoot微服务">
+<meta property="og:url" content="https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="在公司用了半年的 SpringCloud + Docker + Jenkins 的技术框架，现在流行持续集成，还没有抽点时间自己实际走一下全流程开发环境的搭建，正好赶上端午节，可以宅在出租屋里好好研究一下，特此记录一下实践过程中遇到的问题及解决方案。 搭建测试项目请求接口 搭建一个简单的SpringBoot项目，创建一个接口用来测试。   chenxii81&#x2F;springboot-dem">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.happy365.day/24/04/17231138.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17231212.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17231249.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17231337.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17231419.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17231501.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17231547.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17231621.png">
+<meta property="article:published_time" content="2021-06-13T12:07:56.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.216Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="Jenkins">
+<meta property="article:tag" content="GitLab">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.happy365.day/24/04/17231138.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Gitlab+Jenkins+Docker自动部署SpringBoot微服务</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20210622/vue-proxy-invalid/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20210605/jenkins-cd-command-not-work/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&text=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&title=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&is_video=false&description=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Gitlab+Jenkins+Docker自动部署SpringBoot微服务&body=Check out this article: https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&title=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&title=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&title=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&title=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&name=Gitlab+Jenkins+Docker自动部署SpringBoot微服务&description=&lt;p&gt;在公司用了半年的 SpringCloud + Docker + Jenkins 的技术框架，现在流行持续集成，还没有抽点时间自己实际走一下全流程开发环境的搭建，正好赶上端午节，可以宅在出租屋里好好研究一下，特此记录一下实践过程中遇到的问题及解决方案。&lt;/p&gt;
+&lt;h2 id=&#34;搭建测试项目&#34;&gt;&lt;a href=&#34;#搭建测试项目&#34; class=&#34;headerlink&#34; title=&#34;搭建测试项目&#34;&gt;&lt;/a&gt;搭建测试项目&lt;/h2&gt;&lt;h3 id=&#34;请求接口&#34;&gt;&lt;a href=&#34;#请求接口&#34; class=&#34;headerlink&#34; title=&#34;请求接口&#34;&gt;&lt;/a&gt;请求接口&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;搭建一个简单的SpringBoot项目，创建一个接口用来测试。&lt;/p&gt;
+&lt;p&gt;  &lt;a href=&#34;https://github.com/chenxii81&#34;&gt;chenxii81&lt;/a&gt;&amp;#x2F;&lt;strong&gt;&lt;a href=&#34;https://github.com/chenxii81/springboot-demo&#34;&gt;springboot-demo&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接口地址：&amp;#x2F;api&amp;#x2F;user-management&amp;#x2F;users&lt;/p&gt;
+&lt;figure class=&#34;highlight java&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;@GetMapping(&amp;quot;/users&amp;quot;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;public&lt;/span&gt; Response&amp;lt;List&amp;lt;UserPo&amp;gt;&amp;gt; &lt;span class=&#34;title function_&#34;&gt;listUsers&lt;/span&gt;&lt;span class=&#34;params&#34;&gt;(&lt;span class=&#34;meta&#34;&gt;@RequestParam&lt;/span&gt; &lt;span class=&#34;type&#34;&gt;int&lt;/span&gt; count)&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    Response&amp;lt;List&amp;lt;UserPo&amp;gt;&amp;gt; response = &lt;span class=&#34;keyword&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;title class_&#34;&gt;Response&lt;/span&gt;&amp;lt;&amp;gt;();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    response.setCode(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    response.setMessage(&lt;span class=&#34;string&#34;&gt;&amp;quot;请求成功&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    response.setData(userService.listUsers(count));&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;return&lt;/span&gt; response;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;返回数据格式：&lt;/p&gt;
+&lt;figure class=&#34;highlight json&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;code&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;message&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;请求成功&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;punctuation&#34;&gt;[&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;no&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U00-0&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U-name0&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;高级用户&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;point&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;245&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;no&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U00-1&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U-name1&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;初级用户&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;point&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;238&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;no&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U00-2&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U-name2&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;初级用户&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;point&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;240&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;punctuation&#34;&gt;]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;Dockerfile&#34;&gt;&lt;a href=&#34;#Dockerfile&#34; class=&#34;headerlink&#34; title=&#34;Dockerfile&#34;&gt;&lt;/a&gt;Dockerfile&lt;/h3&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;FROM openjdk:8-jdk-alpine&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;VOLUME /tmp&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;COPY springboot-demo.jar app.jar&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;ENTRYPOINT [&amp;quot;java&amp;quot;, &amp;quot;-jar&amp;quot;, &amp;quot;/app.jar&amp;quot;]&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;EXPOSE 8080&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&t=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E6%B5%8B%E8%AF%95%E9%A1%B9%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">搭建测试项目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.1.</span> <span class="toc-text">请求接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockerfile"><span class="toc-number">1.2.</span> <span class="toc-text">Dockerfile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jenkinsfile"><span class="toc-number">1.3.</span> <span class="toc-text">Jenkinsfile</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker%E5%AE%89%E8%A3%85%E4%BB%A5%E5%8F%8ADockerhub%E8%B4%A6%E6%88%B7%E6%B3%A8%E5%86%8C"><span class="toc-number">2.</span> <span class="toc-text">Docker安装以及Dockerhub账户注册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gitlab%E5%AE%89%E8%A3%85"><span class="toc-number">3.</span> <span class="toc-text">Gitlab安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Jenkins%E5%AE%89%E8%A3%85"><span class="toc-number">4.</span> <span class="toc-text">Jenkins安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Jenkins%E6%8F%92%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">安装Jenkins插件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#maven"><span class="toc-number">5.1.</span> <span class="toc-text">maven</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEGitlab-Key"><span class="toc-number">6.</span> <span class="toc-text">配置Gitlab Key</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH-Key"><span class="toc-number">6.1.</span> <span class="toc-text">SSH Key</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Access-Tokens"><span class="toc-number">6.2.</span> <span class="toc-text">Access Tokens</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Jenkins%E6%8A%A5%E9%94%99"><span class="toc-number">7.</span> <span class="toc-text">Jenkins报错</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mvn%E5%91%BD%E4%BB%A4%E6%89%BE%E4%B8%8D%E5%88%B0"><span class="toc-number">7.1.</span> <span class="toc-text">mvn命令找不到</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker%E5%91%BD%E4%BB%A4%E6%89%BE%E4%B8%8D%E5%88%B0"><span class="toc-number">7.2.</span> <span class="toc-text">docker命令找不到</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#var-run-docker-sock-connect-permission-denied"><span class="toc-number">7.3.</span> <span class="toc-text">&#x2F;var&#x2F;run&#x2F;docker.sock: connect: permission denied</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Gitlab+Jenkins+Docker自动部署SpringBoot微服务
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-06-13T12:07:56.000Z" class="dt-published" itemprop="datePublished">2021-06-13</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Docker/" rel="tag">Docker</a>, <a class="p-category" href="/tags/GitLab/" rel="tag">GitLab</a>, <a class="p-category" href="/tags/Jenkins/" rel="tag">Jenkins</a> -->
+        <a class="category-link" href="/tags/Docker/" rel="tag">Docker</a>, <a class="category-link" href="/tags/GitLab/" rel="tag">GitLab</a>, <a class="category-link" href="/tags/Jenkins/" rel="tag">Jenkins</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">876 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">3  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>在公司用了半年的 SpringCloud + Docker + Jenkins 的技术框架，现在流行持续集成，还没有抽点时间自己实际走一下全流程开发环境的搭建，正好赶上端午节，可以宅在出租屋里好好研究一下，特此记录一下实践过程中遇到的问题及解决方案。</p>
+<h2 id="搭建测试项目"><a href="#搭建测试项目" class="headerlink" title="搭建测试项目"></a>搭建测试项目</h2><h3 id="请求接口"><a href="#请求接口" class="headerlink" title="请求接口"></a>请求接口</h3><ul>
+<li><p>搭建一个简单的SpringBoot项目，创建一个接口用来测试。</p>
+<p>  <a target="_blank" rel="noopener" href="https://github.com/chenxii81">chenxii81</a>&#x2F;<strong><a target="_blank" rel="noopener" href="https://github.com/chenxii81/springboot-demo">springboot-demo</a></strong></p>
+</li>
+</ul>
+<p>接口地址：&#x2F;api&#x2F;user-management&#x2F;users</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/users&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Response&lt;List&lt;UserPo&gt;&gt; <span class="title function_">listUsers</span><span class="params">(<span class="meta">@RequestParam</span> <span class="type">int</span> count)</span> &#123;</span><br><span class="line">    Response&lt;List&lt;UserPo&gt;&gt; response = <span class="keyword">new</span> <span class="title class_">Response</span>&lt;&gt;();</span><br><span class="line">    response.setCode(<span class="number">0</span>);</span><br><span class="line">    response.setMessage(<span class="string">&quot;请求成功&quot;</span>);</span><br><span class="line">    response.setData(userService.listUsers(count));</span><br><span class="line">    <span class="keyword">return</span> response;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回数据格式：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;请求成功&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;no&quot;</span><span class="punctuation">:</span> <span class="string">&quot;U00-0&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;U-name0&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;level&quot;</span><span class="punctuation">:</span> <span class="string">&quot;高级用户&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;point&quot;</span><span class="punctuation">:</span> <span class="number">245</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;no&quot;</span><span class="punctuation">:</span> <span class="string">&quot;U00-1&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;U-name1&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;level&quot;</span><span class="punctuation">:</span> <span class="string">&quot;初级用户&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;point&quot;</span><span class="punctuation">:</span> <span class="number">238</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;no&quot;</span><span class="punctuation">:</span> <span class="string">&quot;U00-2&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;U-name2&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;level&quot;</span><span class="punctuation">:</span> <span class="string">&quot;初级用户&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;point&quot;</span><span class="punctuation">:</span> <span class="number">240</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FROM openjdk:8-jdk-alpine</span><br><span class="line">VOLUME /tmp</span><br><span class="line">COPY springboot-demo.jar app.jar</span><br><span class="line">ENTRYPOINT [&quot;java&quot;, &quot;-jar&quot;, &quot;/app.jar&quot;]</span><br><span class="line">EXPOSE 8080</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent any</span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(&#x27;Build&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &#x27;Building..&#x27;</span><br><span class="line">                sh &#x27;mvn clean &amp;&amp; mvn package&#x27;</span><br><span class="line">                sh &#x27;cp target/springboot-demo.jar src/main/docker/springboot-demo.jar&#x27;</span><br><span class="line">                echo &#x27;Build completed.&#x27;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&quot;Image&quot;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &#x27;Imaging..&#x27;</span><br><span class="line">                sh &#x27;cd src/main/docker &amp;&amp; docker build --rm -t springboot-demo:v1 .&#x27;</span><br><span class="line">                echo &#x27;Image completed.&#x27;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#x27;Deploy&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &#x27;Deploying....&#x27;</span><br><span class="line">                sh &#x27;docker run -d -p 8082:8001 --name springboot-demo springboot-demo:v1&#x27;</span><br><span class="line">                echo &#x27;Deploy completed.&#x27;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Docker安装以及Dockerhub账户注册"><a href="#Docker安装以及Dockerhub账户注册" class="headerlink" title="Docker安装以及Dockerhub账户注册"></a>Docker安装以及Dockerhub账户注册</h2><p>注册Dockerhub账号，然后安装docker。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装docker</span></span><br><span class="line">curl -sSL https://get.daocloud.io/docker | sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将用户加入docker组中</span></span><br><span class="line">sudo gpasswd -a chenxii docker</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新docker组</span></span><br><span class="line">sudo grpnew docker</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">登录docker，用docker <span class="built_in">id</span>登录而不是邮箱</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">不要直接 -p 登录，不安全</span></span><br><span class="line">cat passwd.txt | docker login -u chenxii81 --password-stdin</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Gitlab安装"><a href="#Gitlab安装" class="headerlink" title="Gitlab安装"></a>Gitlab安装</h2><p>本来想用VPS的，但是从docker启动gitlab之后总是几分钟就会Exit，应该是配置太低了，才512M内存，1核处理器。只能放到虚拟机弄了。</p>
+<p>为了配置方便，用 Docker 安装 Gitlab：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">docker pull gitlab/gitlab-ce:latest</span><br><span class="line"></span><br><span class="line">docker run -d  -p 443:443 -p 80:80 -p 222:22 --name gitlab gitlab/gitlab-ce:latest</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">e176b0d7d3d8775a293701d85029421eebf0ae6d013e79edb791c47df0e8c857</span></span><br><span class="line"></span><br><span class="line">docker ps -a</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">状态为 healthy之后就可以用宿主机ip进行访问了，Up 3 minutes (healthy)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">修改gitlab地址</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打开文件 /etc/gitlab/gitlab.rb 文件并找到</span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">external_url <span class="string">&#x27;GENERATED_EXTERNAL_URL&#x27;</span> 这行，去掉注释，并按照下面的格式修改。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用hosts里配置的域名，git提交会被redirect，最好用ip</span></span><br><span class="line">external_url &#x27;http://gitlab.chenxii.com&#x27; 或者 external_url &#x27;http://192.168.8.188&#x27;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">然后执行下面的命令使配置生效</span></span><br><span class="line">sudo docker exec gitlab gitlab-ctl reconfigure</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">修改完之后仓库的地址：</span></span><br><span class="line">git@gitlab.chenxii.com:gitlab-instance-8190bce8/Monitoring.git</span><br><span class="line">http://gitlab.chenxii.com/gitlab-instance-8190bce8/Monitoring.git</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将代码传到gitlab</span></span><br><span class="line">git remote add origin http://192.168.8.188/root/springboot-demo.git</span><br><span class="line">git add .</span><br><span class="line">git commit -m &quot;init repo&quot;</span><br><span class="line">git push -u origin --all</span><br><span class="line">git push -u origin --tags</span><br></pre></td></tr></table></figure>
+
+<p>初次登录需要重设密码，之后可以用root + 新密码登录。</p>
+<p><img src="https://images.happy365.day/24/04/17231138.png" alt="截图"></p>
+<h2 id="Jenkins安装"><a href="#Jenkins安装" class="headerlink" title="Jenkins安装"></a>Jenkins安装</h2><p>使用Docker配置Jenkins</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker pull jenkins/jenkins:lts</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Jenkins Docker镜像中没有Maven，所以将宿主机的Maven挂载到Docker容器</span></span><br><span class="line">docker run -d -p 8081:8080 --name jenkins \</span><br><span class="line">-v /opt/jdk/jdk1.8.0_181:/usr/lib/jvm/java-1.8-openjdk \</span><br><span class="line">-v /opt/maven/maven-3.5.4:/usr/local/maven3 jenkins/jenkins:lts</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用docker logs查看Jenkins初始化密码</span></span><br><span class="line">docker logs container_id</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>安装推荐插件之后，创建用户进入Jenkins</p>
+<p><img src="https://images.happy365.day/24/04/17231212.png" alt="截图"></p>
+<h2 id="安装Jenkins插件"><a href="#安装Jenkins插件" class="headerlink" title="安装Jenkins插件"></a>安装Jenkins插件</h2><h3 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h3><p>下载地址：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz"> apache-maven-3.8.1-bin.tar.gz</a></p>
+<p>配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">因为maven-3.8.1报错，换成了3.5.4版本</span></span><br><span class="line">sudo mv ~/Downloads/apache-maven-3.5.4-bin.tar.gz /opt/maven  </span><br><span class="line">sudo tar -zxvf apache-maven-3.5.4-bin.tar.gz</span><br><span class="line">cd apache-maven-3.5.4</span><br><span class="line">sudo mv apache-maven-3.5.4/opt /maven-3.5.4</span><br><span class="line"></span><br><span class="line">vim ~/.bashrc</span><br><span class="line">export MAVEN_HOME=/opt/maven/maven-3.5.4</span><br><span class="line">export PATH=$PATH:$MAVEN_HOME/bin</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="配置Gitlab-Key"><a href="#配置Gitlab-Key" class="headerlink" title="配置Gitlab Key"></a>配置Gitlab Key</h2><h3 id="SSH-Key"><a href="#SSH-Key" class="headerlink" title="SSH Key"></a>SSH Key</h3><p>在 Gitlab 中 SSH Key 页面（<a target="_blank" rel="noopener" href="http://192.168.8.188/-/profile/keys%EF%BC%89%EF%BC%8C%E5%B0%86%E8%87%AA%E5%B7%B1%E6%9C%AC%E5%9C%B0">http://192.168.8.188/-/profile/keys），将自己本地</a> ~&#x2F;.ssh&#x2F;id_rsa.pub 内容存进去，这样传代码不需要每次都输入密码。</p>
+<h3 id="Access-Tokens"><a href="#Access-Tokens" class="headerlink" title="Access Tokens"></a>Access Tokens</h3><p>1、给Jenkins安装Publish Over SSH插件</p>
+<p>2、Jenkins需要从Gitlab拉取代码，所以需要为Jenkins配置一个Access Tokens，类似：5nU3oGSxyZXsxHyuwekH，生成之后将其配置到 <strong>系统配置</strong> &gt; <strong>Publish over SSH</strong> &gt; <strong>Key</strong> 保存。</p>
+<h2 id="Jenkins报错"><a href="#Jenkins报错" class="headerlink" title="Jenkins报错"></a>Jenkins报错</h2><h3 id="mvn命令找不到"><a href="#mvn命令找不到" class="headerlink" title="mvn命令找不到"></a>mvn命令找不到</h3><p>Jenkins报错 mvn 命令找不到，因为 Docker Jenkins里没有Maven。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+ mvn clean</span><br><span class="line"></span><br><span class="line">/var/jenkins_home/workspace/springboot-demo_master@tmp/durable-c0a723ef/script.sh: 1: /var/jenkins_home/workspace/springboot-demo_master@tmp/durable-c0a723ef/script.sh: mvn: not found</span><br><span class="line"></span><br><span class="line">script returned exit code 127</span><br></pre></td></tr></table></figure>
+
+<p>配置如下：</p>
+<p>在这里卡了很长时间，最后找到一个解决方案：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43437874/article/details/107087363">Jenkins打包Maven项目找不到mvn解决办法script.sh: line 1: mvn: not found</a></p>
+<p>启动命令中将宿主机上的maven路径挂在到Docker容器的 &#x2F;usr&#x2F;local&#x2F;maven3目录下，然后在 <strong>系统配置</strong> &gt; <strong>全局属性</strong> 下，将MAVEN_HOME追加到环境变量中，然后扫描流水线就可以下载依赖了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># docker run中挂载宿主机maven到docker容器中</span><br><span class="line">-v /opt/maven/maven-3.5.4:/usr/local/maven3 jenkins/jenkins:lts</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>还有一种挂载方式不需要重新运行镜像，直接给容器挂载新的目录：</p>
+<p>修改 &#x2F;var&#x2F;run&#x2F;docker&#x2F;containerid&#x2F;容器id&#x2F;hostconfig.json 和 &#x2F;var&#x2F;run&#x2F;docker&#x2F;containerid&#x2F;容器id&#x2F;config.v2.json</p>
+<p>参见：<a target="_blank" rel="noopener" href="https://blog.51cto.com/hjun169/2440799"><strong>docker给已经启动容器添加挂载目录</strong></a></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>键</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MAVEN_HOME</td>
+<td>&#x2F;usr&#x2F;local&#x2F;maven3</td>
+</tr>
+<tr>
+<td>PATH+EXTRA</td>
+<td>$MAVEN_HOME&#x2F;bin</td>
+</tr>
+</tbody></table>
+<p><img src="https://images.happy365.day/24/04/17231249.png"></p>
+<p><img src="https://images.happy365.day/24/04/17231337.png"></p>
+<h3 id="docker命令找不到"><a href="#docker命令找不到" class="headerlink" title="docker命令找不到"></a>docker命令找不到</h3><p>解决方案：</p>
+<blockquote>
+<p>给启动的Docker容器挂载宿主机的 docker 环境</p>
+<p>参见：<a target="_blank" rel="noopener" href="https://blog.51cto.com/hjun169/2440799">docker给已经启动容器添加挂载目录</a></p>
+</blockquote>
+<h3 id="var-run-docker-sock-connect-permission-denied"><a href="#var-run-docker-sock-connect-permission-denied" class="headerlink" title="&#x2F;var&#x2F;run&#x2F;docker.sock: connect: permission denied"></a>&#x2F;var&#x2F;run&#x2F;docker.sock: connect: permission denied</h3><p>运行到 docker 构建镜像的时候提示权限不足，&#x2F;var&#x2F;run&#x2F;docker.sock 只有 root 权限才能调用，可以将 jenkins 用户加到 docker 组下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo gpasswd -a jenkins docker</span><br><span class="line">newgrp docker</span><br></pre></td></tr></table></figure>
+
+<p>但是这里docker是挂载了宿主机的docker目录，所以不存在docker组，直接将 &#x2F;var&#x2F;run&#x2F;docker.sock 改成 777 权限：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -u 0 -it 容器id /bin/bash</span><br><span class="line">chmod -R 777 /var/run/docker.sock</span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+<p>再次构建：</p>
+<p><img src="https://images.happy365.day/24/04/17231419.png" alt="截图"></p>
+<p><img src="https://images.happy365.day/24/04/17231501.png" alt="截图"></p>
+<p><img src="https://images.happy365.day/24/04/17231547.png" alt="截图"></p>
+<p><img src="https://images.happy365.day/24/04/17231621.png" alt="截图"></p>
+<p>20次的流水线扫描，上百次 Bing 搜索，终于成功看到了赏心悦目的绿色和接口返回值 🎉</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实上个月已经做个一个 Jenkins Pipeline 的实践项目，但是上次 Jenkins 和 Gitlab 都是虚拟机安装，没有使用 Docker，所以这次两天的实践基本上是填 Docker 中遇到的坑，端午节假期今天结束了，很庆幸虽然这两天断断续续但还是赶在最后的时间点部署成功了。对 Docker 、 Jenkins 和 Gitlab 这一套技术有了更深的理解。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E6%B5%8B%E8%AF%95%E9%A1%B9%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">搭建测试项目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.1.</span> <span class="toc-text">请求接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockerfile"><span class="toc-number">1.2.</span> <span class="toc-text">Dockerfile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jenkinsfile"><span class="toc-number">1.3.</span> <span class="toc-text">Jenkinsfile</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker%E5%AE%89%E8%A3%85%E4%BB%A5%E5%8F%8ADockerhub%E8%B4%A6%E6%88%B7%E6%B3%A8%E5%86%8C"><span class="toc-number">2.</span> <span class="toc-text">Docker安装以及Dockerhub账户注册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gitlab%E5%AE%89%E8%A3%85"><span class="toc-number">3.</span> <span class="toc-text">Gitlab安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Jenkins%E5%AE%89%E8%A3%85"><span class="toc-number">4.</span> <span class="toc-text">Jenkins安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Jenkins%E6%8F%92%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">安装Jenkins插件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#maven"><span class="toc-number">5.1.</span> <span class="toc-text">maven</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEGitlab-Key"><span class="toc-number">6.</span> <span class="toc-text">配置Gitlab Key</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH-Key"><span class="toc-number">6.1.</span> <span class="toc-text">SSH Key</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Access-Tokens"><span class="toc-number">6.2.</span> <span class="toc-text">Access Tokens</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Jenkins%E6%8A%A5%E9%94%99"><span class="toc-number">7.</span> <span class="toc-text">Jenkins报错</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mvn%E5%91%BD%E4%BB%A4%E6%89%BE%E4%B8%8D%E5%88%B0"><span class="toc-number">7.1.</span> <span class="toc-text">mvn命令找不到</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker%E5%91%BD%E4%BB%A4%E6%89%BE%E4%B8%8D%E5%88%B0"><span class="toc-number">7.2.</span> <span class="toc-text">docker命令找不到</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#var-run-docker-sock-connect-permission-denied"><span class="toc-number">7.3.</span> <span class="toc-text">&#x2F;var&#x2F;run&#x2F;docker.sock: connect: permission denied</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&text=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&title=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&is_video=false&description=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=Gitlab+Jenkins+Docker自动部署SpringBoot微服务&body=Check out this article: https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&title=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&title=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&title=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&title=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&name=Gitlab+Jenkins+Docker自动部署SpringBoot微服务&description=&lt;p&gt;在公司用了半年的 SpringCloud + Docker + Jenkins 的技术框架，现在流行持续集成，还没有抽点时间自己实际走一下全流程开发环境的搭建，正好赶上端午节，可以宅在出租屋里好好研究一下，特此记录一下实践过程中遇到的问题及解决方案。&lt;/p&gt;
+&lt;h2 id=&#34;搭建测试项目&#34;&gt;&lt;a href=&#34;#搭建测试项目&#34; class=&#34;headerlink&#34; title=&#34;搭建测试项目&#34;&gt;&lt;/a&gt;搭建测试项目&lt;/h2&gt;&lt;h3 id=&#34;请求接口&#34;&gt;&lt;a href=&#34;#请求接口&#34; class=&#34;headerlink&#34; title=&#34;请求接口&#34;&gt;&lt;/a&gt;请求接口&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;搭建一个简单的SpringBoot项目，创建一个接口用来测试。&lt;/p&gt;
+&lt;p&gt;  &lt;a href=&#34;https://github.com/chenxii81&#34;&gt;chenxii81&lt;/a&gt;&amp;#x2F;&lt;strong&gt;&lt;a href=&#34;https://github.com/chenxii81/springboot-demo&#34;&gt;springboot-demo&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接口地址：&amp;#x2F;api&amp;#x2F;user-management&amp;#x2F;users&lt;/p&gt;
+&lt;figure class=&#34;highlight java&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;@GetMapping(&amp;quot;/users&amp;quot;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;public&lt;/span&gt; Response&amp;lt;List&amp;lt;UserPo&amp;gt;&amp;gt; &lt;span class=&#34;title function_&#34;&gt;listUsers&lt;/span&gt;&lt;span class=&#34;params&#34;&gt;(&lt;span class=&#34;meta&#34;&gt;@RequestParam&lt;/span&gt; &lt;span class=&#34;type&#34;&gt;int&lt;/span&gt; count)&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    Response&amp;lt;List&amp;lt;UserPo&amp;gt;&amp;gt; response = &lt;span class=&#34;keyword&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;title class_&#34;&gt;Response&lt;/span&gt;&amp;lt;&amp;gt;();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    response.setCode(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    response.setMessage(&lt;span class=&#34;string&#34;&gt;&amp;quot;请求成功&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    response.setData(userService.listUsers(count));&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;return&lt;/span&gt; response;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;返回数据格式：&lt;/p&gt;
+&lt;figure class=&#34;highlight json&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;code&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;message&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;请求成功&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;punctuation&#34;&gt;[&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;no&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U00-0&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U-name0&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;高级用户&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;point&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;245&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;no&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U00-1&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U-name1&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;初级用户&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;point&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;238&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;no&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U00-2&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;U-name2&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;string&#34;&gt;&amp;quot;初级用户&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      &lt;span class=&#34;attr&#34;&gt;&amp;quot;point&amp;quot;&lt;/span&gt;&lt;span class=&#34;punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;240&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;punctuation&#34;&gt;]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;Dockerfile&#34;&gt;&lt;a href=&#34;#Dockerfile&#34; class=&#34;headerlink&#34; title=&#34;Dockerfile&#34;&gt;&lt;/a&gt;Dockerfile&lt;/h3&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;FROM openjdk:8-jdk-alpine&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;VOLUME /tmp&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;COPY springboot-demo.jar app.jar&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;ENTRYPOINT [&amp;quot;java&amp;quot;, &amp;quot;-jar&amp;quot;, &amp;quot;/app.jar&amp;quot;]&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;EXPOSE 8080&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20210613/auto-depolyment-with-gitlab-jenkins-docker/&t=Gitlab+Jenkins+Docker自动部署SpringBoot微服务"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

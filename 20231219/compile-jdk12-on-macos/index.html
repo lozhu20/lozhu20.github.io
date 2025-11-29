@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="最近在跟着《深入理解Java虚拟机》复习 JVM 相关的知识，想再编译一下 JDK。因为之前有编译过 JDK8，因为版本较老，踩坑比较多；并且现在 Java 每半年一个大版本，新版本还没来得及了解就过时了，更别提去使用了，所以这次打算用 JDK11 来编译 OpenJDK12。 环境信息：  系统版本：MacOS 13.6.1 (22G313) boot jdk：idk-11.0.21 Xcode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在MacOS上编译jdk12">
+<meta property="og:url" content="https://zhu.happy365.day/20231219/compile-jdk12-on-macos/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="最近在跟着《深入理解Java虚拟机》复习 JVM 相关的知识，想再编译一下 JDK。因为之前有编译过 JDK8，因为版本较老，踩坑比较多；并且现在 Java 每半年一个大版本，新版本还没来得及了解就过时了，更别提去使用了，所以这次打算用 JDK11 来编译 OpenJDK12。 环境信息：  系统版本：MacOS 13.6.1 (22G313) boot jdk：idk-11.0.21 Xcode">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-12-19T15:05:12.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.222Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="jdk">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>在MacOS上编译jdk12</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20231219/compile-jdk12-on-macos/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20231222/page-helper-not-work-in-spring-boot/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20231203/2023-browser-history-from-a-to-z/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&text=在MacOS上编译jdk12"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&title=在MacOS上编译jdk12"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&is_video=false&description=在MacOS上编译jdk12"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=在MacOS上编译jdk12&body=Check out this article: https://zhu.happy365.day/20231219/compile-jdk12-on-macos/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&title=在MacOS上编译jdk12"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&title=在MacOS上编译jdk12"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&title=在MacOS上编译jdk12"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&title=在MacOS上编译jdk12"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&name=在MacOS上编译jdk12&description=&lt;p&gt;最近在跟着《深入理解Java虚拟机》复习 JVM 相关的知识，想再编译一下 JDK。因为之前有编译过 JDK8，因为版本较老，踩坑比较多；并且现在 Java 每半年一个大版本，新版本还没来得及了解就过时了，更别提去使用了，所以这次打算用 JDK11 来编译 OpenJDK12。&lt;/p&gt;
+&lt;p&gt;环境信息：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;系统版本：MacOS 13.6.1 (22G313)&lt;/li&gt;
+&lt;li&gt;boot jdk：idk-11.0.21&lt;/li&gt;
+&lt;li&gt;Xcode 版本：15.0&lt;/li&gt;
+&lt;/ul&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&t=在MacOS上编译jdk12"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">源码下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">前置操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#freetype"><span class="toc-number">2.1.</span> <span class="toc-text">freetype</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ccache"><span class="toc-number">2.2.</span> <span class="toc-text">ccache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-JDK11"><span class="toc-number">2.3.</span> <span class="toc-text">安装 JDK11</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">3.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95"><span class="toc-number">4.</span> <span class="toc-text">问题记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%981"><span class="toc-number">4.1.</span> <span class="toc-text">问题1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%982"><span class="toc-number">4.2.</span> <span class="toc-text">问题2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%983"><span class="toc-number">4.3.</span> <span class="toc-text">问题3</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        在MacOS上编译jdk12
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-12-19T15:05:12.000Z" class="dt-published" itemprop="datePublished">2023-12-19</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Java/" rel="tag">Java</a>, <a class="p-category" href="/tags/jdk/" rel="tag">jdk</a> -->
+        <a class="category-link" href="/tags/Java/" rel="tag">Java</a>, <a class="category-link" href="/tags/jdk/" rel="tag">jdk</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">966 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">4  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>最近在跟着《深入理解Java虚拟机》复习 JVM 相关的知识，想再编译一下 JDK。因为之前有编译过 JDK8，因为版本较老，踩坑比较多；并且现在 Java 每半年一个大版本，新版本还没来得及了解就过时了，更别提去使用了，所以这次打算用 JDK11 来编译 OpenJDK12。</p>
+<p>环境信息：</p>
+<ul>
+<li>系统版本：MacOS 13.6.1 (22G313)</li>
+<li>boot jdk：idk-11.0.21</li>
+<li>Xcode 版本：15.0</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="源码下载"><a href="#源码下载" class="headerlink" title="源码下载"></a>源码下载</h2><p>要编译 JDK，肯定要先有源码才能编译。源码从 Oracle 官网下载：<a target="_blank" rel="noopener" href="https://hg.openjdk.org/jdk/jdk12%EF%BC%8C%E5%B7%A6%E8%BE%B9%E8%8F%9C%E5%8D%95%E9%80%89%E6%8B%A9%E6%96%B9%E4%BE%BF%E7%9A%84%E6%A0%BC%E5%BC%8F%E4%B8%8B%E8%BD%BD%E5%8D%B3%E5%8F%AF%EF%BC%8C%E5%BC%80%E5%A7%8B%E6%88%91%E4%B8%8B%E8%BD%BD%E7%9A%84%E6%98%AF">https://hg.openjdk.org/jdk/jdk12，左边菜单选择方便的格式下载即可，开始我下载的是</a> zip，但是解压的时候总是会提示意料之外的文件结尾，解压不出来，所以就换了 tar 格式下载。</p>
+<h2 id="前置操作"><a href="#前置操作" class="headerlink" title="前置操作"></a>前置操作</h2><h3 id="freetype"><a href="#freetype" class="headerlink" title="freetype"></a>freetype</h3><p>OpenJDK 中用到 freetype 渲染，所以需要先安装好 freetype。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install freetype</span><br></pre></td></tr></table></figure>
+
+<h3 id="ccache"><a href="#ccache" class="headerlink" title="ccache"></a>ccache</h3><p>ccache，是一个编译器缓存，该工具会高速缓存编译生成的信息，并在编译的特定部分使用高速缓存的信息。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install ccache</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-JDK11"><a href="#安装-JDK11" class="headerlink" title="安装 JDK11"></a>安装 JDK11</h3><p>要得到梯子，首先要有个梯子。同样的道理，要编译出 JDK，首先得有个 JDK。只能通过低版本的 JDK 编译出高版本的 JDK，不能反过来。下载 JDK11 ，配置好环境变量，就不多赘述了。</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>接下来就可以开始编译了，如果有过编译记录，先运行 <code>make clean</code> 和 <code>make clean-dist</code> 清空相关目录，然后在根目录运行 <code>configure</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --disable-warnings-as-errors --with-debug-level=slowdebug --with-jvm-variants=server --enable-ccache</span><br></pre></td></tr></table></figure>
+
+<p>顺利的话会输出以下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">====================================================</span><br><span class="line">The existing configuration has been successfully updated in</span><br><span class="line">/Users/lozhu/Documents/projects/jdk12-06222165c35f/build/macosx-x86_64-server-slowdebug</span><br><span class="line">using configure arguments &#x27;--disable-warnings-as-errors --with-debug-level=slowdebug --with-jvm-variants=server --enable-ccache&#x27;.</span><br><span class="line"></span><br><span class="line">Configuration summary:</span><br><span class="line">* Debug level:    slowdebug</span><br><span class="line">* HS debug level: debug</span><br><span class="line">* JVM variants:   server</span><br><span class="line">* JVM features:   server: &#x27;aot cds cmsgc compiler1 compiler2 dtrace epsilongc g1gc graal jfr jni-check jvmci jvmti management nmt parallelgc serialgc services shenandoahgc vm-structs&#x27;</span><br><span class="line">* OpenJDK target: OS: macosx, CPU architecture: x86, address length: 64</span><br><span class="line">* Version string: 12-internal+0-adhoc.root.jdk12-06222165c35f (12-internal)</span><br><span class="line"></span><br><span class="line">Tools summary:</span><br><span class="line">* Boot JDK:       openjdk version &quot;11.0.21&quot; 2023-10-17 LTS OpenJDK Runtime Environment Microsoft-8519785 (build 11.0.21+9-LTS) OpenJDK 64-Bit Server VM Microsoft-8519785 (build 11.0.21+9-LTS, mixed mode)  (at /opt/java/jdk-11.0.21+9/Contents/Home)</span><br><span class="line">* Toolchain:      clang (clang/LLVM from Xcode 15.0.1)</span><br><span class="line">* C Compiler:     Version 15.0.0 (at /usr/bin/clang)</span><br><span class="line">* C++ Compiler:   Version 15.0.0 (at /usr/bin/clang++)</span><br><span class="line"></span><br><span class="line">Build performance summary:</span><br><span class="line">* Cores to use:   8</span><br><span class="line">* Memory limit:   16384 MB</span><br><span class="line">* ccache status:  Active (4.8.3)</span><br><span class="line"></span><br><span class="line">WARNING: The result of this configuration has overridden an older</span><br><span class="line">configuration. You *should* run &#x27;make clean&#x27; to make sure you get a</span><br><span class="line">proper build. Failure to do so might result in strange build problems.</span><br></pre></td></tr></table></figure>
+
+<p>然后运行 <code>make images</code> 进行编译，根据机器配置编译时间长短会有较大差异，2020款MacBook pro编译了15分钟。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Stopping sjavac server</span><br><span class="line">Finished building target &#x27;images&#x27; in configuration &#x27;macosx-x86_64-server-slowdebug&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>出现这个提示就说明编译成功了！编译出的 JDK 位于：.&#x2F;build&#x2F;macosx-x86_64-server-slowdebug&#x2F;jdk&#x2F;bin 下，运行 <code>./java -version</code> 可以看到自己编译出的 JDK 版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openjdk version &quot;12-internal&quot; 2019-03-19</span><br><span class="line">OpenJDK Runtime Environment (slowdebug build 12-internal+0-adhoc.root.jdk12-06222165c35f)</span><br><span class="line">OpenJDK 64-Bit Server VM (slowdebug build 12-internal+0-adhoc.root.jdk12-06222165c35f, mixed mode)</span><br></pre></td></tr></table></figure>
+
+<h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><h3 id="问题1"><a href="#问题1" class="headerlink" title="问题1"></a>问题1</h3><p>.&#x2F;jdk12-06222165c35f&#x2F;src&#x2F;java.base&#x2F;macosx&#x2F;native&#x2F;libosxsecurity&#x2F;KeystoreImpl.m note: did not find header ‘JavaNativeFoundation.h’ in framework ‘JavaNativeFoundation’ (loaded from ‘&#x2F;Applications&#x2F;Xcode.app&#x2F;Contents&#x2F;Developer&#x2F;Platforms&#x2F;MacOSX.platform&#x2F;Developer&#x2F;SDKs&#x2F;MacOSX14.0.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks’)</p>
+<p><strong>解决</strong></p>
+<p>这个问题很明显，就是系统路径的问题，但是一直苦于不知道 JavaNativeFoundation 在哪里引入的，在这里卡了两三个小时，搜索了很多国内外的网站也没找到解决方案。最后是关掉电脑后用手机搜这个问题，在 CSDN 上搜到了一些之前没搜到的资料，虽然说问题不完全相同，但是算是同一个问题，提供了很大的帮助。</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/885c718df9de">macOS Catalina + Xcode 12 编译OpenJDK 14 错误解决</a></p>
+<p>系统版本升级，一部分文件路径有变化。新的路径：&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX14.sdk。</p>
+<p>在 .&#x2F;build&#x2F;macosx-x86_64-server-slowdebug&#x2F;spec.gmk 中搜索 <code>SYSROOT_CFLAGS</code> 和 <code>SYSROOT_LDFLAGS</code> ，注释掉这两个变量，新增下面的内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SYSROOT_CFLAGS := -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -iframework /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks -F /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/JavaNativeFoundation.framework</span><br><span class="line">SYSROOT_LDFLAGS := -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -iframework /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks -F /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/JavaNativeFoundation.framework</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BUILD_SYSROOT_CFLAGS:=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -iframework /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks -F /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/JavaNativeFoundation.framework</span><br><span class="line">BUILD_SYSROOT_LDFLAGS:=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -iframework /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks -F /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/JavaNativeFoundation.framework</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在 .&#x2F;build&#x2F;macosx-x86_64-server-slowdebug&#x2F;buildjdk-spec.gmk 中搜索 <code>SYSROOT_CFLAGS</code> 和 <code>SYSROOT_LDFLAGS</code> ，注释掉这两个变量，新增下面的内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BUILD_SYSROOT_CFLAGS:=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -iframework /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks -F /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/JavaNativeFoundation.framework</span><br><span class="line">BUILD_SYSROOT_LDFLAGS:=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -iframework /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks -F /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/JavaNativeFoundation.framework</span><br><span class="line"></span><br><span class="line">BUILD_SYSROOT_CFLAGS:=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -iframework /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks -F /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/JavaNativeFoundation.framework</span><br><span class="line">BUILD_SYSROOT_LDFLAGS:=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -iframework /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks -F /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/JavaNativeFoundation.framework</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="问题2"><a href="#问题2" class="headerlink" title="问题2"></a>问题2</h3><p>assert 未定义</p>
+<p><strong>解决</strong></p>
+<p>直接将报错文件中有 assert 的行删除或者注释掉即可，只涉及一个文件，不到十行代码。</p>
+<hr>
+<h3 id="问题3"><a href="#问题3" class="headerlink" title="问题3"></a>问题3</h3><p>clang: error: SDK does not contain ‘libarclite’ at the path ‘&#x2F;Applications&#x2F;Xcode.app&#x2F;Contents&#x2F;Developer&#x2F;Toolchains&#x2F;XcodeDefault.xctoolchain&#x2F;usr&#x2F;lib&#x2F;arc&#x2F;libarclite_macosx.a’; try increasing the minimum deployment target</p>
+<p><strong>解决</strong></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/u013712343/article/details/134262640">iOS Xcode 升级Xcode15报错: SDK does not contain ‘libarclite‘ at the path ‘&#x2F;Applications&#x2F;Xcode.app&#x2F;Con…</a></p>
+<p>文件缺失，从 <a href="GitHub">https://codeload.github.com/kamyarelyasi/Libarclite-Files/zip/refs/heads/main</a> 下载 <code>libarclite_macosx.a</code> 文件，复制到 <code>/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/arc/</code> 路径下。这里有个问题就是，arc 路径需要自己创建，但是受系统权限限制，sudo 权限也创建不了这个目录，只能更改系统设置关闭 SIP。重启电脑，按住 ⌘ + R，进入保护模式后打开终端，输入命令：<code>crsutil disable</code> ，重启即可。要重新开启 SIP，命令为：<code>crsutil enable</code></p>
+<p>参考的链接里单词写错了，是 <code>crsutil</code> 不是 <code>csrutil</code>。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">源码下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">前置操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#freetype"><span class="toc-number">2.1.</span> <span class="toc-text">freetype</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ccache"><span class="toc-number">2.2.</span> <span class="toc-text">ccache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-JDK11"><span class="toc-number">2.3.</span> <span class="toc-text">安装 JDK11</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">3.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95"><span class="toc-number">4.</span> <span class="toc-text">问题记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%981"><span class="toc-number">4.1.</span> <span class="toc-text">问题1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%982"><span class="toc-number">4.2.</span> <span class="toc-text">问题2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%983"><span class="toc-number">4.3.</span> <span class="toc-text">问题3</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&text=在MacOS上编译jdk12"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&title=在MacOS上编译jdk12"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&is_video=false&description=在MacOS上编译jdk12"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=在MacOS上编译jdk12&body=Check out this article: https://zhu.happy365.day/20231219/compile-jdk12-on-macos/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&title=在MacOS上编译jdk12"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&title=在MacOS上编译jdk12"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&title=在MacOS上编译jdk12"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&title=在MacOS上编译jdk12"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&name=在MacOS上编译jdk12&description=&lt;p&gt;最近在跟着《深入理解Java虚拟机》复习 JVM 相关的知识，想再编译一下 JDK。因为之前有编译过 JDK8，因为版本较老，踩坑比较多；并且现在 Java 每半年一个大版本，新版本还没来得及了解就过时了，更别提去使用了，所以这次打算用 JDK11 来编译 OpenJDK12。&lt;/p&gt;
+&lt;p&gt;环境信息：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;系统版本：MacOS 13.6.1 (22G313)&lt;/li&gt;
+&lt;li&gt;boot jdk：idk-11.0.21&lt;/li&gt;
+&lt;li&gt;Xcode 版本：15.0&lt;/li&gt;
+&lt;/ul&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20231219/compile-jdk12-on-macos/&t=在MacOS上编译jdk12"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

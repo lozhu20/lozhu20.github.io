@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="启发最近添加了 Pinpe的云端 博友的友链，并且在留言页面留过言。 今天晚上收到了来自 GitHub 的其他博友留言的抄送邮件，遵循周末晚上要把友链都翻一遍的习惯，点进了博友的留言页面，惊奇的发现留言和回复是连贯的。 原 hexo-theme-cactus 主题的基于 Utterances 的评论系统中，评论和回复是分开的，只能引用回复。 我还以为是我使用错误，最后确认 GitHub 的 iss">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为hexo-theme-cactus主题添加Giscus评论系统">
+<meta property="og:url" content="https://zhu.happy365.day/20251116/use-giscus-comment-system/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="启发最近添加了 Pinpe的云端 博友的友链，并且在留言页面留过言。 今天晚上收到了来自 GitHub 的其他博友留言的抄送邮件，遵循周末晚上要把友链都翻一遍的习惯，点进了博友的留言页面，惊奇的发现留言和回复是连贯的。 原 hexo-theme-cactus 主题的基于 Utterances 的评论系统中，评论和回复是分开的，只能引用回复。 我还以为是我使用错误，最后确认 GitHub 的 iss">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-15T17:04:00.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.221Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="hexo-theme-cactus">
+<meta property="article:tag" content="Giscus">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>为hexo-theme-cactus主题添加Giscus评论系统</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20251116/use-giscus-comment-system/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20251118/add-dark-mode-to-hexo-theme-cactus/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20251115/remove-phone-number-from-instagram/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251116/use-giscus-comment-system/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&text=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&title=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&is_video=false&description=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=为hexo-theme-cactus主题添加Giscus评论系统&body=Check out this article: https://zhu.happy365.day/20251116/use-giscus-comment-system/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&title=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&title=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&title=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&title=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&name=为hexo-theme-cactus主题添加Giscus评论系统&description=&lt;h2 id=&#34;启发&#34;&gt;&lt;a href=&#34;#启发&#34; class=&#34;headerlink&#34; title=&#34;启发&#34;&gt;&lt;/a&gt;启发&lt;/h2&gt;&lt;p&gt;最近添加了 &lt;a href=&#34;https://pinpe.top/&#34;&gt;Pinpe的云端&lt;/a&gt; 博友的友链，并且在留言页面留过言。&lt;/p&gt;
+&lt;p&gt;今天晚上收到了来自 GitHub 的其他博友留言的抄送邮件，遵循周末晚上要把友链都翻一遍的习惯，点进了博友的留言页面，惊奇的发现留言和回复是连贯的。&lt;/p&gt;
+&lt;p&gt;原 hexo-theme-cactus 主题的基于 Utterances 的评论系统中，评论和回复是分开的，只能引用回复。&lt;/p&gt;
+&lt;p&gt;我还以为是我使用错误，最后确认 GitHub 的 issues 中确实不能直接 Reply，只能 Quote Reply。&lt;/p&gt;
+&lt;h2 id=&#34;Giscus&#34;&gt;&lt;a href=&#34;#Giscus&#34; class=&#34;headerlink&#34; title=&#34;Giscus&#34;&gt;&lt;/a&gt;Giscus&lt;/h2&gt;&lt;p&gt;很久之前就看到过 Giscus 这个评论系统的名字，可是没机会仔细了解，本能的以为是和 disqus、wolai 类似的第三方的评论系统。&lt;/p&gt;
+&lt;p&gt;点进主页，这主页风格和 Utterances 如出一辙，惊喜的发现 Giscus 就是受到 Utterances 的启发利用 GitHub Discussions 功能开发的，而 GitHub Discussions 系统是支持直接回复的。&lt;/p&gt;
+&lt;p&gt;于是打算将评论切换为 Giscus。&lt;/p&gt;
+&lt;p&gt;不过 hexo-theme-cactus 主题默认只支持 disqus 和 utterances，并没有 Giscus 的选项。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251116/use-giscus-comment-system/&t=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8F%91"><span class="toc-number">1.</span> <span class="toc-text">启发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Giscus"><span class="toc-number">2.</span> <span class="toc-text">Giscus</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%8F%98%E6%9B%B4"><span class="toc-number">3.</span> <span class="toc-text">代码变更</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E8%AF%84%E8%AE%BA%E8%BF%81%E7%A7%BB"><span class="toc-number">4.</span> <span class="toc-text">历史评论迁移</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        为hexo-theme-cactus主题添加Giscus评论系统
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-11-15T17:04:00.000Z" class="dt-published" itemprop="datePublished">2025-11-16</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/">博客维护</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Giscus/" rel="tag">Giscus</a>, <a class="p-category" href="/tags/hexo-theme-cactus/" rel="tag">hexo-theme-cactus</a> -->
+        <a class="category-link" href="/tags/Giscus/" rel="tag">Giscus</a>, <a class="category-link" href="/tags/hexo-theme-cactus/" rel="tag">hexo-theme-cactus</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">467 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">2  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="启发"><a href="#启发" class="headerlink" title="启发"></a>启发</h2><p>最近添加了 <a target="_blank" rel="noopener" href="https://pinpe.top/">Pinpe的云端</a> 博友的友链，并且在留言页面留过言。</p>
+<p>今天晚上收到了来自 GitHub 的其他博友留言的抄送邮件，遵循周末晚上要把友链都翻一遍的习惯，点进了博友的留言页面，惊奇的发现留言和回复是连贯的。</p>
+<p>原 hexo-theme-cactus 主题的基于 Utterances 的评论系统中，评论和回复是分开的，只能引用回复。</p>
+<p>我还以为是我使用错误，最后确认 GitHub 的 issues 中确实不能直接 Reply，只能 Quote Reply。</p>
+<h2 id="Giscus"><a href="#Giscus" class="headerlink" title="Giscus"></a>Giscus</h2><p>很久之前就看到过 Giscus 这个评论系统的名字，可是没机会仔细了解，本能的以为是和 disqus、wolai 类似的第三方的评论系统。</p>
+<p>点进主页，这主页风格和 Utterances 如出一辙，惊喜的发现 Giscus 就是受到 Utterances 的启发利用 GitHub Discussions 功能开发的，而 GitHub Discussions 系统是支持直接回复的。</p>
+<p>于是打算将评论切换为 Giscus。</p>
+<p>不过 hexo-theme-cactus 主题默认只支持 disqus 和 utterances，并没有 Giscus 的选项。</p>
+<p>没有了解过 Hexo 的评论系统，不过看从 <a target="_blank" rel="noopener" href="https://giscus.app/zh-CN">Giscus</a> 主页生成的配置看，就一个 script 标签，所以想着应该也不复杂。</p>
+<p>尝试着看看原有的主题相关的配置和 ejs 文件，复制了改改就弄好了，比想象中的简单。</p>
+<h2 id="代码变更"><a href="#代码变更" class="headerlink" title="代码变更"></a>代码变更</h2><p>主要涉及 <code>theme/_config.yml</code>、<code>theme/layout/_partial/comments.ejs</code>、<code>theme/layout/_partial/scripts.ejs</code> 这几个文件。</p>
+<p>在 <code>theme/_config.yml</code> 文件中新增配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">giscus:</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">&quot;username/repository&quot;</span>  <span class="comment"># 用户名/仓库名，仓库名不带 .git 后缀</span></span><br><span class="line">  <span class="attr">repo_id:</span> <span class="string">&quot;repo-id&quot;</span></span><br><span class="line">  <span class="attr">category:</span> <span class="string">&quot;Announcements&quot;</span>  <span class="comment"># 推荐使用的 Discussions 类别</span></span><br><span class="line">  <span class="attr">category_id:</span> <span class="string">&quot;category-id&quot;</span></span><br><span class="line">  <span class="attr">mapping:</span> <span class="string">&quot;pathname&quot;</span></span><br><span class="line">  <span class="attr">strict:</span> <span class="string">&quot;0&quot;</span></span><br><span class="line">  <span class="attr">reactions_enabled:</span> <span class="string">&quot;1&quot;</span></span><br><span class="line">  <span class="attr">emit-metadata:</span> <span class="string">&quot;0&quot;</span></span><br><span class="line">  <span class="attr">input_position:</span> <span class="string">&quot;top&quot;</span></span><br><span class="line">  <span class="attr">theme:</span> <span class="string">&quot;light&quot;</span></span><br><span class="line">  <span class="attr">lang:</span> <span class="string">&quot;zh-CN&quot;</span></span><br><span class="line">  <span class="attr">loading:</span> <span class="string">&quot;lazy&quot;</span></span><br><span class="line">  <span class="attr">crossorigin:</span> <span class="string">&quot;anonymous&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>theme/layout/_partial/comments.ejs</code> 文件末尾新增内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;% if(page.comments &amp;&amp; theme.giscus.enabled)&#123; %&gt;</span><br><span class="line">    &lt;div class=&quot;blog-post-comments&quot;&gt;</span><br><span class="line">        &lt;div id=&quot;giscus_thread&quot;&gt;</span><br><span class="line">            &lt;noscript&gt;&lt;%= __(&#x27;comments.no_js&#x27;) %&gt;&lt;/noscript&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;% &#125; %&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>theme/layout/_partial/scripts.ejs</code> 中新增内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&lt;% if (page.comments &amp;&amp; theme.giscus.enabled &amp;&amp; theme.giscus.repo &amp;&amp; theme.giscus.category &amp;&amp; theme.giscus.theme)&#123; %&gt;</span><br><span class="line">  &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">    var giscus_repo = &#x27;&lt;%= theme.giscus.repo %&gt;&#x27;;</span><br><span class="line">    var giscus_repo_id = &#x27;&lt;%= theme.giscus.repo_id %&gt;&#x27;;</span><br><span class="line">    var giscus_category = &#x27;&lt;%= theme.giscus.category %&gt;&#x27;;</span><br><span class="line">    var giscus_category_id = &#x27;&lt;%= theme.giscus.category_id %&gt;&#x27;;</span><br><span class="line">    var giscus_mapping = &#x27;&lt;%= theme.giscus.mapping %&gt;&#x27;;</span><br><span class="line">    var giscus_strict = &#x27;&lt;%= theme.giscus.strict %&gt;&#x27;;</span><br><span class="line">    var giscus_reactions_enabled = &#x27;&lt;%= theme.giscus.reactions_enabled %&gt;&#x27;;</span><br><span class="line">    var giscus_emit_metadata = &#x27;&lt;%= theme.giscus.emit_metadata %&gt;&#x27;;</span><br><span class="line">    var giscus_input_position = &#x27;&lt;%= theme.giscus.input_position %&gt;&#x27;;</span><br><span class="line">    var giscus_theme = &#x27;&lt;%= theme.giscus.theme %&gt;&#x27;;</span><br><span class="line">    var theme_lang = &#x27;&lt;%= theme.lang %&gt;&#x27;;</span><br><span class="line">    var giscus_loading = &#x27;&lt;%= theme.giscus.loading %&gt;&#x27;;</span><br><span class="line">    var giscus_crossorigin = &#x27;&lt;%= theme.giscus.crossorigin %&gt;&#x27;;</span><br><span class="line"></span><br><span class="line">    (function()&#123;</span><br><span class="line">        var script = document.createElement(&#x27;script&#x27;);</span><br><span class="line"></span><br><span class="line">        script.src = &#x27;https://giscus.app/client.js&#x27;;</span><br><span class="line">        script.setAttribute(&#x27;data-repo&#x27;, giscus_repo);</span><br><span class="line">        script.setAttribute(&#x27;data-repo-id&#x27;, giscus_repo_id);</span><br><span class="line">        script.setAttribute(&#x27;data-category&#x27;, giscus_category);</span><br><span class="line">        script.setAttribute(&#x27;data-category-id&#x27;, giscus_category_id);</span><br><span class="line">        script.setAttribute(&#x27;data-mapping&#x27;, giscus_mapping);</span><br><span class="line">        script.setAttribute(&#x27;data-strict&#x27;, giscus_strict);</span><br><span class="line">        script.setAttribute(&#x27;data-reactions-enabled&#x27;, giscus_reactions_enabled);</span><br><span class="line">        script.setAttribute(&#x27;data-emit-metadata&#x27;, giscus_emit_metadata);</span><br><span class="line">        script.setAttribute(&#x27;data-input-position&#x27;, giscus_input_position);</span><br><span class="line">        script.setAttribute(&#x27;data-theme&#x27;, giscus_theme);</span><br><span class="line">        script.setAttribute(&#x27;data-lang&#x27;, theme_lang);</span><br><span class="line">        script.setAttribute(&#x27;data-loading&#x27;, giscus_loading);</span><br><span class="line">        script.setAttribute(&#x27;crossorigin&#x27;, giscus_crossorigin);</span><br><span class="line">        script.async = true;</span><br><span class="line">        (document.getElementById(&#x27;giscus_thread&#x27;)).appendChild(script);</span><br><span class="line">    &#125;());</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;% &#125; %&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</code> 本地运行测试，一次通过！</p>
+<h2 id="历史评论迁移"><a href="#历史评论迁移" class="headerlink" title="历史评论迁移"></a>历史评论迁移</h2><p>看 Giscus 主页提到如果历史评论基于 Utterances，还可以进行迁移，非常的便利，有空再看看迁移。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8F%91"><span class="toc-number">1.</span> <span class="toc-text">启发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Giscus"><span class="toc-number">2.</span> <span class="toc-text">Giscus</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%8F%98%E6%9B%B4"><span class="toc-number">3.</span> <span class="toc-text">代码变更</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E8%AF%84%E8%AE%BA%E8%BF%81%E7%A7%BB"><span class="toc-number">4.</span> <span class="toc-text">历史评论迁移</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251116/use-giscus-comment-system/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&text=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&title=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&is_video=false&description=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=为hexo-theme-cactus主题添加Giscus评论系统&body=Check out this article: https://zhu.happy365.day/20251116/use-giscus-comment-system/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&title=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&title=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&title=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&title=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251116/use-giscus-comment-system/&name=为hexo-theme-cactus主题添加Giscus评论系统&description=&lt;h2 id=&#34;启发&#34;&gt;&lt;a href=&#34;#启发&#34; class=&#34;headerlink&#34; title=&#34;启发&#34;&gt;&lt;/a&gt;启发&lt;/h2&gt;&lt;p&gt;最近添加了 &lt;a href=&#34;https://pinpe.top/&#34;&gt;Pinpe的云端&lt;/a&gt; 博友的友链，并且在留言页面留过言。&lt;/p&gt;
+&lt;p&gt;今天晚上收到了来自 GitHub 的其他博友留言的抄送邮件，遵循周末晚上要把友链都翻一遍的习惯，点进了博友的留言页面，惊奇的发现留言和回复是连贯的。&lt;/p&gt;
+&lt;p&gt;原 hexo-theme-cactus 主题的基于 Utterances 的评论系统中，评论和回复是分开的，只能引用回复。&lt;/p&gt;
+&lt;p&gt;我还以为是我使用错误，最后确认 GitHub 的 issues 中确实不能直接 Reply，只能 Quote Reply。&lt;/p&gt;
+&lt;h2 id=&#34;Giscus&#34;&gt;&lt;a href=&#34;#Giscus&#34; class=&#34;headerlink&#34; title=&#34;Giscus&#34;&gt;&lt;/a&gt;Giscus&lt;/h2&gt;&lt;p&gt;很久之前就看到过 Giscus 这个评论系统的名字，可是没机会仔细了解，本能的以为是和 disqus、wolai 类似的第三方的评论系统。&lt;/p&gt;
+&lt;p&gt;点进主页，这主页风格和 Utterances 如出一辙，惊喜的发现 Giscus 就是受到 Utterances 的启发利用 GitHub Discussions 功能开发的，而 GitHub Discussions 系统是支持直接回复的。&lt;/p&gt;
+&lt;p&gt;于是打算将评论切换为 Giscus。&lt;/p&gt;
+&lt;p&gt;不过 hexo-theme-cactus 主题默认只支持 disqus 和 utterances，并没有 Giscus 的选项。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251116/use-giscus-comment-system/&t=为hexo-theme-cactus主题添加Giscus评论系统"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

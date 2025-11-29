@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="今天尝试了使用无刷电调来驱动无刷电机，但是刚开始遇到点问题，没理解网上的博文，还好板子没被烧掉💦 树莓派pwm控制无刷电机 连线刚开始了卡在了连线这里，电调有两根电源线，连接12V电源，其中三根线连接树莓派，如果树莓派独立供电的话，电调只需要将信号控制线和地线连接到树莓派的GPIO口和GND口。 我刚开始连错了，树莓派独立供电的同时，将电调的5V输出端和GND线都连接到了树莓派上，板子突然自己开">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树莓派通过无刷电调驱动无刷电机">
+<meta property="og:url" content="https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="今天尝试了使用无刷电调来驱动无刷电机，但是刚开始遇到点问题，没理解网上的博文，还好板子没被烧掉💦 树莓派pwm控制无刷电机 连线刚开始了卡在了连线这里，电调有两根电源线，连接12V电源，其中三根线连接树莓派，如果树莓派独立供电的话，电调只需要将信号控制线和地线连接到树莓派的GPIO口和GND口。 我刚开始连错了，树莓派独立供电的同时，将电调的5V输出端和GND线都连接到了树莓派上，板子突然自己开">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.happy365.day/24/04/17222155.png">
+<meta property="article:published_time" content="2020-01-05T11:21:03.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.223Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="IoT">
+<meta property="article:tag" content="树莓派">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.happy365.day/24/04/17222155.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>树莓派通过无刷电调驱动无刷电机</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20200105/serifu-of-a-place-further-than-universe/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20200104/raspberry-drive-led-display/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&text=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&title=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&is_video=false&description=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=树莓派通过无刷电调驱动无刷电机&body=Check out this article: https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&title=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&title=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&title=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&title=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&name=树莓派通过无刷电调驱动无刷电机&description=&lt;p&gt;今天尝试了使用无刷电调来驱动无刷电机，但是刚开始遇到点问题，没理解网上的博文，还好板子没被烧掉💦&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/qf0129/article/details/70769054&#34;&gt;树莓派pwm控制无刷电机&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;连线&#34;&gt;&lt;a href=&#34;#连线&#34; class=&#34;headerlink&#34; title=&#34;连线&#34;&gt;&lt;/a&gt;连线&lt;/h2&gt;&lt;p&gt;刚开始了卡在了连线这里，电调有两根电源线，连接12V电源，其中三根线连接树莓派，&lt;strong&gt;如果树莓派独立供电的话，电调只需要将信号控制线和地线连接到树莓派的GPIO口和GND口&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;我刚开始连错了，树莓派独立供电的同时，将电调的5V输出端和GND线都连接到了树莓派上，板子突然自己开机了，才意识到接错了。后来想着不需要电调输出的电压，所以只接了信号控制线，5V输出和GND都没接，程序跑了但是电机没转动，也没信号声音。看了 &lt;a href=&#34;https://www.cnblogs.com/raffeale/p/5585757.html&#34;&gt;折腾了2个晚上无刷电调(ESC)，电机终于转起来了，特此记录一下&lt;/a&gt; 才意识到电调的GND线是一定要接到树莓派的GND口的，然后电机就动了。&lt;/p&gt;
+&lt;p&gt;连接图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/24/04/17222155.png&#34; alt=&#34;连线图&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;上面的图中电调的输入电压应该是12V，可以用4节5号电池串联。&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;测试代码&#34;&gt;&lt;a href=&#34;#测试代码&#34; class=&#34;headerlink&#34; title=&#34;测试代码&#34;&gt;&lt;/a&gt;测试代码&lt;/h2&gt;&lt;p&gt;连接好之后，给树莓派通电，接通电调连接的电源，然后用RPi.GPIO.PWM()控制电机的转速。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&t=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E7%BA%BF"><span class="toc-number">1.</span> <span class="toc-text">连线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">测试代码</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        树莓派通过无刷电调驱动无刷电机
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-01-05T11:21:03.000Z" class="dt-published" itemprop="datePublished">2020-01-05</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/IoT/" rel="tag">IoT</a>, <a class="p-category" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a> -->
+        <a class="category-link" href="/tags/IoT/" rel="tag">IoT</a>, <a class="category-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">358 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">1  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>今天尝试了使用无刷电调来驱动无刷电机，但是刚开始遇到点问题，没理解网上的博文，还好板子没被烧掉💦</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qf0129/article/details/70769054">树莓派pwm控制无刷电机</a></p>
+<h2 id="连线"><a href="#连线" class="headerlink" title="连线"></a>连线</h2><p>刚开始了卡在了连线这里，电调有两根电源线，连接12V电源，其中三根线连接树莓派，<strong>如果树莓派独立供电的话，电调只需要将信号控制线和地线连接到树莓派的GPIO口和GND口</strong>。</p>
+<p>我刚开始连错了，树莓派独立供电的同时，将电调的5V输出端和GND线都连接到了树莓派上，板子突然自己开机了，才意识到接错了。后来想着不需要电调输出的电压，所以只接了信号控制线，5V输出和GND都没接，程序跑了但是电机没转动，也没信号声音。看了 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/raffeale/p/5585757.html">折腾了2个晚上无刷电调(ESC)，电机终于转起来了，特此记录一下</a> 才意识到电调的GND线是一定要接到树莓派的GND口的，然后电机就动了。</p>
+<p>连接图：</p>
+<p><img src="https://images.happy365.day/24/04/17222155.png" alt="连线图"></p>
+<p><em>上面的图中电调的输入电压应该是12V，可以用4节5号电池串联。</em></p>
+<h2 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h2><p>连接好之后，给树莓派通电，接通电调连接的电源，然后用RPi.GPIO.PWM()控制电机的转速。</p>
+<p>测试代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python</span></span><br><span class="line"><span class="comment"># _*_ coding:utf-8 _*_</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> RPi.GPIO <span class="keyword">as</span> GPIO</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pin = <span class="number">18</span></span><br><span class="line"></span><br><span class="line">GPIO.setmode(GPIO.BCM)</span><br><span class="line">GPIO.setup(pin, GPIO.OUT)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 频率400Hz</span></span><br><span class="line">p = GPIO.PWM(pin, <span class="number">400</span>)</span><br><span class="line">p.start(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">dc = <span class="number">10</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">40</span>):</span><br><span class="line">        dc += <span class="number">2</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;dc:&#x27;</span>, dc</span><br><span class="line">        p.ChangeDutyCycle(dc)</span><br><span class="line">        time.sleep(<span class="number">0.3</span>)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    p.stop()</span><br><span class="line">    GPIO.cleanup()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E7%BA%BF"><span class="toc-number">1.</span> <span class="toc-text">连线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">测试代码</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&text=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&title=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&is_video=false&description=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=树莓派通过无刷电调驱动无刷电机&body=Check out this article: https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&title=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&title=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&title=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&title=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&name=树莓派通过无刷电调驱动无刷电机&description=&lt;p&gt;今天尝试了使用无刷电调来驱动无刷电机，但是刚开始遇到点问题，没理解网上的博文，还好板子没被烧掉💦&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/qf0129/article/details/70769054&#34;&gt;树莓派pwm控制无刷电机&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;连线&#34;&gt;&lt;a href=&#34;#连线&#34; class=&#34;headerlink&#34; title=&#34;连线&#34;&gt;&lt;/a&gt;连线&lt;/h2&gt;&lt;p&gt;刚开始了卡在了连线这里，电调有两根电源线，连接12V电源，其中三根线连接树莓派，&lt;strong&gt;如果树莓派独立供电的话，电调只需要将信号控制线和地线连接到树莓派的GPIO口和GND口&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;我刚开始连错了，树莓派独立供电的同时，将电调的5V输出端和GND线都连接到了树莓派上，板子突然自己开机了，才意识到接错了。后来想着不需要电调输出的电压，所以只接了信号控制线，5V输出和GND都没接，程序跑了但是电机没转动，也没信号声音。看了 &lt;a href=&#34;https://www.cnblogs.com/raffeale/p/5585757.html&#34;&gt;折腾了2个晚上无刷电调(ESC)，电机终于转起来了，特此记录一下&lt;/a&gt; 才意识到电调的GND线是一定要接到树莓派的GND口的，然后电机就动了。&lt;/p&gt;
+&lt;p&gt;连接图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/24/04/17222155.png&#34; alt=&#34;连线图&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;上面的图中电调的输入电压应该是12V，可以用4节5号电池串联。&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;测试代码&#34;&gt;&lt;a href=&#34;#测试代码&#34; class=&#34;headerlink&#34; title=&#34;测试代码&#34;&gt;&lt;/a&gt;测试代码&lt;/h2&gt;&lt;p&gt;连接好之后，给树莓派通电，接通电调连接的电源，然后用RPi.GPIO.PWM()控制电机的转速。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20200105/raspberry-pi-drive-motor/&t=树莓派通过无刷电调驱动无刷电机"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

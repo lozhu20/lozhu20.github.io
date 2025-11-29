@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="二次开发内容主题地址：hexo-theme-cactus 之前用的是博客主题是 hexo-theme-aomori，一款比较简洁的主题，用了大半年。 正逢清明假期，想了解一下其他博客实现，如 typecho、solo、aurora、以及基于 Next.js 实现之类的。无意间看到两款比较喜欢的 Hexo 主题：hexo-theme-quiet 和 hexo-theme-cactus。原文链接：He">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo-theme-cactus主题再开发">
+<meta property="og:url" content="https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="二次开发内容主题地址：hexo-theme-cactus 之前用的是博客主题是 hexo-theme-aomori，一款比较简洁的主题，用了大半年。 正逢清明假期，想了解一下其他博客实现，如 typecho、solo、aurora、以及基于 Next.js 实现之类的。无意间看到两款比较喜欢的 Hexo 主题：hexo-theme-quiet 和 hexo-theme-cactus。原文链接：He">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-04-04T09:52:27.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.221Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="hexo-theme-cactus">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>hexo-theme-cactus主题再开发</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20240408/some-useful-keymap-in-sublime/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20240314/deploy-postgresql-cluster-with-docker/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&text=hexo-theme-cactus主题再开发"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&title=hexo-theme-cactus主题再开发"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&is_video=false&description=hexo-theme-cactus主题再开发"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=hexo-theme-cactus主题再开发&body=Check out this article: https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&title=hexo-theme-cactus主题再开发"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&title=hexo-theme-cactus主题再开发"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&title=hexo-theme-cactus主题再开发"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&title=hexo-theme-cactus主题再开发"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&name=hexo-theme-cactus主题再开发&description=&lt;h2 id=&#34;二次开发内容&#34;&gt;&lt;a href=&#34;#二次开发内容&#34; class=&#34;headerlink&#34; title=&#34;二次开发内容&#34;&gt;&lt;/a&gt;二次开发内容&lt;/h2&gt;&lt;p&gt;主题地址：&lt;a href=&#34;https://github.com/lozhu20/hexo-theme-cactus&#34;&gt;hexo-theme-cactus&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;之前用的是博客主题是 hexo-theme-aomori，一款比较简洁的主题，用了大半年。&lt;/p&gt;
+&lt;p&gt;正逢清明假期，想了解一下其他博客实现，如 typecho、solo、aurora、以及基于 Next.js 实现之类的。无意间看到两款比较喜欢的 Hexo 主题：&lt;a href=&#34;https://blog.taire.de/&#34;&gt;hexo-theme-quiet&lt;/a&gt; 和 &lt;a href=&#34;https://github.com/lozhu20/hexo-theme-cactus&#34;&gt;hexo-theme-cactus&lt;/a&gt;。&lt;br&gt;原文链接：&lt;a href=&#34;https://blog.lixiaomu.fun/posts/43857/&#34;&gt;Hexo 10款好看的主题｜新手建站必备！&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本来开始想切换成 quite 的，简洁大方，记录一下生活、发点照片之类的应该效果很好，但是把 quite 主题拉到本地之后，发现和作者的 Demo 样式不太一致，使用文档也不是很详细，就放弃了。&lt;/p&gt;
+&lt;p&gt;cactus 主题的设计给人眼前一亮的感觉，有 dark、white、light、classic 4 种样式可以选择，非常棒！制作一款优秀的主题，不光要有技术，能投入大量的时间，前期的设计也很重要，quite 主题下最多的 issues 就是：能不能给文章详情添加目录？作者的答复是因为前期设计就没考虑目录，要修改的话会比较麻烦，需要时间，到现在过去了很久还没更新。&lt;/p&gt;
+&lt;p&gt;可能是强迫症吧，cactus 主题切换之前改了一些小细节：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;💄 默认的黑色主题下字体比较小，看起来比较费劲，将默认主题切换为了 white&lt;/li&gt;
+&lt;li&gt;💄 logo 尺寸调整为 55&lt;/li&gt;
+&lt;li&gt;💄 nav 靠网站标题太近，调整 nav margin-top&amp;#x3D;5px&lt;/li&gt;
+&lt;li&gt;💄 去掉社交网络中间的逗号&lt;/li&gt;
+&lt;li&gt;💄 移除文章详情页标签信息的下划线&lt;/li&gt;
+&lt;li&gt;💄 将文章详情页的标签信息颜色从红色修改为绿色&lt;/li&gt;
+&lt;li&gt;💄 修改默认的 content-width&amp;#x3D;52&lt;/li&gt;
+&lt;li&gt;💄 移除默认的网站图标 hover 效果，默认非 hover 网站图标是灰色，不好看&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;优化后的主题：&lt;a href=&#34;https://github.com/lozhu20/hexo-theme-cactus&#34;&gt;hexo-theme-cactus&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;添加了 Disqus 评论，Github 图床，后面努力更新吧。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&t=hexo-theme-cactus主题再开发"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text">二次开发内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%AE%B0%E5%BD%95"><span class="toc-number">2.</span> <span class="toc-text">更新记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2024-04-07-%E6%9B%B4%E6%96%B0"><span class="toc-number">2.1.</span> <span class="toc-text">✅ 2024-04-07 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2024-04-14-%E6%9B%B4%E6%96%B0"><span class="toc-number">2.2.</span> <span class="toc-text">✅ 2024-04-14 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2024-04-16-%E6%9B%B4%E6%96%B0"><span class="toc-number">2.3.</span> <span class="toc-text">✅ 2024-04-16 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2025-11-20-%E6%9B%B4%E6%96%B0"><span class="toc-number">2.4.</span> <span class="toc-text">✅ 2025-11-20 更新</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        hexo-theme-cactus主题再开发
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-04-04T09:52:27.000Z" class="dt-published" itemprop="datePublished">2024-04-04</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/">博客维护</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Hexo/" rel="tag">Hexo</a>, <a class="p-category" href="/tags/hexo-theme-cactus/" rel="tag">hexo-theme-cactus</a> -->
+        <a class="category-link" href="/tags/Hexo/" rel="tag">Hexo</a>, <a class="category-link" href="/tags/hexo-theme-cactus/" rel="tag">hexo-theme-cactus</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">975 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">4  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="二次开发内容"><a href="#二次开发内容" class="headerlink" title="二次开发内容"></a>二次开发内容</h2><p>主题地址：<a target="_blank" rel="noopener" href="https://github.com/lozhu20/hexo-theme-cactus">hexo-theme-cactus</a></p>
+<p>之前用的是博客主题是 hexo-theme-aomori，一款比较简洁的主题，用了大半年。</p>
+<p>正逢清明假期，想了解一下其他博客实现，如 typecho、solo、aurora、以及基于 Next.js 实现之类的。无意间看到两款比较喜欢的 Hexo 主题：<a target="_blank" rel="noopener" href="https://blog.taire.de/">hexo-theme-quiet</a> 和 <a target="_blank" rel="noopener" href="https://github.com/lozhu20/hexo-theme-cactus">hexo-theme-cactus</a>。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.lixiaomu.fun/posts/43857/">Hexo 10款好看的主题｜新手建站必备！</a></p>
+<p>本来开始想切换成 quite 的，简洁大方，记录一下生活、发点照片之类的应该效果很好，但是把 quite 主题拉到本地之后，发现和作者的 Demo 样式不太一致，使用文档也不是很详细，就放弃了。</p>
+<p>cactus 主题的设计给人眼前一亮的感觉，有 dark、white、light、classic 4 种样式可以选择，非常棒！制作一款优秀的主题，不光要有技术，能投入大量的时间，前期的设计也很重要，quite 主题下最多的 issues 就是：能不能给文章详情添加目录？作者的答复是因为前期设计就没考虑目录，要修改的话会比较麻烦，需要时间，到现在过去了很久还没更新。</p>
+<p>可能是强迫症吧，cactus 主题切换之前改了一些小细节：</p>
+<ol>
+<li>💄 默认的黑色主题下字体比较小，看起来比较费劲，将默认主题切换为了 white</li>
+<li>💄 logo 尺寸调整为 55</li>
+<li>💄 nav 靠网站标题太近，调整 nav margin-top&#x3D;5px</li>
+<li>💄 去掉社交网络中间的逗号</li>
+<li>💄 移除文章详情页标签信息的下划线</li>
+<li>💄 将文章详情页的标签信息颜色从红色修改为绿色</li>
+<li>💄 修改默认的 content-width&#x3D;52</li>
+<li>💄 移除默认的网站图标 hover 效果，默认非 hover 网站图标是灰色，不好看</li>
+</ol>
+<p>优化后的主题：<a target="_blank" rel="noopener" href="https://github.com/lozhu20/hexo-theme-cactus">hexo-theme-cactus</a></p>
+<p>添加了 Disqus 评论，Github 图床，后面努力更新吧。</p>
+<h2 id="更新记录"><a href="#更新记录" class="headerlink" title="更新记录"></a>更新记录</h2><h3 id="✅-2024-04-07-更新"><a href="#✅-2024-04-07-更新" class="headerlink" title="✅ 2024-04-07 更新"></a>✅ 2024-04-07 更新</h3><ol>
+<li>⚙️ 觉得 Disqus 评论不够简约，了解了 utterances，外观简约和页面风格更搭，基于 GitHub 更方便管理，正好 utterances 评论也是 cactus 主题默认支持的两个评论系统之一。</li>
+<li>💄 删除 utterances 评论默认的 margin-left 和 margin-right。</li>
+<li>🐛 Friends 页面的 avatar 高度样式被覆盖，导致变成了长方形，给高度属性加了 <code>!important</code>。</li>
+<li>✨ 给 Friends 页面添加评论，方便添加友链。</li>
+<li>🍺 文章详情页的图片上下左右都有留白，需要去掉留白，<del>未解决</del>。(调了好久，发现只有 Mac 截图产生的图片才有此问题，平板截图、照片均无此问题，原因不明)（更新：截图工具的边缘阴影设置问题。）</li>
+<li>💄 修改文章 url 路径为 hash: permalink: :year&#x2F;:month&#x2F;:day&#x2F;:hash&#x2F;，默认使用 :title，当 ttile 中包含中文时会导致 utterances label 乱码。</li>
+</ol>
+<h3 id="✅-2024-04-14-更新"><a href="#✅-2024-04-14-更新" class="headerlink" title="✅ 2024-04-14 更新"></a>✅ 2024-04-14 更新</h3><ol>
+<li>✨ 底部增加 moe icp 萌国 ICP 备案展示</li>
+<li>✨ 导航增加开往​</li>
+<li>✨ 新增文章详情页图片弹窗展示​</li>
+<li>💄 将默认字体大小从 14px 调整 为 16px，方便阅读</li>
+<li>💄 文章分享按钮从纵向改为横向展示​</li>
+<li>🐛 修复主页 Copyright 信息与右侧导航未水平对齐的问题​</li>
+<li>🐛 修复小尺寸屏幕设备上页面内容与底部导航栏重叠问题</li>
+<li>🌍 优化部分中文翻译​</li>
+<li>🔖 发布 Release​</li>
+</ol>
+<h3 id="✅-2024-04-16-更新"><a href="#✅-2024-04-16-更新" class="headerlink" title="✅ 2024-04-16 更新"></a>✅ 2024-04-16 更新</h3><ol>
+<li>✨ 增加 RSS 订阅动态展示</li>
+</ol>
+<p>❌ 目前发现的 bug</p>
+<p>🐛目前发现的 bug：文章分享按钮重复打开、关闭之后，按钮上方会有莫名其妙的空白产生，随着点击次数增加，空白区域逐渐增大。</p>
+<h3 id="✅-2025-11-20-更新"><a href="#✅-2025-11-20-更新" class="headerlink" title="✅ 2025-11-20 更新"></a>✅ 2025-11-20 更新</h3><ol>
+<li>增加深色模式。</li>
+<li>增加十年之约配置。</li>
+<li>增加随机句子展示。</li>
+<li>增加首页公告。</li>
+</ol>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text">二次开发内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%AE%B0%E5%BD%95"><span class="toc-number">2.</span> <span class="toc-text">更新记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2024-04-07-%E6%9B%B4%E6%96%B0"><span class="toc-number">2.1.</span> <span class="toc-text">✅ 2024-04-07 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2024-04-14-%E6%9B%B4%E6%96%B0"><span class="toc-number">2.2.</span> <span class="toc-text">✅ 2024-04-14 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2024-04-16-%E6%9B%B4%E6%96%B0"><span class="toc-number">2.3.</span> <span class="toc-text">✅ 2024-04-16 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2025-11-20-%E6%9B%B4%E6%96%B0"><span class="toc-number">2.4.</span> <span class="toc-text">✅ 2025-11-20 更新</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&text=hexo-theme-cactus主题再开发"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&title=hexo-theme-cactus主题再开发"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&is_video=false&description=hexo-theme-cactus主题再开发"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=hexo-theme-cactus主题再开发&body=Check out this article: https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&title=hexo-theme-cactus主题再开发"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&title=hexo-theme-cactus主题再开发"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&title=hexo-theme-cactus主题再开发"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&title=hexo-theme-cactus主题再开发"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&name=hexo-theme-cactus主题再开发&description=&lt;h2 id=&#34;二次开发内容&#34;&gt;&lt;a href=&#34;#二次开发内容&#34; class=&#34;headerlink&#34; title=&#34;二次开发内容&#34;&gt;&lt;/a&gt;二次开发内容&lt;/h2&gt;&lt;p&gt;主题地址：&lt;a href=&#34;https://github.com/lozhu20/hexo-theme-cactus&#34;&gt;hexo-theme-cactus&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;之前用的是博客主题是 hexo-theme-aomori，一款比较简洁的主题，用了大半年。&lt;/p&gt;
+&lt;p&gt;正逢清明假期，想了解一下其他博客实现，如 typecho、solo、aurora、以及基于 Next.js 实现之类的。无意间看到两款比较喜欢的 Hexo 主题：&lt;a href=&#34;https://blog.taire.de/&#34;&gt;hexo-theme-quiet&lt;/a&gt; 和 &lt;a href=&#34;https://github.com/lozhu20/hexo-theme-cactus&#34;&gt;hexo-theme-cactus&lt;/a&gt;。&lt;br&gt;原文链接：&lt;a href=&#34;https://blog.lixiaomu.fun/posts/43857/&#34;&gt;Hexo 10款好看的主题｜新手建站必备！&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本来开始想切换成 quite 的，简洁大方，记录一下生活、发点照片之类的应该效果很好，但是把 quite 主题拉到本地之后，发现和作者的 Demo 样式不太一致，使用文档也不是很详细，就放弃了。&lt;/p&gt;
+&lt;p&gt;cactus 主题的设计给人眼前一亮的感觉，有 dark、white、light、classic 4 种样式可以选择，非常棒！制作一款优秀的主题，不光要有技术，能投入大量的时间，前期的设计也很重要，quite 主题下最多的 issues 就是：能不能给文章详情添加目录？作者的答复是因为前期设计就没考虑目录，要修改的话会比较麻烦，需要时间，到现在过去了很久还没更新。&lt;/p&gt;
+&lt;p&gt;可能是强迫症吧，cactus 主题切换之前改了一些小细节：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;💄 默认的黑色主题下字体比较小，看起来比较费劲，将默认主题切换为了 white&lt;/li&gt;
+&lt;li&gt;💄 logo 尺寸调整为 55&lt;/li&gt;
+&lt;li&gt;💄 nav 靠网站标题太近，调整 nav margin-top&amp;#x3D;5px&lt;/li&gt;
+&lt;li&gt;💄 去掉社交网络中间的逗号&lt;/li&gt;
+&lt;li&gt;💄 移除文章详情页标签信息的下划线&lt;/li&gt;
+&lt;li&gt;💄 将文章详情页的标签信息颜色从红色修改为绿色&lt;/li&gt;
+&lt;li&gt;💄 修改默认的 content-width&amp;#x3D;52&lt;/li&gt;
+&lt;li&gt;💄 移除默认的网站图标 hover 效果，默认非 hover 网站图标是灰色，不好看&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;优化后的主题：&lt;a href=&#34;https://github.com/lozhu20/hexo-theme-cactus&#34;&gt;hexo-theme-cactus&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;添加了 Disqus 评论，Github 图床，后面努力更新吧。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20240404/hexo-theme-cactus-redevelopment/&t=hexo-theme-cactus主题再开发"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

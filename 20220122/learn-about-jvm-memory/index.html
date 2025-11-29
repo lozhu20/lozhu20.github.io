@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="Java 与 C++ 之间有一堵由内存动态分配和垃圾回收技术所围成的高墙，墙外的人想进去，墙里的人想出来。  从大二开始学习 Java ，到现在工作的第四个年头，早已经习惯了 Java 的开发模式——想要对象就 new 一个，内存的分配和溢出从来没放在心上。前两天在 ESP8266 上写代码，开发板的 flash 只有 4M 内存，每行代码都要思前想后，申请释放内存的工作让人精疲力竭。C 语言考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Java虚拟机-2-Java内存区域及异常">
+<meta property="og:url" content="https://zhu.happy365.day/20220122/learn-about-jvm-memory/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="Java 与 C++ 之间有一堵由内存动态分配和垃圾回收技术所围成的高墙，墙外的人想进去，墙里的人想出来。  从大二开始学习 Java ，到现在工作的第四个年头，早已经习惯了 Java 的开发模式——想要对象就 new 一个，内存的分配和溢出从来没放在心上。前两天在 ESP8266 上写代码，开发板的 flash 只有 4M 内存，每行代码都要思前想后，申请释放内存的工作让人精疲力竭。C 语言考">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-22T13:36:49.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.223Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>深入理解Java虚拟机-2-Java内存区域及异常</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20220122/learn-about-jvm-memory/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20220319/settings-in-hadoop-and-hive/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20220122/weather-forecast-by-esp8266/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20220122/learn-about-jvm-memory/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&text=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&title=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&is_video=false&description=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=深入理解Java虚拟机-2-Java内存区域及异常&body=Check out this article: https://zhu.happy365.day/20220122/learn-about-jvm-memory/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&title=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&title=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&title=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&title=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&name=深入理解Java虚拟机-2-Java内存区域及异常&description=&lt;blockquote&gt;
+&lt;p&gt;Java 与 C++ 之间有一堵由内存动态分配和垃圾回收技术所围成的高墙，墙外的人想进去，墙里的人想出来。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;从大二开始学习 Java ，到现在工作的第四个年头，早已经习惯了 Java 的开发模式——想要对象就 new 一个，内存的分配和溢出从来没放在心上。前两天在 ESP8266 上写代码，开发板的 flash 只有 4M 内存，每行代码都要思前想后，申请释放内存的工作让人精疲力竭。C 语言考验技术， Java 用起来省心。&lt;/p&gt;
+&lt;h2 id=&#34;运行时数据区域&#34;&gt;&lt;a href=&#34;#运行时数据区域&#34; class=&#34;headerlink&#34; title=&#34;运行时数据区域&#34;&gt;&lt;/a&gt;运行时数据区域&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;方法区（Method Area）-线程共享&lt;/li&gt;
+&lt;li&gt;堆（Heap）                   -线程共享&lt;/li&gt;
+&lt;li&gt;虚拟机栈（VM Stack）&lt;/li&gt;
+&lt;li&gt;本地方法栈（Native Method Stack）&lt;/li&gt;
+&lt;li&gt;程序计数器（Program Counter Register）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;程序计数器&#34;&gt;&lt;a href=&#34;#程序计数器&#34; class=&#34;headerlink&#34; title=&#34;程序计数器&#34;&gt;&lt;/a&gt;程序计数器&lt;/h3&gt;&lt;p&gt;一块较小的内存空间，当前线程执行字节码指令的行号指示器，字节码指示器通过改变计数器的值获得下一条将要执行的指令，实现分支、循环、异常处理等功能。&lt;/p&gt;
+&lt;p&gt;Java虚拟机的多线程是通过&lt;strong&gt;线程轮换、分配处理器执行时间&lt;/strong&gt;来实现的，同一时刻只有一个线程运行，为了使线程处理器执行时间结束后能回到正确的位置，每个线程都需要一个独立的计数器（&lt;strong&gt;线程私有&lt;/strong&gt;）。类似于体能测试跑800米1000米一样，不跑的几个人分别盯着跑的那几个人，每个旁边的人记着自己的盯的人是第几个到终点，最后再和老师的计时器对比得到完成时间。&lt;/p&gt;
+&lt;p&gt;如果线程正在执行的是一个Java方法，这个计数器记录的是正在执行的虚拟机字节码指令的地址；如果正在执行的是本地（Native）方法，这个计数器值则应为空（Undefined）。&lt;/p&gt;
+&lt;h3 id=&#34;Java-虚拟机栈&#34;&gt;&lt;a href=&#34;#Java-虚拟机栈&#34; class=&#34;headerlink&#34; title=&#34;Java 虚拟机栈&#34;&gt;&lt;/a&gt;Java 虚拟机栈&lt;/h3&gt;&lt;p&gt;Java 虚拟机栈也是线程私有，每个方法执行的时候，虚拟机都会创建一个栈，用来存放这个方法相关的临时变量，操作数等。在 IDEA IDE 中，调试模式下，控制台左侧会有一个 Frame 的区域，展示流程中的方法栈。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&t=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F"><span class="toc-number">1.</span> <span class="toc-text">运行时数据区域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">程序计数器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="toc-number">1.2.</span> <span class="toc-text">Java 虚拟机栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="toc-number">1.3.</span> <span class="toc-text">本地方法栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%9C%9F%E4%B8%8E%E8%BF%90%E8%A1%8C%E6%9C%9F"><span class="toc-number">1.4.</span> <span class="toc-text">编译期与运行期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A0%86"><span class="toc-number">1.5.</span> <span class="toc-text">堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="toc-number">1.6.</span> <span class="toc-text">方法区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-number">1.7.</span> <span class="toc-text">运行时常量池</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HotSpot-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A7%98"><span class="toc-number">2.</span> <span class="toc-text">HotSpot 虚拟机对象探秘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">2.1.</span> <span class="toc-text">对象的创建</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        深入理解Java虚拟机-2-Java内存区域及异常
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-01-22T13:36:49.000Z" class="dt-published" itemprop="datePublished">2022-01-22</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/JVM/" rel="tag">JVM</a>, <a class="p-category" href="/tags/Java/" rel="tag">Java</a> -->
+        <a class="category-link" href="/tags/JVM/" rel="tag">JVM</a>, <a class="category-link" href="/tags/Java/" rel="tag">Java</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">2.3k words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">8  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <blockquote>
+<p>Java 与 C++ 之间有一堵由内存动态分配和垃圾回收技术所围成的高墙，墙外的人想进去，墙里的人想出来。</p>
+</blockquote>
+<p>从大二开始学习 Java ，到现在工作的第四个年头，早已经习惯了 Java 的开发模式——想要对象就 new 一个，内存的分配和溢出从来没放在心上。前两天在 ESP8266 上写代码，开发板的 flash 只有 4M 内存，每行代码都要思前想后，申请释放内存的工作让人精疲力竭。C 语言考验技术， Java 用起来省心。</p>
+<h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><ul>
+<li>方法区（Method Area）-线程共享</li>
+<li>堆（Heap）                   -线程共享</li>
+<li>虚拟机栈（VM Stack）</li>
+<li>本地方法栈（Native Method Stack）</li>
+<li>程序计数器（Program Counter Register）</li>
+</ul>
+<h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>一块较小的内存空间，当前线程执行字节码指令的行号指示器，字节码指示器通过改变计数器的值获得下一条将要执行的指令，实现分支、循环、异常处理等功能。</p>
+<p>Java虚拟机的多线程是通过<strong>线程轮换、分配处理器执行时间</strong>来实现的，同一时刻只有一个线程运行，为了使线程处理器执行时间结束后能回到正确的位置，每个线程都需要一个独立的计数器（<strong>线程私有</strong>）。类似于体能测试跑800米1000米一样，不跑的几个人分别盯着跑的那几个人，每个旁边的人记着自己的盯的人是第几个到终点，最后再和老师的计时器对比得到完成时间。</p>
+<p>如果线程正在执行的是一个Java方法，这个计数器记录的是正在执行的虚拟机字节码指令的地址；如果正在执行的是本地（Native）方法，这个计数器值则应为空（Undefined）。</p>
+<h3 id="Java-虚拟机栈"><a href="#Java-虚拟机栈" class="headerlink" title="Java 虚拟机栈"></a>Java 虚拟机栈</h3><p>Java 虚拟机栈也是线程私有，每个方法执行的时候，虚拟机都会创建一个栈，用来存放这个方法相关的临时变量，操作数等。在 IDEA IDE 中，调试模式下，控制台左侧会有一个 Frame 的区域，展示流程中的方法栈。</p>
+<p>栈主要用来存放基本数据类型及对象引用（地址）。</p>
+<ol>
+<li>boolean</li>
+<li>byte</li>
+<li>char</li>
+<li>short</li>
+<li>int</li>
+<li>float</li>
+<li>double</li>
+<li>long</li>
+</ol>
+<p>局部变量表所需的内存空间在编译期间完成分配，当进入一个方法时，这个方法需要在栈帧中分配多大的局部变量空间是完全确定的，在方法运行期间不会改变局部变量表的大小。</p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>本地方法栈（Native Method Stack）与虚拟机栈类似，不过本地方法栈是为本地方法（Native Method）服务的，虚拟机栈是执行字节码服务的。</p>
+<h3 id="编译期与运行期"><a href="#编译期与运行期" class="headerlink" title="编译期与运行期"></a>编译期与运行期</h3><p>编译期：</p>
+<blockquote>
+<p>指把源码交给编译器生成计算机可执行文件的过程。在 Java 中即把 .java 文件编译成 .class 文件的过程。编译期只是做了一些翻译功能，并没有把代码放在内存中运行起来，而只是把代码当成文本进行操作，比如检查错误。</p>
+</blockquote>
+<p>运行期：</p>
+<blockquote>
+<p>是把编译后的文件交给计算机执行，直到程序运行结束。所谓运行期就把在磁盘中的代码放到内存中执行起来，在Java中把磁盘中的代码放到内存中就是类加载过程，类加载是运行期的开始部分。</p>
+</blockquote>
+<p>编译期分配内存并不是说在编译期就把程序所需要的空间在内存中分配好，而是说在编译期生成的代码中产生一些指令，在运行代码时通过这些指令把程序所需的内存分配好。只不过在编译期的时候就知道<em>分配的大小</em>，并且知道这些<em>内存的位置</em>。</p>
+<p>而运行期分配内存是指只有在运行期才确定内存的大小、存放的位置。</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/myitnews/p/11457649.html">编译期与运行期 </a></p>
+<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>堆由所有线程共享，几乎所有的 Java 对象和数组都在这里分配内存，所以该区域也是垃圾回收的主要区域。</p>
+<p>如果从分配内存的角度看，所有线程共享的Java堆中可以划分出多个线程私有的分配缓冲区，以提升对象分配时的效率。不过无论从什么角度，无论如何划分，都不会改变 Java 堆中存储内容的共性，无论是哪个区域，存储的都只能是对象的实例，将Java 堆细分的目的只是为了更好地回收内存，或者更快地分配内存。</p>
+<p>Java堆可以处于物理上不连续的内存空间中，但在逻辑上它应该被视为连续的，这点就像我们用磁盘空间去存储文件一样，并不要求每个文件都连续存放。但对于大对象(典型的如数组对象)，多数虚拟机实现出于实现简单、存储高效的考虑，很可能会要求连续的内存空间。</p>
+<p>Java堆既可以被实现成固定大小的，也可以是可扩展的，不过当前主流的Java虚拟机都是按照可扩展来实现的(通过参数 <strong>-Xmx</strong> 和 <strong>-Xms</strong> 设定)。如果在Java堆中没有内存完成实例分配，并且堆也无法再扩展时，Java虚拟机将会抛出 OutOfMemoryError 异常。</p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>方法区和堆一样，是各个线程共享的内存区域，用于存储被虚拟机加载的类型信息、常量、静态变量等数据。</p>
+<p>《Java虚拟机规范》对方法区的约束是非常宽松的，除了和 Java 堆一样不需要连续的内存和可以选择固定大小或者可扩展外，甚至还可以选择不实现垃圾收集。相对而言，垃圾收集行为在这个区域的 确是比较少出现的，但并非数据进入了方法区就如永久代的名字一样“永久”存在了。</p>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>运行时常量池(Runtime Constant Pool)是方法区的一部分。Class文件中除了有类的版本、字 段、方法、接口等描述信息外，还有一项信息是常量池表(Constant Pool Table)，用于存放编译期生 成的各种字面量与符号引用，这部分内容将在类加载后存放到方法区的运行时常量池中。</p>
+<p>运行时常量池相对于Class文件常量池的另外一个重要特征是具备动态性，Java语言并不要求常量 一定只有编译期才能产生，也就是说，并非预置入Class文件中常量池的内容才能进入方法区运行时常 量池，运行期间也可以将新的常量放入池中，这种特性被开发人员利用得比较多的便是String类的intern()方法。</p>
+<p>深入理解 intern() 方法：<a target="_blank" rel="noopener" href="https://www.runoob.com/java/java-string-intern.html">Java intern() 方法</a></p>
+<h2 id="HotSpot-虚拟机对象探秘"><a href="#HotSpot-虚拟机对象探秘" class="headerlink" title="HotSpot 虚拟机对象探秘"></a>HotSpot 虚拟机对象探秘</h2><h3 id="对象的创建"><a href="#对象的创建" class="headerlink" title="对象的创建"></a>对象的创建</h3><p>当虚拟机遇到一条 new 指令时，先检查这个指令能否在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否被<em>加载</em>、<em>解析</em>、<em>初始化</em>过，如果有，则分配内存，否则会先加载这个类。</p>
+<p>为对象分配内存时，如果堆中的内存是规整的（使用过的与未使用的内存区域是分开的），则在未使用的区域中划分一块确定大小的内存区域（指针移动所需分配内存大小的距离）；如果内存区域使用过的和空闲的未分开，则需要维护一个列表来管理未划分和已划分的内存。</p>
+<p>Java堆是否规整又由所采用的垃圾收集器是否带有空间压缩整理(Comp act)的能力决定。</p>
+<p>分配内存时，还需要考虑并发的问题，可能会出现分配内存的过程中又将此内存区域分配给了另一个对象的问题。一种解决办法是对分配内存的操作进行<strong>同步处理</strong>，另一种方法是<strong>为每个线程在堆中预先分配一块内存，即本地线程分配缓冲（TLAB）</strong>。虚拟机是否使用 TLAB ，可以通过参数：**-XX:+&#x2F;-UseTLAB** 设置。</p>
+<p>内存分配完成之后需要对对象进行初始化，将分配到的除对象头信息外的内存空间初始化为零值。</p>
+<p>还需要对对象进行必要的设置（元数据信息、对象哈希码、所属类等）。</p>
+<p>✅ 内存分配已经全部完成，在内存中已经产生一个新对象了，后面还需要根据构造函数来对这个对象进行初始化，执行完构造函数之后，这个对象就完整了。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F"><span class="toc-number">1.</span> <span class="toc-text">运行时数据区域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">程序计数器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="toc-number">1.2.</span> <span class="toc-text">Java 虚拟机栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="toc-number">1.3.</span> <span class="toc-text">本地方法栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%9C%9F%E4%B8%8E%E8%BF%90%E8%A1%8C%E6%9C%9F"><span class="toc-number">1.4.</span> <span class="toc-text">编译期与运行期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A0%86"><span class="toc-number">1.5.</span> <span class="toc-text">堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="toc-number">1.6.</span> <span class="toc-text">方法区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-number">1.7.</span> <span class="toc-text">运行时常量池</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HotSpot-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A7%98"><span class="toc-number">2.</span> <span class="toc-text">HotSpot 虚拟机对象探秘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">2.1.</span> <span class="toc-text">对象的创建</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20220122/learn-about-jvm-memory/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&text=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&title=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&is_video=false&description=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=深入理解Java虚拟机-2-Java内存区域及异常&body=Check out this article: https://zhu.happy365.day/20220122/learn-about-jvm-memory/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&title=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&title=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&title=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&title=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&name=深入理解Java虚拟机-2-Java内存区域及异常&description=&lt;blockquote&gt;
+&lt;p&gt;Java 与 C++ 之间有一堵由内存动态分配和垃圾回收技术所围成的高墙，墙外的人想进去，墙里的人想出来。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;从大二开始学习 Java ，到现在工作的第四个年头，早已经习惯了 Java 的开发模式——想要对象就 new 一个，内存的分配和溢出从来没放在心上。前两天在 ESP8266 上写代码，开发板的 flash 只有 4M 内存，每行代码都要思前想后，申请释放内存的工作让人精疲力竭。C 语言考验技术， Java 用起来省心。&lt;/p&gt;
+&lt;h2 id=&#34;运行时数据区域&#34;&gt;&lt;a href=&#34;#运行时数据区域&#34; class=&#34;headerlink&#34; title=&#34;运行时数据区域&#34;&gt;&lt;/a&gt;运行时数据区域&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;方法区（Method Area）-线程共享&lt;/li&gt;
+&lt;li&gt;堆（Heap）                   -线程共享&lt;/li&gt;
+&lt;li&gt;虚拟机栈（VM Stack）&lt;/li&gt;
+&lt;li&gt;本地方法栈（Native Method Stack）&lt;/li&gt;
+&lt;li&gt;程序计数器（Program Counter Register）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;程序计数器&#34;&gt;&lt;a href=&#34;#程序计数器&#34; class=&#34;headerlink&#34; title=&#34;程序计数器&#34;&gt;&lt;/a&gt;程序计数器&lt;/h3&gt;&lt;p&gt;一块较小的内存空间，当前线程执行字节码指令的行号指示器，字节码指示器通过改变计数器的值获得下一条将要执行的指令，实现分支、循环、异常处理等功能。&lt;/p&gt;
+&lt;p&gt;Java虚拟机的多线程是通过&lt;strong&gt;线程轮换、分配处理器执行时间&lt;/strong&gt;来实现的，同一时刻只有一个线程运行，为了使线程处理器执行时间结束后能回到正确的位置，每个线程都需要一个独立的计数器（&lt;strong&gt;线程私有&lt;/strong&gt;）。类似于体能测试跑800米1000米一样，不跑的几个人分别盯着跑的那几个人，每个旁边的人记着自己的盯的人是第几个到终点，最后再和老师的计时器对比得到完成时间。&lt;/p&gt;
+&lt;p&gt;如果线程正在执行的是一个Java方法，这个计数器记录的是正在执行的虚拟机字节码指令的地址；如果正在执行的是本地（Native）方法，这个计数器值则应为空（Undefined）。&lt;/p&gt;
+&lt;h3 id=&#34;Java-虚拟机栈&#34;&gt;&lt;a href=&#34;#Java-虚拟机栈&#34; class=&#34;headerlink&#34; title=&#34;Java 虚拟机栈&#34;&gt;&lt;/a&gt;Java 虚拟机栈&lt;/h3&gt;&lt;p&gt;Java 虚拟机栈也是线程私有，每个方法执行的时候，虚拟机都会创建一个栈，用来存放这个方法相关的临时变量，操作数等。在 IDEA IDE 中，调试模式下，控制台左侧会有一个 Frame 的区域，展示流程中的方法栈。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20220122/learn-about-jvm-memory/&t=深入理解Java虚拟机-2-Java内存区域及异常"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

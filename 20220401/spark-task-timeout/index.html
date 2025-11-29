@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="上个版本因为一个需求需要在原有任务上加两个字段，很简单的一件事，想都没多想，直接在 select 后面加上了两个字段，类似于： 123456789101112insert overwrite table tbl_test partition (undr)select a.*,       b.app,   -- 新增字段       c.date   -- 新增字段from awhere join">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次Spark任务卡住的问题排查">
+<meta property="og:url" content="https://zhu.happy365.day/20220401/spark-task-timeout/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="上个版本因为一个需求需要在原有任务上加两个字段，很简单的一件事，想都没多想，直接在 select 后面加上了两个字段，类似于： 123456789101112insert overwrite table tbl_test partition (undr)select a.*,       b.app,   -- 新增字段       c.date   -- 新增字段from awhere join">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-31T16:08:43.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.224Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Spark">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>记一次Spark任务卡住的问题排查</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20220401/spark-task-timeout/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20220726/learn-about-effective-java/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20220320/learn-about-hive/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20220401/spark-task-timeout/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20220401/spark-task-timeout/&text=记一次Spark任务卡住的问题排查"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20220401/spark-task-timeout/&title=记一次Spark任务卡住的问题排查"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20220401/spark-task-timeout/&is_video=false&description=记一次Spark任务卡住的问题排查"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=记一次Spark任务卡住的问题排查&body=Check out this article: https://zhu.happy365.day/20220401/spark-task-timeout/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20220401/spark-task-timeout/&title=记一次Spark任务卡住的问题排查"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20220401/spark-task-timeout/&title=记一次Spark任务卡住的问题排查"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20220401/spark-task-timeout/&title=记一次Spark任务卡住的问题排查"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20220401/spark-task-timeout/&title=记一次Spark任务卡住的问题排查"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20220401/spark-task-timeout/&name=记一次Spark任务卡住的问题排查&description=&lt;p&gt;上个版本因为一个需求需要在原有任务上加两个字段，很简单的一件事，想都没多想，直接在 select 后面加上了两个字段，类似于：&lt;/p&gt;
+&lt;figure class=&#34;highlight sql&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;insert&lt;/span&gt; overwrite &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; tbl_test &lt;span class=&#34;keyword&#34;&gt;partition&lt;/span&gt; (undr)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;select&lt;/span&gt; a.&lt;span class=&#34;operator&#34;&gt;*&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       b.app,   &lt;span class=&#34;comment&#34;&gt;-- 新增字段&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       c.date   &lt;span class=&#34;comment&#34;&gt;-- 新增字段&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;from&lt;/span&gt; a&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;where&lt;/span&gt; &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;join&lt;/span&gt; b &lt;span class=&#34;keyword&#34;&gt;on&lt;/span&gt; a.id &lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt; b.aid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;join&lt;/span&gt; c &lt;span class=&#34;keyword&#34;&gt;on&lt;/span&gt; a.id &lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt; c.aid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;join&lt;/span&gt; d &lt;span class=&#34;keyword&#34;&gt;on&lt;/span&gt; a.id &lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt; d.aid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;join&lt;/span&gt; e &lt;span class=&#34;keyword&#34;&gt;on&lt;/span&gt; a.id &lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt; e.aid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;join&lt;/span&gt; f &lt;span class=&#34;keyword&#34;&gt;on&lt;/span&gt; a.id &lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt; f.aid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;加完之后就上到测试环境去跑了，想着先把基表数据跑出来再做后面的需求。这时候问题出现了，原本基本两个小时跑完的任务，这次跑了五六个小时都没跑完，于是开始找问题。&lt;/p&gt;
+&lt;p&gt;最初没深究问题，直接 &lt;code&gt;yarn application -kill application...&lt;/code&gt; kill 掉了，因为 kill 掉，所以调度平台收到了任务报错的消息，就自动下发了，我没注意到调度平台会自动下发，于是 kill 掉之后立即手动下发。等我回来排查问题的时候，发现下发的任务都在排队，因为有一个任务在跑，把资源都占用完了。&lt;/p&gt;
+&lt;p&gt;重复下发了几次，都是超过四五个小时没结束，甚至头一天下班下发的任务，第二天上班还没跑完，感觉不太对劲，开始仔细排查问题。&lt;/p&gt;
+&lt;p&gt;查看日志每次都卡在 stage8，看 DAG 图，应该是最后一个 stage 了，流程比较复杂。怀疑是加的两个字段有问题，于是将两个字段写死成 ‘’ ，结果还是跑不出结果。&lt;/p&gt;
+&lt;p&gt;因为不是专业搞大数据的，又临近版本日，只好提单向大数据组的同事求助。结果令人失望，一个接单的女同事，都没看我的 SQL 直接发给我几个优化参数，说加上再跑试试。。原本以为他们能具体问题具体分析的。加上了几个常见的优化参数还是不行。&lt;/p&gt;
+&lt;p&gt;确实没办法，只能先上到生产环境，生产环境资源多，历史记录显示基本50分钟左右就能跑完。周末发版之后让运营帮忙下发了任务，持续观察，结果过了快一天也没有跑完，资源占满还导致一些重要的任务被卡住了好几个小时，开始报警。无奈只能强行 kill 掉。&lt;/p&gt;
+&lt;p&gt;让大数据组的同事拉了集群节点的进程、内存、CPU资源占用情况，发现内存占用很低，CPU 占用几乎达到100%。&lt;/p&gt;
+&lt;p&gt;感觉很诡异了，也找不到问题所在，有点束手无策。前两天下班后和组里的一位对大数据比较熟悉的同事讨论，我正打算把这个表新加的字段删除，直接把任务恢复到改动之前去试试的，这才看到 insert 语句后面跟了动态分区！partition(undr)！！我想我知道问题在哪里了，这个语句有动态分区，原本的 SQL 里最后一个字段是年月，做了分区字段，而我加上了这两个字段之后，现在 SQL 在用客户号分区，而这个 SQL 查出来的客户号有上亿的数据，真相就在这里了！于是开始验证我的想法，先查看表机构，确定原本的最后一个字段就是分区字段；dfs -ls 语句查看表里的目录，确实正是用客户号分的区，分区目录不计其数。确定就是分区导致的问题后，将新增加的两个字段调整到分区字段之前，重新部署、下发任务。不出预料，很顺利的 50 分钟就成功结束，困扰两个星期的问题最终还是靠自己解决。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20220401/spark-task-timeout/&t=记一次Spark任务卡住的问题排查"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        记一次Spark任务卡住的问题排查
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-03-31T16:08:43.000Z" class="dt-published" itemprop="datePublished">2022-04-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">解决方案</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Spark/" rel="tag">Spark</a>, <a class="p-category" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a> -->
+        <a class="category-link" href="/tags/Spark/" rel="tag">Spark</a>, <a class="category-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">906 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">3  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>上个版本因为一个需求需要在原有任务上加两个字段，很简单的一件事，想都没多想，直接在 select 后面加上了两个字段，类似于：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> tbl_test <span class="keyword">partition</span> (undr)</span><br><span class="line"><span class="keyword">select</span> a.<span class="operator">*</span>,</span><br><span class="line">       b.app,   <span class="comment">-- 新增字段</span></span><br><span class="line">       c.date   <span class="comment">-- 新增字段</span></span><br><span class="line"><span class="keyword">from</span> a</span><br><span class="line"><span class="keyword">where</span> </span><br><span class="line"><span class="keyword">join</span> b <span class="keyword">on</span> a.id <span class="operator">=</span> b.aid</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> c <span class="keyword">on</span> a.id <span class="operator">=</span> c.aid</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> d <span class="keyword">on</span> a.id <span class="operator">=</span> d.aid</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> e <span class="keyword">on</span> a.id <span class="operator">=</span> e.aid</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> f <span class="keyword">on</span> a.id <span class="operator">=</span> f.aid</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>加完之后就上到测试环境去跑了，想着先把基表数据跑出来再做后面的需求。这时候问题出现了，原本基本两个小时跑完的任务，这次跑了五六个小时都没跑完，于是开始找问题。</p>
+<p>最初没深究问题，直接 <code>yarn application -kill application...</code> kill 掉了，因为 kill 掉，所以调度平台收到了任务报错的消息，就自动下发了，我没注意到调度平台会自动下发，于是 kill 掉之后立即手动下发。等我回来排查问题的时候，发现下发的任务都在排队，因为有一个任务在跑，把资源都占用完了。</p>
+<p>重复下发了几次，都是超过四五个小时没结束，甚至头一天下班下发的任务，第二天上班还没跑完，感觉不太对劲，开始仔细排查问题。</p>
+<p>查看日志每次都卡在 stage8，看 DAG 图，应该是最后一个 stage 了，流程比较复杂。怀疑是加的两个字段有问题，于是将两个字段写死成 ‘’ ，结果还是跑不出结果。</p>
+<p>因为不是专业搞大数据的，又临近版本日，只好提单向大数据组的同事求助。结果令人失望，一个接单的女同事，都没看我的 SQL 直接发给我几个优化参数，说加上再跑试试。。原本以为他们能具体问题具体分析的。加上了几个常见的优化参数还是不行。</p>
+<p>确实没办法，只能先上到生产环境，生产环境资源多，历史记录显示基本50分钟左右就能跑完。周末发版之后让运营帮忙下发了任务，持续观察，结果过了快一天也没有跑完，资源占满还导致一些重要的任务被卡住了好几个小时，开始报警。无奈只能强行 kill 掉。</p>
+<p>让大数据组的同事拉了集群节点的进程、内存、CPU资源占用情况，发现内存占用很低，CPU 占用几乎达到100%。</p>
+<p>感觉很诡异了，也找不到问题所在，有点束手无策。前两天下班后和组里的一位对大数据比较熟悉的同事讨论，我正打算把这个表新加的字段删除，直接把任务恢复到改动之前去试试的，这才看到 insert 语句后面跟了动态分区！partition(undr)！！我想我知道问题在哪里了，这个语句有动态分区，原本的 SQL 里最后一个字段是年月，做了分区字段，而我加上了这两个字段之后，现在 SQL 在用客户号分区，而这个 SQL 查出来的客户号有上亿的数据，真相就在这里了！于是开始验证我的想法，先查看表机构，确定原本的最后一个字段就是分区字段；dfs -ls 语句查看表里的目录，确实正是用客户号分的区，分区目录不计其数。确定就是分区导致的问题后，将新增加的两个字段调整到分区字段之前，重新部署、下发任务。不出预料，很顺利的 50 分钟就成功结束，困扰两个星期的问题最终还是靠自己解决。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20220401/spark-task-timeout/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20220401/spark-task-timeout/&text=记一次Spark任务卡住的问题排查"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20220401/spark-task-timeout/&title=记一次Spark任务卡住的问题排查"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20220401/spark-task-timeout/&is_video=false&description=记一次Spark任务卡住的问题排查"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=记一次Spark任务卡住的问题排查&body=Check out this article: https://zhu.happy365.day/20220401/spark-task-timeout/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20220401/spark-task-timeout/&title=记一次Spark任务卡住的问题排查"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20220401/spark-task-timeout/&title=记一次Spark任务卡住的问题排查"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20220401/spark-task-timeout/&title=记一次Spark任务卡住的问题排查"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20220401/spark-task-timeout/&title=记一次Spark任务卡住的问题排查"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20220401/spark-task-timeout/&name=记一次Spark任务卡住的问题排查&description=&lt;p&gt;上个版本因为一个需求需要在原有任务上加两个字段，很简单的一件事，想都没多想，直接在 select 后面加上了两个字段，类似于：&lt;/p&gt;
+&lt;figure class=&#34;highlight sql&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;insert&lt;/span&gt; overwrite &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; tbl_test &lt;span class=&#34;keyword&#34;&gt;partition&lt;/span&gt; (undr)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;select&lt;/span&gt; a.&lt;span class=&#34;operator&#34;&gt;*&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       b.app,   &lt;span class=&#34;comment&#34;&gt;-- 新增字段&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       c.date   &lt;span class=&#34;comment&#34;&gt;-- 新增字段&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;from&lt;/span&gt; a&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;where&lt;/span&gt; &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;join&lt;/span&gt; b &lt;span class=&#34;keyword&#34;&gt;on&lt;/span&gt; a.id &lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt; b.aid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;join&lt;/span&gt; c &lt;span class=&#34;keyword&#34;&gt;on&lt;/span&gt; a.id &lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt; c.aid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;join&lt;/span&gt; d &lt;span class=&#34;keyword&#34;&gt;on&lt;/span&gt; a.id &lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt; d.aid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;join&lt;/span&gt; e &lt;span class=&#34;keyword&#34;&gt;on&lt;/span&gt; a.id &lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt; e.aid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;join&lt;/span&gt; f &lt;span class=&#34;keyword&#34;&gt;on&lt;/span&gt; a.id &lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt; f.aid&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;加完之后就上到测试环境去跑了，想着先把基表数据跑出来再做后面的需求。这时候问题出现了，原本基本两个小时跑完的任务，这次跑了五六个小时都没跑完，于是开始找问题。&lt;/p&gt;
+&lt;p&gt;最初没深究问题，直接 &lt;code&gt;yarn application -kill application...&lt;/code&gt; kill 掉了，因为 kill 掉，所以调度平台收到了任务报错的消息，就自动下发了，我没注意到调度平台会自动下发，于是 kill 掉之后立即手动下发。等我回来排查问题的时候，发现下发的任务都在排队，因为有一个任务在跑，把资源都占用完了。&lt;/p&gt;
+&lt;p&gt;重复下发了几次，都是超过四五个小时没结束，甚至头一天下班下发的任务，第二天上班还没跑完，感觉不太对劲，开始仔细排查问题。&lt;/p&gt;
+&lt;p&gt;查看日志每次都卡在 stage8，看 DAG 图，应该是最后一个 stage 了，流程比较复杂。怀疑是加的两个字段有问题，于是将两个字段写死成 ‘’ ，结果还是跑不出结果。&lt;/p&gt;
+&lt;p&gt;因为不是专业搞大数据的，又临近版本日，只好提单向大数据组的同事求助。结果令人失望，一个接单的女同事，都没看我的 SQL 直接发给我几个优化参数，说加上再跑试试。。原本以为他们能具体问题具体分析的。加上了几个常见的优化参数还是不行。&lt;/p&gt;
+&lt;p&gt;确实没办法，只能先上到生产环境，生产环境资源多，历史记录显示基本50分钟左右就能跑完。周末发版之后让运营帮忙下发了任务，持续观察，结果过了快一天也没有跑完，资源占满还导致一些重要的任务被卡住了好几个小时，开始报警。无奈只能强行 kill 掉。&lt;/p&gt;
+&lt;p&gt;让大数据组的同事拉了集群节点的进程、内存、CPU资源占用情况，发现内存占用很低，CPU 占用几乎达到100%。&lt;/p&gt;
+&lt;p&gt;感觉很诡异了，也找不到问题所在，有点束手无策。前两天下班后和组里的一位对大数据比较熟悉的同事讨论，我正打算把这个表新加的字段删除，直接把任务恢复到改动之前去试试的，这才看到 insert 语句后面跟了动态分区！partition(undr)！！我想我知道问题在哪里了，这个语句有动态分区，原本的 SQL 里最后一个字段是年月，做了分区字段，而我加上了这两个字段之后，现在 SQL 在用客户号分区，而这个 SQL 查出来的客户号有上亿的数据，真相就在这里了！于是开始验证我的想法，先查看表机构，确定原本的最后一个字段就是分区字段；dfs -ls 语句查看表里的目录，确实正是用客户号分的区，分区目录不计其数。确定就是分区导致的问题后，将新增加的两个字段调整到分区字段之前，重新部署、下发任务。不出预料，很顺利的 50 分钟就成功结束，困扰两个星期的问题最终还是靠自己解决。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20220401/spark-task-timeout/&t=记一次Spark任务卡住的问题排查"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

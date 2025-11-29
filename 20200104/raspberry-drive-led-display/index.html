@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="经过上个周末以及元旦一天的努力，手里的web项目也过半了，于是陆续准备了许多材料打算开始做基于树莓派和OpenCV的自主寻迹小车。正好今天周六数码显示管到了，于是想先摸索着点亮看看，之前也没搞过。往上资料不是很详细，花了两三个小时才搞明白，记录一下备忘。 硬件 树莓派（3b+） 4位数码显示管 T型扩展板（非必需） 12根母对母杜邦线  原理树莓派控制3641BS数码管显示数字 元件电路图：  我">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树莓派驱动4位数码管">
+<meta property="og:url" content="https://zhu.happy365.day/20200104/raspberry-drive-led-display/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="经过上个周末以及元旦一天的努力，手里的web项目也过半了，于是陆续准备了许多材料打算开始做基于树莓派和OpenCV的自主寻迹小车。正好今天周六数码显示管到了，于是想先摸索着点亮看看，之前也没搞过。往上资料不是很详细，花了两三个小时才搞明白，记录一下备忘。 硬件 树莓派（3b+） 4位数码显示管 T型扩展板（非必需） 12根母对母杜邦线  原理树莓派控制3641BS数码管显示数字 元件电路图：  我">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.happy365.day/24/04/17221831.gif">
+<meta property="og:image" content="https://images.happy365.day/24/04/17221932.jpg">
+<meta property="og:image" content="https://images.happy365.day/24/04/17222047.png">
+<meta property="article:published_time" content="2020-01-04T14:22:25.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.223Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="IoT">
+<meta property="article:tag" content="树莓派">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.happy365.day/24/04/17221831.gif">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>树莓派驱动4位数码管</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20200104/raspberry-drive-led-display/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20200105/raspberry-pi-drive-motor/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20200101/thymeleaf-page-helper/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20200104/raspberry-drive-led-display/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&text=树莓派驱动4位数码管"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&title=树莓派驱动4位数码管"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&is_video=false&description=树莓派驱动4位数码管"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=树莓派驱动4位数码管&body=Check out this article: https://zhu.happy365.day/20200104/raspberry-drive-led-display/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&title=树莓派驱动4位数码管"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&title=树莓派驱动4位数码管"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&title=树莓派驱动4位数码管"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&title=树莓派驱动4位数码管"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&name=树莓派驱动4位数码管&description=&lt;p&gt;经过上个周末以及元旦一天的努力，手里的web项目也过半了，于是陆续准备了许多材料打算开始做基于树莓派和OpenCV的自主寻迹小车。正好今天周六数码显示管到了，于是想先摸索着点亮看看，之前也没搞过。往上资料不是很详细，花了两三个小时才搞明白，记录一下备忘。&lt;/p&gt;
+&lt;h2 id=&#34;硬件&#34;&gt;&lt;a href=&#34;#硬件&#34; class=&#34;headerlink&#34; title=&#34;硬件&#34;&gt;&lt;/a&gt;硬件&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;树莓派（3b+）&lt;/li&gt;
+&lt;li&gt;4位数码显示管&lt;/li&gt;
+&lt;li&gt;T型扩展板（非必需）&lt;/li&gt;
+&lt;li&gt;12根母对母杜邦线&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;原理&#34;&gt;&lt;a href=&#34;#原理&#34; class=&#34;headerlink&#34; title=&#34;原理&#34;&gt;&lt;/a&gt;原理&lt;/h2&gt;&lt;p&gt;&lt;a href=&#34;https://www.kawabangga.com/posts/1408&#34;&gt;树莓派控制3641BS数码管显示数字&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;元件电路图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/24/04/17221831.gif&#34; alt=&#34;4位数码管电路原理图&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我自己买的共阴极的。&lt;/p&gt;
+&lt;p&gt;引脚：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/24/04/17221932.jpg&#34; alt=&#34;引脚图&#34;&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&t=树莓派驱动4位数码管"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">硬件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E7%BA%BF"><span class="toc-number">3.</span> <span class="toc-text">接线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">显示当前时间的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">运行结果</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        树莓派驱动4位数码管
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-01-04T14:22:25.000Z" class="dt-published" itemprop="datePublished">2020-01-04</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/IoT/" rel="tag">IoT</a>, <a class="p-category" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a> -->
+        <a class="category-link" href="/tags/IoT/" rel="tag">IoT</a>, <a class="category-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">585 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">2  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>经过上个周末以及元旦一天的努力，手里的web项目也过半了，于是陆续准备了许多材料打算开始做基于树莓派和OpenCV的自主寻迹小车。正好今天周六数码显示管到了，于是想先摸索着点亮看看，之前也没搞过。往上资料不是很详细，花了两三个小时才搞明白，记录一下备忘。</p>
+<h2 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h2><ul>
+<li>树莓派（3b+）</li>
+<li>4位数码显示管</li>
+<li>T型扩展板（非必需）</li>
+<li>12根母对母杜邦线</li>
+</ul>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><a target="_blank" rel="noopener" href="https://www.kawabangga.com/posts/1408">树莓派控制3641BS数码管显示数字</a></p>
+<p>元件电路图：</p>
+<p><img src="https://images.happy365.day/24/04/17221831.gif" alt="4位数码管电路原理图"></p>
+<p>我自己买的共阴极的。</p>
+<p>引脚：</p>
+<p><img src="https://images.happy365.day/24/04/17221932.jpg" alt="引脚图"></p>
+<p>引脚编号从下往上，从左往右然后再从右往左。</p>
+<p>其中 12 号引脚控制第一个数字的显示，然后 9 -&gt; 2，8 -&gt; 3，6 -&gt; 4。</p>
+<h2 id="接线"><a href="#接线" class="headerlink" title="接线"></a>接线</h2><p>在接线这儿犹豫了一会儿，因为担心接线接错了可能会直接烧毁数码显示器和树莓派，往上也没有找到详细的线路图。后来看了电路图后直接将所有引脚用母对母杜邦线接到了GPIO口。接完了了之后只测试了一个数字的显示，确认显示正常值后才开始写代码。</p>
+<p>在我的3b+ T型扩展板上（用的BCM编码方式），连线是这样的：</p>
+<table>
+<thead>
+<tr>
+<th>树莓派引脚（BCM）</th>
+<th>数码显示器引脚</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G18</td>
+<td>11</td>
+</tr>
+<tr>
+<td>G19</td>
+<td>7</td>
+</tr>
+<tr>
+<td>G20</td>
+<td>4</td>
+</tr>
+<tr>
+<td>G21</td>
+<td>2</td>
+</tr>
+<tr>
+<td>G22</td>
+<td>1</td>
+</tr>
+<tr>
+<td>G23</td>
+<td>10</td>
+</tr>
+<tr>
+<td>G24</td>
+<td>5</td>
+</tr>
+<tr>
+<td>G25</td>
+<td>3</td>
+</tr>
+<tr>
+<td>G13</td>
+<td>12</td>
+</tr>
+<tr>
+<td>G16</td>
+<td>9</td>
+</tr>
+<tr>
+<td>G17</td>
+<td>8</td>
+</tr>
+<tr>
+<td>G26</td>
+<td>6</td>
+</tr>
+</tbody></table>
+<h2 id="显示当前时间的代码"><a href="#显示当前时间的代码" class="headerlink" title="显示当前时间的代码"></a>显示当前时间的代码</h2><p>代码是从这里搬过来的，但是我把时间改成了小时+分钟的形式，然后这段代码有些bug，做了一些修改。</p>
+<p><a target="_blank" rel="noopener" href="https://www.kawabangga.com/posts/1408">树莓派控制3641BS数码管显示数字</a></p>
+<p>最后修正后的代码如下，将高电位和低电位进行了反转；在Ln157到Ln176行增加了显示1, 2, 3, 4其中一个数字的时候，将其他三个数字选择置于高电平，是高电位哦；在程序退出时增加了RPi.GPIO.cleanup()，避免程序退出数码管依然显示。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/bin/env python</span></span><br><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> RPi.GPIO <span class="keyword">as</span> GPIO</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># mapping LED to GPIO</span></span><br><span class="line">LED_A = <span class="number">18</span> <span class="comment"># 11</span></span><br><span class="line">LED_B = <span class="number">19</span> <span class="comment"># 7</span></span><br><span class="line">LED_C = <span class="number">20</span> <span class="comment"># 4</span></span><br><span class="line">LED_D = <span class="number">21</span> <span class="comment"># 2</span></span><br><span class="line">LED_E = <span class="number">22</span> <span class="comment"># 1</span></span><br><span class="line">LED_F = <span class="number">23</span> <span class="comment"># 10</span></span><br><span class="line">LED_G = <span class="number">24</span> <span class="comment"># 5</span></span><br><span class="line">LED_DP = <span class="number">25</span> <span class="comment"># 3</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># mapping public GPIO</span></span><br><span class="line">DIGIT1 = <span class="number">13</span> <span class="comment"># 12</span></span><br><span class="line">DIGIT2 = <span class="number">16</span> <span class="comment"># 9</span></span><br><span class="line">DIGIT3 = <span class="number">17</span> <span class="comment"># 8</span></span><br><span class="line">DIGIT4 = <span class="number">26</span> <span class="comment"># 6</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">#sleep time - loop displey</span></span><br><span class="line">t=<span class="number">0.001</span></span><br><span class="line"> </span><br><span class="line">GPIO.setmode(GPIO.BCM)</span><br><span class="line"> </span><br><span class="line">GPIO.setup(LED_A, GPIO.OUT)</span><br><span class="line">GPIO.setup(LED_B, GPIO.OUT)</span><br><span class="line">GPIO.setup(LED_C, GPIO.OUT)</span><br><span class="line">GPIO.setup(LED_D, GPIO.OUT)</span><br><span class="line">GPIO.setup(LED_E, GPIO.OUT)</span><br><span class="line">GPIO.setup(LED_F, GPIO.OUT)</span><br><span class="line">GPIO.setup(LED_G, GPIO.OUT)</span><br><span class="line">GPIO.setup(LED_DP, GPIO.OUT)</span><br><span class="line">GPIO.setup(DIGIT1, GPIO.OUT)</span><br><span class="line">GPIO.setup(DIGIT2, GPIO.OUT)</span><br><span class="line">GPIO.setup(DIGIT3, GPIO.OUT)</span><br><span class="line">GPIO.setup(DIGIT4, GPIO.OUT)</span><br><span class="line"> </span><br><span class="line">GPIO.output(DIGIT1, <span class="literal">True</span>)</span><br><span class="line">GPIO.output(DIGIT2, <span class="literal">True</span>)</span><br><span class="line">GPIO.output(DIGIT3, <span class="literal">True</span>)</span><br><span class="line">GPIO.output(DIGIT4, <span class="literal">True</span>)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">showDigit</span>(<span class="params">no, num, showDotPoint=<span class="literal">False</span></span>):</span><br><span class="line"></span><br><span class="line">    GPIO.setup(LED_A, <span class="literal">False</span>)</span><br><span class="line">    GPIO.setup(LED_B, <span class="literal">False</span>)</span><br><span class="line">    GPIO.setup(LED_C, <span class="literal">False</span>)</span><br><span class="line">    GPIO.setup(LED_D, <span class="literal">False</span>)</span><br><span class="line">    GPIO.setup(LED_E, <span class="literal">False</span>)</span><br><span class="line">    GPIO.setup(LED_F, <span class="literal">False</span>)</span><br><span class="line">    GPIO.setup(LED_G, <span class="literal">False</span>)</span><br><span class="line">    GPIO.setup(LED_DP, <span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    GPIO.output(DIGIT1, <span class="literal">False</span>)</span><br><span class="line">    GPIO.output(DIGIT2, <span class="literal">False</span>)</span><br><span class="line">    GPIO.output(DIGIT3, <span class="literal">False</span>)</span><br><span class="line">    GPIO.output(DIGIT4, <span class="literal">False</span>)</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> (num == <span class="number">0</span>) :</span><br><span class="line">        GPIO.output(LED_A, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_B, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_C, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_D, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_E, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_F, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_G, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_DP, showDotPoint)</span><br><span class="line">    <span class="keyword">elif</span> (num == <span class="number">1</span>) :</span><br><span class="line">        GPIO.output(LED_A, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_B, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_C, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_D, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_E, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_F, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_G, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_DP, showDotPoint)</span><br><span class="line">    <span class="keyword">elif</span> (num == <span class="number">2</span>) :</span><br><span class="line">        GPIO.output(LED_A, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_B, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_C, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_D, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_E, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_F, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_G, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_DP, showDotPoint)</span><br><span class="line">    <span class="keyword">elif</span> (num == <span class="number">3</span>) :</span><br><span class="line">        GPIO.output(LED_A, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_B, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_C, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_D, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_E, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_F, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_G, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_DP, showDotPoint)</span><br><span class="line">    <span class="keyword">elif</span> (num == <span class="number">4</span>) :</span><br><span class="line">        GPIO.output(LED_A, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_B, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_C, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_D, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_E, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_F, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_G, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_DP, showDotPoint)</span><br><span class="line">    <span class="keyword">elif</span> (num == <span class="number">5</span>) :</span><br><span class="line">        GPIO.output(LED_A, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_B, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_C, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_D, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_E, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_F, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_G, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_DP, showDotPoint)</span><br><span class="line">    <span class="keyword">elif</span> (num == <span class="number">6</span>) :</span><br><span class="line">        GPIO.output(LED_A, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_B, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_C, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_D, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_E, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_F, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_G, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_DP, showDotPoint)</span><br><span class="line">    <span class="keyword">elif</span> (num == <span class="number">7</span>) :</span><br><span class="line">        GPIO.output(LED_A, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_B, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_C, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_D, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_E, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_F, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_G, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_DP, showDotPoint)</span><br><span class="line">    <span class="keyword">elif</span> (num == <span class="number">8</span>) :</span><br><span class="line">        GPIO.output(LED_A, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_B, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_C, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_D, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_E, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_F, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_G, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_DP, showDotPoint)</span><br><span class="line">    <span class="keyword">elif</span> (num == <span class="number">9</span>) :</span><br><span class="line">        GPIO.output(LED_A, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_B, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_C, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_D, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_E, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(LED_F, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_G, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(LED_DP, showDotPoint)</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> (no == <span class="number">1</span>) :</span><br><span class="line">        GPIO.output(DIGIT1, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(DIGIT2, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(DIGIT3, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(DIGIT4, <span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">elif</span> (no == <span class="number">2</span>) :</span><br><span class="line">        GPIO.output(DIGIT1, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(DIGIT2, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(DIGIT3, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(DIGIT4, <span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">elif</span> (no == <span class="number">3</span>) :</span><br><span class="line">        GPIO.output(DIGIT1, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(DIGIT2, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(DIGIT3, <span class="literal">False</span>)</span><br><span class="line">        GPIO.output(DIGIT4, <span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        GPIO.output(DIGIT1, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(DIGIT2, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(DIGIT3, <span class="literal">True</span>)</span><br><span class="line">        GPIO.output(DIGIT4, <span class="literal">False</span>)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">display_time</span>():</span><br><span class="line">	<span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	    now = time.localtime(time.time())</span><br><span class="line">        time.sleep(t)</span><br><span class="line">        showDigit(<span class="number">1</span>, <span class="built_in">int</span>(time.strftime(<span class="string">&quot;%H&quot;</span>, now)) / <span class="number">10</span>, <span class="literal">False</span>)</span><br><span class="line">        time.sleep(t)</span><br><span class="line">        showDigit(<span class="number">2</span>, <span class="built_in">int</span>(time.strftime(<span class="string">&quot;%H&quot;</span>, now)) % <span class="number">10</span>, <span class="literal">True</span>)</span><br><span class="line">        time.sleep(t)</span><br><span class="line">        showDigit(<span class="number">3</span>, <span class="built_in">int</span>(time.strftime(<span class="string">&quot;%M&quot;</span>, now)) / <span class="number">10</span>, <span class="literal">False</span>)</span><br><span class="line">        time.sleep(t)</span><br><span class="line">        showDigit(<span class="number">4</span>, <span class="built_in">int</span>(time.strftime(<span class="string">&quot;%M&quot;</span>, now)) % <span class="number">10</span>, <span class="literal">False</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">	display_time()</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">	GPIO.cleanup()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><p>效果如下：</p>
+<p><img src="https://images.happy365.day/24/04/17222047.png" alt="效果图"></p>
+<p>可能是二极管余辉的原因？每个数字显示得都很不纯净，暂时先这样吧。</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">硬件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E7%BA%BF"><span class="toc-number">3.</span> <span class="toc-text">接线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">显示当前时间的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">运行结果</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20200104/raspberry-drive-led-display/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&text=树莓派驱动4位数码管"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&title=树莓派驱动4位数码管"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&is_video=false&description=树莓派驱动4位数码管"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=树莓派驱动4位数码管&body=Check out this article: https://zhu.happy365.day/20200104/raspberry-drive-led-display/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&title=树莓派驱动4位数码管"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&title=树莓派驱动4位数码管"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&title=树莓派驱动4位数码管"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&title=树莓派驱动4位数码管"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&name=树莓派驱动4位数码管&description=&lt;p&gt;经过上个周末以及元旦一天的努力，手里的web项目也过半了，于是陆续准备了许多材料打算开始做基于树莓派和OpenCV的自主寻迹小车。正好今天周六数码显示管到了，于是想先摸索着点亮看看，之前也没搞过。往上资料不是很详细，花了两三个小时才搞明白，记录一下备忘。&lt;/p&gt;
+&lt;h2 id=&#34;硬件&#34;&gt;&lt;a href=&#34;#硬件&#34; class=&#34;headerlink&#34; title=&#34;硬件&#34;&gt;&lt;/a&gt;硬件&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;树莓派（3b+）&lt;/li&gt;
+&lt;li&gt;4位数码显示管&lt;/li&gt;
+&lt;li&gt;T型扩展板（非必需）&lt;/li&gt;
+&lt;li&gt;12根母对母杜邦线&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;原理&#34;&gt;&lt;a href=&#34;#原理&#34; class=&#34;headerlink&#34; title=&#34;原理&#34;&gt;&lt;/a&gt;原理&lt;/h2&gt;&lt;p&gt;&lt;a href=&#34;https://www.kawabangga.com/posts/1408&#34;&gt;树莓派控制3641BS数码管显示数字&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;元件电路图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/24/04/17221831.gif&#34; alt=&#34;4位数码管电路原理图&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我自己买的共阴极的。&lt;/p&gt;
+&lt;p&gt;引脚：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://images.happy365.day/24/04/17221932.jpg&#34; alt=&#34;引脚图&#34;&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20200104/raspberry-drive-led-display/&t=树莓派驱动4位数码管"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

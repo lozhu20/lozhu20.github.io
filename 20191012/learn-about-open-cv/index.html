@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="读取和显示图像 cv2.imread()：读取 cv2.imwrite()：写入 cv2.imshow()：显示  1234567img &#x3D; cv2.imread(img_path, 0)cv2.namedWindow(&quot;imview&quot;, cv2.WINDOW_NORMAL)cv2.imshow(&quot;imview&quot;, img)k &#x3D; cv2.waitKey(0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenCV学习笔记（一）">
+<meta property="og:url" content="https://zhu.happy365.day/20191012/learn-about-open-cv/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="读取和显示图像 cv2.imread()：读取 cv2.imwrite()：写入 cv2.imshow()：显示  1234567img &#x3D; cv2.imread(img_path, 0)cv2.namedWindow(&quot;imview&quot;, cv2.WINDOW_NORMAL)cv2.imshow(&quot;imview&quot;, img)k &#x3D; cv2.waitKey(0">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-10-12T09:52:39.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.219Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="OpenCV">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>OpenCV学习笔记（一）</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20191012/learn-about-open-cv/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20191014/learn-about-open-cv/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20190805/video-monitoring-by-raspberry-pi/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20191012/learn-about-open-cv/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&text=OpenCV学习笔记（一）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&title=OpenCV学习笔记（一）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&is_video=false&description=OpenCV学习笔记（一）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=OpenCV学习笔记（一）&body=Check out this article: https://zhu.happy365.day/20191012/learn-about-open-cv/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&title=OpenCV学习笔记（一）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&title=OpenCV学习笔记（一）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&title=OpenCV学习笔记（一）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&title=OpenCV学习笔记（一）"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&name=OpenCV学习笔记（一）&description=&lt;h2 id=&#34;读取和显示图像&#34;&gt;&lt;a href=&#34;#读取和显示图像&#34; class=&#34;headerlink&#34; title=&#34;读取和显示图像&#34;&gt;&lt;/a&gt;读取和显示图像&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;cv2.imread()：读取&lt;/li&gt;
+&lt;li&gt;cv2.imwrite()：写入&lt;/li&gt;
+&lt;li&gt;cv2.imshow()：显示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;img = cv2.imread(img_path, &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cv2.namedWindow(&lt;span class=&#34;string&#34;&gt;&amp;quot;imview&amp;quot;&lt;/span&gt;, cv2.WINDOW_NORMAL)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;quot;imview&amp;quot;&lt;/span&gt;, img)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;k = cv2.waitKey(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; k == &lt;span class=&#34;built_in&#34;&gt;ord&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;s&amp;quot;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  cv2.imwrite(&lt;span class=&#34;string&#34;&gt;&amp;quot;other.jpg&amp;quot;&lt;/span&gt;, img)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cv2.destroyAllWindows()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+
+&lt;h2 id=&#34;视频的操作&#34;&gt;&lt;a href=&#34;#视频的操作&#34; class=&#34;headerlink&#34; title=&#34;视频的操作&#34;&gt;&lt;/a&gt;视频的操作&lt;/h2&gt;&lt;h3 id=&#34;从摄像头读取视频&#34;&gt;&lt;a href=&#34;#从摄像头读取视频&#34; class=&#34;headerlink&#34; title=&#34;从摄像头读取视频&#34;&gt;&lt;/a&gt;从摄像头读取视频&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;cv2.VideoCapture(0).read()&lt;/li&gt;
+&lt;li&gt;cv2.cvtColor()&lt;/li&gt;
+&lt;li&gt;cv2.imshow()&lt;/li&gt;
+&lt;li&gt;cap.get(propId)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;30&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;title function_&#34;&gt;create_video&lt;/span&gt;():&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cap = cv2.VideoCapture(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;True&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        ret, frame = cap.read()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;quot;frame&amp;quot;&lt;/span&gt;, gray)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; cv2.waitKey() == &lt;span class=&#34;built_in&#34;&gt;ord&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;q&amp;quot;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cap.release()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cv2.destroyAllWindows()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;   &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;title function_&#34;&gt;video&lt;/span&gt;():&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cap = cv2.VideoCapture(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    fourcc = cv2.VideoWriter_fourcc(*&lt;span class=&#34;string&#34;&gt;&amp;#x27;XVID&amp;#x27;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    out = cv2.VideoWriter(&lt;span class=&#34;string&#34;&gt;&amp;quot;output.avi&amp;quot;&lt;/span&gt;, fourcc, &lt;span class=&#34;number&#34;&gt;20&lt;/span&gt;, &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, (&lt;span class=&#34;number&#34;&gt;640&lt;/span&gt;, &lt;span class=&#34;number&#34;&gt;480&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;while&lt;/span&gt; (cap.isOpened()):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        ret, frame = cap.read()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; ret:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            frame = cv2.flip(frame, &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            out.write(frame)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;quot;video&amp;quot;&lt;/span&gt;, frame)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; cv2.waitKey(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;) == &lt;span class=&#34;built_in&#34;&gt;ord&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;q&amp;quot;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cap.release()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    out.release()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cv2.destroyAllWindows()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;从文件中获取视频&#34;&gt;&lt;a href=&#34;#从文件中获取视频&#34; class=&#34;headerlink&#34; title=&#34;从文件中获取视频&#34;&gt;&lt;/a&gt;从文件中获取视频&lt;/h3&gt;&lt;p&gt;cv2.VideoCapture(0)表示打开默认设备，将设备索引号改成视频文件的名称就能从视频文件中读取视频，使用 waitKey()控制播放速度（通常25 ms）。&lt;/p&gt;
+&lt;h2 id=&#34;OpenCV-中的绘图函数&#34;&gt;&lt;a href=&#34;#OpenCV-中的绘图函数&#34; class=&#34;headerlink&#34; title=&#34;OpenCV 中的绘图函数&#34;&gt;&lt;/a&gt;OpenCV 中的绘图函数&lt;/h2&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20191012/learn-about-open-cv/&t=OpenCV学习笔记（一）"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E5%92%8C%E6%98%BE%E7%A4%BA%E5%9B%BE%E5%83%8F"><span class="toc-number">1.</span> <span class="toc-text">读取和显示图像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">视频的操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E6%91%84%E5%83%8F%E5%A4%B4%E8%AF%BB%E5%8F%96%E8%A7%86%E9%A2%91"><span class="toc-number">2.1.</span> <span class="toc-text">从摄像头读取视频</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E6%96%87%E4%BB%B6%E4%B8%AD%E8%8E%B7%E5%8F%96%E8%A7%86%E9%A2%91"><span class="toc-number">2.2.</span> <span class="toc-text">从文件中获取视频</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenCV-%E4%B8%AD%E7%9A%84%E7%BB%98%E5%9B%BE%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">OpenCV 中的绘图函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%BB%E7%BA%BF"><span class="toc-number">3.1.</span> <span class="toc-text">画线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%BB%E7%9F%A9%E5%BD%A2"><span class="toc-number">3.2.</span> <span class="toc-text">画矩形</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%BB%E5%9C%86"><span class="toc-number">3.3.</span> <span class="toc-text">画圆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%BB%E6%A4%AD%E5%9C%86"><span class="toc-number">3.4.</span> <span class="toc-text">画椭圆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E5%9B%BE%E7%89%87%E4%B8%AD%E6%B7%BB%E5%8A%A0%E6%96%87%E5%AD%97"><span class="toc-number">3.5.</span> <span class="toc-text">在图片中添加文字</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E9%BC%A0%E6%A0%87%E4%BA%8B%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">简单的鼠标事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.1.</span> <span class="toc-text">简单示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%BB%91%E5%8A%A8%E6%9D%A1%E5%81%9A%E8%B0%83%E8%89%B2%E6%9D%BF"><span class="toc-number">5.</span> <span class="toc-text">用滑动条做调色板</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.1.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%A0%E9%A2%98"><span class="toc-number">5.2.</span> <span class="toc-text">习题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C"><span class="toc-number">6.</span> <span class="toc-text">核心操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C"><span class="toc-number">6.1.</span> <span class="toc-text">图像的基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%9B%BE%E5%83%8F%E7%9A%84%E5%83%8F%E7%B4%A0"><span class="toc-number">6.2.</span> <span class="toc-text">获取图像的像素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84-ROI"><span class="toc-number">6.3.</span> <span class="toc-text">图像的 ROI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%86%E5%88%86%E5%8F%8A%E5%90%88%E5%B9%B6%E5%9B%BE%E5%83%8F%E9%80%9A%E9%81%93"><span class="toc-number">6.4.</span> <span class="toc-text">拆分及合并图像通道</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E4%B8%8A%E7%9A%84%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97"><span class="toc-number">7.</span> <span class="toc-text">图像上的算术运算</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E6%B3%95"><span class="toc-number">7.1.</span> <span class="toc-text">加法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E6%B7%B7%E5%90%88"><span class="toc-number">7.2.</span> <span class="toc-text">图像混合</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        OpenCV学习笔记（一）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-10-12T09:52:39.000Z" class="dt-published" itemprop="datePublished">2019-10-12</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/OpenCV/" rel="tag">OpenCV</a> -->
+        <a class="category-link" href="/tags/OpenCV/" rel="tag">OpenCV</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">632 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">2  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="读取和显示图像"><a href="#读取和显示图像" class="headerlink" title="读取和显示图像"></a>读取和显示图像</h2><ul>
+<li>cv2.imread()：读取</li>
+<li>cv2.imwrite()：写入</li>
+<li>cv2.imshow()：显示</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">img = cv2.imread(img_path, <span class="number">0</span>)</span><br><span class="line">cv2.namedWindow(<span class="string">&quot;imview&quot;</span>, cv2.WINDOW_NORMAL)</span><br><span class="line">cv2.imshow(<span class="string">&quot;imview&quot;</span>, img)</span><br><span class="line">k = cv2.waitKey(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">if</span> k == <span class="built_in">ord</span>(<span class="string">&quot;s&quot;</span>):</span><br><span class="line">  cv2.imwrite(<span class="string">&quot;other.jpg&quot;</span>, img)</span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="视频的操作"><a href="#视频的操作" class="headerlink" title="视频的操作"></a>视频的操作</h2><h3 id="从摄像头读取视频"><a href="#从摄像头读取视频" class="headerlink" title="从摄像头读取视频"></a>从摄像头读取视频</h3><ul>
+<li>cv2.VideoCapture(0).read()</li>
+<li>cv2.cvtColor()</li>
+<li>cv2.imshow()</li>
+<li>cap.get(propId)</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">create_video</span>():</span><br><span class="line">    cap = cv2.VideoCapture(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        ret, frame = cap.read()</span><br><span class="line">        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)</span><br><span class="line"></span><br><span class="line">        cv2.imshow(<span class="string">&quot;frame&quot;</span>, gray)</span><br><span class="line">        <span class="keyword">if</span> cv2.waitKey() == <span class="built_in">ord</span>(<span class="string">&quot;q&quot;</span>):</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    cap.release()</span><br><span class="line">    cv2.destroyAllWindows()</span><br><span class="line">    </span><br><span class="line">   </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">video</span>():</span><br><span class="line">    cap = cv2.VideoCapture(<span class="number">0</span>)</span><br><span class="line">    fourcc = cv2.VideoWriter_fourcc(*<span class="string">&#x27;XVID&#x27;</span>)</span><br><span class="line">    out = cv2.VideoWriter(<span class="string">&quot;output.avi&quot;</span>, fourcc, <span class="number">20</span>, <span class="number">0</span>, (<span class="number">640</span>, <span class="number">480</span>))</span><br><span class="line">    <span class="keyword">while</span> (cap.isOpened()):</span><br><span class="line">        ret, frame = cap.read()</span><br><span class="line">        <span class="keyword">if</span> ret:</span><br><span class="line">            frame = cv2.flip(frame, <span class="number">0</span>)</span><br><span class="line">            out.write(frame)</span><br><span class="line">            cv2.imshow(<span class="string">&quot;video&quot;</span>, frame)</span><br><span class="line">            <span class="keyword">if</span> cv2.waitKey(<span class="number">0</span>) == <span class="built_in">ord</span>(<span class="string">&quot;q&quot;</span>):</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    cap.release()</span><br><span class="line">    out.release()</span><br><span class="line">    cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="从文件中获取视频"><a href="#从文件中获取视频" class="headerlink" title="从文件中获取视频"></a>从文件中获取视频</h3><p>cv2.VideoCapture(0)表示打开默认设备，将设备索引号改成视频文件的名称就能从视频文件中读取视频，使用 waitKey()控制播放速度（通常25 ms）。</p>
+<h2 id="OpenCV-中的绘图函数"><a href="#OpenCV-中的绘图函数" class="headerlink" title="OpenCV 中的绘图函数"></a>OpenCV 中的绘图函数</h2><p>学会以下函数的使用：</p>
+<ul>
+<li>cv2.line()</li>
+<li>cv2.circle()</li>
+<li>cv2.rectangle()</li>
+<li>cv2.ellipse()</li>
+<li>cv2.putText()</li>
+</ul>
+<p>参数：上面所有的绘图函数都需要的参数：</p>
+<ul>
+<li>img ：画布</li>
+<li>color : 指定的颜色，RGB-&gt;(255, 255, 0)</li>
+<li>linetype : 线条的类型，8连接，抗锯齿等。lineType&#x3D;cv2.LINE_AA（抗锯齿）。</li>
+</ul>
+<h3 id="画线"><a href="#画线" class="headerlink" title="画线"></a>画线</h3><p>画一条直线需要指定直线的起点和终点：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">draw_line2</span>():</span><br><span class="line">    canvas = np.zeros((<span class="number">300</span>, <span class="number">300</span>, <span class="number">3</span>), dtype=<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">    green = (<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>)</span><br><span class="line">    cv2.line(canvas, (<span class="number">20</span>, <span class="number">20</span>), (<span class="number">150</span>, <span class="number">150</span>), color=green)</span><br><span class="line">    cv2.imshow(<span class="string">&quot;green line&quot;</span>, canvas)</span><br><span class="line">    cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="画矩形"><a href="#画矩形" class="headerlink" title="画矩形"></a>画矩形</h3><p>绘制矩形需要指定两个点的坐标：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">draw_rectangle</span>():</span><br><span class="line">    canvas = np.zeros((<span class="number">300</span>, <span class="number">300</span>, <span class="number">3</span>), dtype=<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">    color = (<span class="number">126</span>, <span class="number">126</span>, <span class="number">126</span>)</span><br><span class="line">    cv2.rectangle(canvas, (<span class="number">80</span>, <span class="number">80</span>), (<span class="number">250</span>, <span class="number">270</span>), color=color)</span><br><span class="line">    cv2.imshow(<span class="string">&quot;rectangle&quot;</span>, canvas)</span><br><span class="line">    cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="画圆"><a href="#画圆" class="headerlink" title="画圆"></a>画圆</h3><p>绘制圆形需要指定圆心坐标和半径大小：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">draw_circle</span>():</span><br><span class="line">    canvas = np.zeros((<span class="number">300</span>, <span class="number">300</span>, <span class="number">3</span>), dtype=<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">    color = (<span class="number">100</span>, <span class="number">100</span>, <span class="number">100</span>)</span><br><span class="line">    cv2.circle(canvas, (<span class="number">150</span>, <span class="number">140</span>), <span class="number">100</span>, color=color)</span><br><span class="line">    cv2.imshow(<span class="string">&quot;circle&quot;</span>, canvas)</span><br><span class="line">    cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="画椭圆"><a href="#画椭圆" class="headerlink" title="画椭圆"></a>画椭圆</h3><p>绘制椭圆需要指定的参数：</p>
+<ol>
+<li>中心点坐标</li>
+<li>长轴和短轴</li>
+<li>沿逆时针方向旋转的角度</li>
+<li>顺时针方向起始角度和结束角度</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">draw_ellipse</span>():</span><br><span class="line">    canvas = np.zeros((<span class="number">400</span>, <span class="number">400</span>, <span class="number">3</span>), dtype=<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">    color = (<span class="number">100</span>, <span class="number">100</span>, <span class="number">100</span>)</span><br><span class="line">    cv2.ellipse(canvas, (<span class="number">200</span>, <span class="number">200</span>), (<span class="number">100</span>, <span class="number">150</span>), <span class="number">0</span>, <span class="number">0</span>, <span class="number">360</span>, color)</span><br><span class="line">    cv2.imshow(<span class="string">&quot;ellipse&quot;</span>, canvas)</span><br><span class="line">    cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="在图片中添加文字"><a href="#在图片中添加文字" class="headerlink" title="在图片中添加文字"></a>在图片中添加文字</h3><p>所需参数：</p>
+<ul>
+<li>添加的文本</li>
+<li>绘制的位置</li>
+<li>字体类型</li>
+<li>字体大小</li>
+<li>文字的一般属性（颜色，粗细，线条类型等）</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">put_text</span>():</span><br><span class="line">    canvas = np.zeros((<span class="number">300</span>, <span class="number">600</span>, <span class="number">3</span>), dtype=<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">    font = cv2.FONT_HERSHEY_SIMPLEX</span><br><span class="line">    cv2.putText(canvas, <span class="string">&#x27;Kanna Makino&#x27;</span>, (<span class="number">10</span>, <span class="number">100</span>), font, <span class="number">2</span>, (<span class="number">100</span>, <span class="number">100</span>, <span class="number">100</span>), <span class="number">2</span>)</span><br><span class="line">    cv2.imshow(<span class="string">&quot;put text&quot;</span>, canvas)</span><br><span class="line">    cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">    cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="简单的鼠标事件"><a href="#简单的鼠标事件" class="headerlink" title="简单的鼠标事件"></a>简单的鼠标事件</h2><ul>
+<li>学习使用 OpenCV 处理鼠标事件</li>
+<li>函数：<strong>cv2.setMouseCallback()</strong></li>
+</ul>
+<h3 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h3><p>鼠标事件可以获得事件对应的坐标和事件名称。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">draw_circle</span>(<span class="params">event, x, y, flags, params</span>):</span><br><span class="line">    <span class="keyword">if</span> event == cv2.EVENT_LBUTTONDBLCLK:</span><br><span class="line">        cv2.circle(img, (x, y), <span class="number">100</span>, (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>), -<span class="number">1</span>, lineType=cv2.LINE_AA)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">img = np.zeros((<span class="number">512</span>, <span class="number">512</span>, <span class="number">3</span>), dtype=<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">cv2.namedWindow(<span class="string">&#x27;image&#x27;</span>)</span><br><span class="line">cv2.setMouseCallback(<span class="string">&#x27;image&#x27;</span>, draw_circle)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;image&#x27;</span>, img)</span><br><span class="line">    <span class="keyword">if</span> cv2.waitKey(<span class="number">20</span>) &amp; <span class="number">0xFF</span> == <span class="number">27</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="用滑动条做调色板"><a href="#用滑动条做调色板" class="headerlink" title="用滑动条做调色板"></a>用滑动条做调色板</h2><p>学习目标：</p>
+<ul>
+<li>学会把滑动条绑定到 OpenCV 的窗口</li>
+<li>cv2.getTrackbarPos()</li>
+<li>cv2.createTrackbar()</li>
+</ul>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># _*_cdoing:utf-8_*_</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">nothing</span>(<span class="params">x</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">img = np.zeros((<span class="number">500</span>, <span class="number">312</span>, <span class="number">3</span>), dtype=<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">cv2.namedWindow(<span class="string">&quot;image&quot;</span>)</span><br><span class="line">cv2.createTrackbar(<span class="string">&quot;R&quot;</span>, <span class="string">&quot;image&quot;</span>, <span class="number">0</span>, <span class="number">255</span>, nothing)</span><br><span class="line">cv2.createTrackbar(<span class="string">&quot;G&quot;</span>, <span class="string">&quot;image&quot;</span>, <span class="number">0</span>, <span class="number">255</span>, nothing)</span><br><span class="line">cv2.createTrackbar(<span class="string">&quot;B&quot;</span>, <span class="string">&quot;image&quot;</span>, <span class="number">0</span>, <span class="number">255</span>, nothing)</span><br><span class="line"></span><br><span class="line">switch = <span class="string">&#x27;0:OFF\n1:ON&#x27;</span></span><br><span class="line">cv2.createTrackbar(switch, <span class="string">&quot;image&quot;</span>, <span class="number">0</span>, <span class="number">1</span>, nothing)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    cv2.imshow(<span class="string">&quot;image&quot;</span>, img)</span><br><span class="line">    k = cv2.waitKey(<span class="number">1</span>) &amp; <span class="number">0xFF</span></span><br><span class="line">    <span class="keyword">if</span> k == <span class="number">27</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    r = cv2.getTrackbarPos(<span class="string">&quot;R&quot;</span>, <span class="string">&quot;image&quot;</span>)</span><br><span class="line">    g = cv2.getTrackbarPos(<span class="string">&quot;G&quot;</span>, <span class="string">&quot;image&quot;</span>)</span><br><span class="line">    b = cv2.getTrackbarPos(<span class="string">&quot;B&quot;</span>, <span class="string">&quot;image&quot;</span>)</span><br><span class="line">    s = cv2.getTrackbarPos(switch, <span class="string">&quot;image&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> s == <span class="number">0</span>:</span><br><span class="line">        img[:] = <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        img[:] = [r, g, b]</span><br><span class="line">cv2.destroyAllWindows()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="习题"><a href="#习题" class="headerlink" title="习题"></a>习题</h3><blockquote>
+<p>创建一个画板，可以选择各种颜色的画笔进行绘画操作。</p>
+</blockquote>
+<p>代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">draw_circle</span>(<span class="params">event, x, y, flag, params</span>):</span><br><span class="line">  <span class="keyword">pass</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="核心操作"><a href="#核心操作" class="headerlink" title="核心操作"></a>核心操作</h2><h3 id="图像的基础操作"><a href="#图像的基础操作" class="headerlink" title="图像的基础操作"></a>图像的基础操作</h3><p>学习目标：</p>
+<ul>
+<li>获取像素的值并修改</li>
+<li>获取图像的属性（信息）</li>
+<li>图像的 ROI（）</li>
+<li>图像通道的拆分与合并</li>
+</ul>
+<h3 id="获取图像的像素"><a href="#获取图像的像素" class="headerlink" title="获取图像的像素"></a>获取图像的像素</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">img = cv2.imread(<span class="string">&quot;/Users/youyou2608/Pictures/pi.png&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(img.item(<span class="number">10</span>, <span class="number">10</span>, <span class="number">2</span>))</span><br><span class="line">img.itemset((<span class="number">10</span>, <span class="number">10</span>, <span class="number">2</span>), <span class="number">100</span>)</span><br><span class="line"><span class="built_in">print</span>(img.item(<span class="number">10</span>, <span class="number">10</span>, <span class="number">2</span>))</span><br><span class="line"><span class="comment"># 图像的属性：行，列，通道，图像数据类型，像素数目等</span></span><br><span class="line"><span class="built_in">print</span>(img.shape)</span><br><span class="line"><span class="comment"># 像素数目</span></span><br><span class="line"><span class="built_in">print</span>(img.size)</span><br><span class="line"><span class="comment"># 图像的数据类型</span></span><br><span class="line"><span class="built_in">print</span>(img.dtype)</span><br><span class="line"></span><br><span class="line"><span class="comment">####### 输出 ######</span></span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">100</span></span><br><span class="line">(<span class="number">487</span>, <span class="number">423</span>, <span class="number">3</span>)</span><br><span class="line"><span class="number">618003</span></span><br><span class="line">uint8</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="图像的-ROI"><a href="#图像的-ROI" class="headerlink" title="图像的 ROI"></a>图像的 ROI</h3><p>有时对图像的某一特定区域进行搜索比在一张图像中搜索有更高的准确性和性能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">img = cv2.imread(<span class="string">&quot;/Users/youyou2608/Pictures/pi.png&quot;</span>)</span><br><span class="line">temp = img[<span class="number">100</span>:<span class="number">300</span>, <span class="number">10</span>:<span class="number">100</span>]</span><br><span class="line">img[<span class="number">0</span>:<span class="number">200</span>, <span class="number">100</span>:<span class="number">190</span>] = temp</span><br><span class="line">cv2.imshow(<span class="string">&quot;image&quot;</span>, img)</span><br><span class="line">cv2.waitKey(<span class="number">100000</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="拆分及合并图像通道"><a href="#拆分及合并图像通道" class="headerlink" title="拆分及合并图像通道"></a>拆分及合并图像通道</h3><p>对 BGR 三个通道分别进行操作。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将图片所有共色通道值都设置为0</span></span><br><span class="line">img = cv2.imread(<span class="string">&quot;/Users/youyou2608/Pictures/pi.png&quot;</span>)</span><br><span class="line">img[<span class="number">0</span>:<span class="number">300</span>, <span class="number">0</span>:<span class="number">200</span>, <span class="number">2</span>] = <span class="number">0</span></span><br><span class="line">cv2.imshow(<span class="string">&quot;image&quot;</span>, img)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="图像上的算术运算"><a href="#图像上的算术运算" class="headerlink" title="图像上的算术运算"></a>图像上的算术运算</h2><ul>
+<li>学习图像上的加法、减法和位运算等</li>
+<li>cv2.add()</li>
+<li>cv2.addWeighted()</li>
+</ul>
+<h3 id="加法"><a href="#加法" class="headerlink" title="加法"></a>加法</h3><p>进行加法的两幅图像的大小、类型必须一致。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = np.uint([<span class="number">250</span>])</span><br><span class="line">y = np.uint([<span class="number">20</span>])</span><br><span class="line"><span class="built_in">print</span>(cv2.add(x, y))  <span class="comment"># [[255]]</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="图像混合"><a href="#图像混合" class="headerlink" title="图像混合"></a>图像混合</h3><p>图像混合其实也是加法，但是不同的是两幅图像的权重不同。</p>
+<p>函数：cv2.addWeighted()</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">img1 = cv2.read(<span class="string">&quot;img1.png&quot;</span>)</span><br><span class="line">img2 = cv2.read(<span class="string">&quot;img2.png&quot;</span>)</span><br><span class="line"></span><br><span class="line">dst = cv2.addWeighted(img1, <span class="number">0.7</span>, img2, <span class="number">0.3</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">cv2.imshow(<span class="string">&quot;image&quot;</span>, dst)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+
+<p>后续…</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E5%92%8C%E6%98%BE%E7%A4%BA%E5%9B%BE%E5%83%8F"><span class="toc-number">1.</span> <span class="toc-text">读取和显示图像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">视频的操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E6%91%84%E5%83%8F%E5%A4%B4%E8%AF%BB%E5%8F%96%E8%A7%86%E9%A2%91"><span class="toc-number">2.1.</span> <span class="toc-text">从摄像头读取视频</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E6%96%87%E4%BB%B6%E4%B8%AD%E8%8E%B7%E5%8F%96%E8%A7%86%E9%A2%91"><span class="toc-number">2.2.</span> <span class="toc-text">从文件中获取视频</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenCV-%E4%B8%AD%E7%9A%84%E7%BB%98%E5%9B%BE%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">OpenCV 中的绘图函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%BB%E7%BA%BF"><span class="toc-number">3.1.</span> <span class="toc-text">画线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%BB%E7%9F%A9%E5%BD%A2"><span class="toc-number">3.2.</span> <span class="toc-text">画矩形</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%BB%E5%9C%86"><span class="toc-number">3.3.</span> <span class="toc-text">画圆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%BB%E6%A4%AD%E5%9C%86"><span class="toc-number">3.4.</span> <span class="toc-text">画椭圆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E5%9B%BE%E7%89%87%E4%B8%AD%E6%B7%BB%E5%8A%A0%E6%96%87%E5%AD%97"><span class="toc-number">3.5.</span> <span class="toc-text">在图片中添加文字</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E9%BC%A0%E6%A0%87%E4%BA%8B%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">简单的鼠标事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.1.</span> <span class="toc-text">简单示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%BB%91%E5%8A%A8%E6%9D%A1%E5%81%9A%E8%B0%83%E8%89%B2%E6%9D%BF"><span class="toc-number">5.</span> <span class="toc-text">用滑动条做调色板</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.1.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%A0%E9%A2%98"><span class="toc-number">5.2.</span> <span class="toc-text">习题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C"><span class="toc-number">6.</span> <span class="toc-text">核心操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C"><span class="toc-number">6.1.</span> <span class="toc-text">图像的基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%9B%BE%E5%83%8F%E7%9A%84%E5%83%8F%E7%B4%A0"><span class="toc-number">6.2.</span> <span class="toc-text">获取图像的像素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84-ROI"><span class="toc-number">6.3.</span> <span class="toc-text">图像的 ROI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%86%E5%88%86%E5%8F%8A%E5%90%88%E5%B9%B6%E5%9B%BE%E5%83%8F%E9%80%9A%E9%81%93"><span class="toc-number">6.4.</span> <span class="toc-text">拆分及合并图像通道</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E4%B8%8A%E7%9A%84%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97"><span class="toc-number">7.</span> <span class="toc-text">图像上的算术运算</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E6%B3%95"><span class="toc-number">7.1.</span> <span class="toc-text">加法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E6%B7%B7%E5%90%88"><span class="toc-number">7.2.</span> <span class="toc-text">图像混合</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20191012/learn-about-open-cv/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&text=OpenCV学习笔记（一）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&title=OpenCV学习笔记（一）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&is_video=false&description=OpenCV学习笔记（一）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=OpenCV学习笔记（一）&body=Check out this article: https://zhu.happy365.day/20191012/learn-about-open-cv/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&title=OpenCV学习笔记（一）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&title=OpenCV学习笔记（一）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&title=OpenCV学习笔记（一）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&title=OpenCV学习笔记（一）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20191012/learn-about-open-cv/&name=OpenCV学习笔记（一）&description=&lt;h2 id=&#34;读取和显示图像&#34;&gt;&lt;a href=&#34;#读取和显示图像&#34; class=&#34;headerlink&#34; title=&#34;读取和显示图像&#34;&gt;&lt;/a&gt;读取和显示图像&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;cv2.imread()：读取&lt;/li&gt;
+&lt;li&gt;cv2.imwrite()：写入&lt;/li&gt;
+&lt;li&gt;cv2.imshow()：显示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;img = cv2.imread(img_path, &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cv2.namedWindow(&lt;span class=&#34;string&#34;&gt;&amp;quot;imview&amp;quot;&lt;/span&gt;, cv2.WINDOW_NORMAL)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;quot;imview&amp;quot;&lt;/span&gt;, img)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;k = cv2.waitKey(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; k == &lt;span class=&#34;built_in&#34;&gt;ord&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;s&amp;quot;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  cv2.imwrite(&lt;span class=&#34;string&#34;&gt;&amp;quot;other.jpg&amp;quot;&lt;/span&gt;, img)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cv2.destroyAllWindows()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+
+&lt;h2 id=&#34;视频的操作&#34;&gt;&lt;a href=&#34;#视频的操作&#34; class=&#34;headerlink&#34; title=&#34;视频的操作&#34;&gt;&lt;/a&gt;视频的操作&lt;/h2&gt;&lt;h3 id=&#34;从摄像头读取视频&#34;&gt;&lt;a href=&#34;#从摄像头读取视频&#34; class=&#34;headerlink&#34; title=&#34;从摄像头读取视频&#34;&gt;&lt;/a&gt;从摄像头读取视频&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;cv2.VideoCapture(0).read()&lt;/li&gt;
+&lt;li&gt;cv2.cvtColor()&lt;/li&gt;
+&lt;li&gt;cv2.imshow()&lt;/li&gt;
+&lt;li&gt;cap.get(propId)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;30&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;title function_&#34;&gt;create_video&lt;/span&gt;():&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cap = cv2.VideoCapture(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;True&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        ret, frame = cap.read()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;quot;frame&amp;quot;&lt;/span&gt;, gray)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; cv2.waitKey() == &lt;span class=&#34;built_in&#34;&gt;ord&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;q&amp;quot;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cap.release()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cv2.destroyAllWindows()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;   &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;title function_&#34;&gt;video&lt;/span&gt;():&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cap = cv2.VideoCapture(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    fourcc = cv2.VideoWriter_fourcc(*&lt;span class=&#34;string&#34;&gt;&amp;#x27;XVID&amp;#x27;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    out = cv2.VideoWriter(&lt;span class=&#34;string&#34;&gt;&amp;quot;output.avi&amp;quot;&lt;/span&gt;, fourcc, &lt;span class=&#34;number&#34;&gt;20&lt;/span&gt;, &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, (&lt;span class=&#34;number&#34;&gt;640&lt;/span&gt;, &lt;span class=&#34;number&#34;&gt;480&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;while&lt;/span&gt; (cap.isOpened()):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        ret, frame = cap.read()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; ret:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            frame = cv2.flip(frame, &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            out.write(frame)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;quot;video&amp;quot;&lt;/span&gt;, frame)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; cv2.waitKey(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;) == &lt;span class=&#34;built_in&#34;&gt;ord&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;q&amp;quot;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cap.release()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    out.release()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cv2.destroyAllWindows()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;从文件中获取视频&#34;&gt;&lt;a href=&#34;#从文件中获取视频&#34; class=&#34;headerlink&#34; title=&#34;从文件中获取视频&#34;&gt;&lt;/a&gt;从文件中获取视频&lt;/h3&gt;&lt;p&gt;cv2.VideoCapture(0)表示打开默认设备，将设备索引号改成视频文件的名称就能从视频文件中读取视频，使用 waitKey()控制播放速度（通常25 ms）。&lt;/p&gt;
+&lt;h2 id=&#34;OpenCV-中的绘图函数&#34;&gt;&lt;a href=&#34;#OpenCV-中的绘图函数&#34; class=&#34;headerlink&#34; title=&#34;OpenCV 中的绘图函数&#34;&gt;&lt;/a&gt;OpenCV 中的绘图函数&lt;/h2&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20191012/learn-about-open-cv/&t=OpenCV学习笔记（一）"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

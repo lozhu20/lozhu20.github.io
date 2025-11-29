@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="前言这两天新买了一个迷你主机准系统，需要自己安装系统，手边只有 Mac，第一次在 MacOS 系统下制作启动盘，踩了一些坑，记录一下。 制作过程下载 Windows10 ISO 镜像文件官方镜像文件下载地址：下载 Windows 10 光盘映像（ISO 文件） 安装工具软件因为个别文件超大，不能直接复制，因此需要安装一个工具软件进行分割复制： 1brew install wimlib   开始制作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在macOS系统中制作Windows10启动盘">
+<meta property="og:url" content="https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="前言这两天新买了一个迷你主机准系统，需要自己安装系统，手边只有 Mac，第一次在 MacOS 系统下制作启动盘，踩了一些坑，记录一下。 制作过程下载 Windows10 ISO 镜像文件官方镜像文件下载地址：下载 Windows 10 光盘映像（ISO 文件） 安装工具软件因为个别文件超大，不能直接复制，因此需要安装一个工具软件进行分割复制： 1brew install wimlib   开始制作">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-07-31T06:51:11.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.222Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="Windows安装">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>在macOS系统中制作Windows10启动盘</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20240821/cannot-open-index-in-nginx/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20240714/github-pages-blog-acceleration/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&text=在macOS系统中制作Windows10启动盘"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&title=在macOS系统中制作Windows10启动盘"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&is_video=false&description=在macOS系统中制作Windows10启动盘"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=在macOS系统中制作Windows10启动盘&body=Check out this article: https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&title=在macOS系统中制作Windows10启动盘"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&title=在macOS系统中制作Windows10启动盘"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&title=在macOS系统中制作Windows10启动盘"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&title=在macOS系统中制作Windows10启动盘"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&name=在macOS系统中制作Windows10启动盘&description=&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;这两天新买了一个迷你主机准系统，需要自己安装系统，手边只有 Mac，第一次在 MacOS 系统下制作启动盘，踩了一些坑，记录一下。&lt;/p&gt;
+&lt;h2 id=&#34;制作过程&#34;&gt;&lt;a href=&#34;#制作过程&#34; class=&#34;headerlink&#34; title=&#34;制作过程&#34;&gt;&lt;/a&gt;制作过程&lt;/h2&gt;&lt;h3 id=&#34;下载-Windows10-ISO-镜像文件&#34;&gt;&lt;a href=&#34;#下载-Windows10-ISO-镜像文件&#34; class=&#34;headerlink&#34; title=&#34;下载 Windows10 ISO 镜像文件&#34;&gt;&lt;/a&gt;下载 Windows10 ISO 镜像文件&lt;/h3&gt;&lt;p&gt;官方镜像文件下载地址：&lt;a href=&#34;https://www.microsoft.com/zh-cn/software-download/windows10ISO&#34;&gt;下载 Windows 10 光盘映像（ISO 文件）&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;安装工具软件&#34;&gt;&lt;a href=&#34;#安装工具软件&#34; class=&#34;headerlink&#34; title=&#34;安装工具软件&#34;&gt;&lt;/a&gt;安装工具软件&lt;/h3&gt;&lt;p&gt;因为个别文件超大，不能直接复制，因此需要安装一个工具软件进行分割复制：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;brew install wimlib&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;开始制作&#34;&gt;&lt;a href=&#34;#开始制作&#34; class=&#34;headerlink&#34; title=&#34;开始制作&#34;&gt;&lt;/a&gt;开始制作&lt;/h3&gt;&lt;p&gt;将 U 盘插入后，使用 diskutil 命令查看磁盘：&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&t=在macOS系统中制作Windows10启动盘"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">制作过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-Windows10-ISO-%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">下载 Windows10 ISO 镜像文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">安装工具软件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E5%88%B6%E4%BD%9C"><span class="toc-number">2.3.</span> <span class="toc-text">开始制作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95"><span class="toc-number">3.</span> <span class="toc-text">问题记录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        在macOS系统中制作Windows10启动盘
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-07-31T06:51:11.000Z" class="dt-published" itemprop="datePublished">2024-07-31</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Windows%E5%AE%89%E8%A3%85/" rel="tag">Windows安装</a> -->
+        <a class="category-link" href="/tags/Windows%E5%AE%89%E8%A3%85/" rel="tag">Windows安装</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">686 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">2  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这两天新买了一个迷你主机准系统，需要自己安装系统，手边只有 Mac，第一次在 MacOS 系统下制作启动盘，踩了一些坑，记录一下。</p>
+<h2 id="制作过程"><a href="#制作过程" class="headerlink" title="制作过程"></a>制作过程</h2><h3 id="下载-Windows10-ISO-镜像文件"><a href="#下载-Windows10-ISO-镜像文件" class="headerlink" title="下载 Windows10 ISO 镜像文件"></a>下载 Windows10 ISO 镜像文件</h3><p>官方镜像文件下载地址：<a target="_blank" rel="noopener" href="https://www.microsoft.com/zh-cn/software-download/windows10ISO">下载 Windows 10 光盘映像（ISO 文件）</a></p>
+<h3 id="安装工具软件"><a href="#安装工具软件" class="headerlink" title="安装工具软件"></a>安装工具软件</h3><p>因为个别文件超大，不能直接复制，因此需要安装一个工具软件进行分割复制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install wimlib</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="开始制作"><a href="#开始制作" class="headerlink" title="开始制作"></a>开始制作</h3><p>将 U 盘插入后，使用 diskutil 命令查看磁盘：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diskutil list</span><br></pre></td></tr></table></figure>
+
+<p>我这里 U 盘的路径是 &#x2F;dev&#x2F;disk3。</p>
+<p>将 U 盘格式化：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diskutil eraseDisk MS-DOS &quot;WIN10&quot; GPT /dev/disk3</span><br></pre></td></tr></table></figure>
+
+<p>GPT 和 MBR 格式的区别以及怎么选择，可以查查资料，一般来说，新硬件直接选择 GPT 就好了。</p>
+<p>U 盘格式化完成之后，挂载 Windows ISO 镜像文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdiutil mount ~/Downloads/Win10_1903_V1_English_x64.iso</span><br></pre></td></tr></table></figure>
+
+<p>挂载完成之后，开始将文件复制到 U 盘，这个过程非常耗时，我的 usb2.0 U 盘，花了整整一夜才复制完成。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -vha --exclude=sources/install.wim /Volumes/CCCOMA_X64FRE_EN-US_DV9/* /Volumes/WIN10</span><br></pre></td></tr></table></figure>
+
+<p>此过程可能会持续两三个小时，如果是 usb3.0 应该会快得多。完成之后再单独复制超大文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wimlib-imagex split /Volumes/CCCOMA_X64FRE_EN-US_DV9/sources/install.wim /Volumes/WIN10/sources/install.swm 3800</span><br></pre></td></tr></table></figure>
+
+<p>此过程可能会持续几个小时，在完成之前进度可能一直是 0%，不要中止。它将使用 wimlib 将 install.wim 文件拆分为 2 个小于 4 GB 的文件（命令中使用 3.8 GB），然后将它们复制到你的 USB。完成后，你可以在 Finder 中从 Mac 中弹出 USB 和 ISO 镜像文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diskutil eject /dev/disk3</span><br></pre></td></tr></table></figure>
+
+<p>全部完成后就可以正常进行安装了。</p>
+<h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><p>系统安装时遇到“windows无法对计算机进行启动到下一个安装阶段的准备”的错误，无法进行后续步骤。查了一下，这是因为 U 盘和系统安装的硬盘中都存在 EFI 分区导致，需要将 U 盘中的 EFI 分区删除。</p>
+<p>在安装过程进行到选择安装分区时，使用 <code>shift + F10</code> 打开命令行工具，然后输入 <code>diskpart</code> 进入磁盘工具：</p>
+<p>查看磁盘：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list disk</span><br></pre></td></tr></table></figure>
+
+<p>找到安装系统的硬盘，记下硬盘编号，我这里 U 盘的磁盘编号是 1。</p>
+<p>选中磁盘：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select disk 1</span><br></pre></td></tr></table></figure>
+
+<p>查看磁盘分区：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list partition</span><br></pre></td></tr></table></figure>
+
+<p>我这里看到两个分区，其中第一个只有 200M，应该就是对应的 EFI 分区，编号为 0。</p>
+<p>选择磁盘分区：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select partition 0</span><br></pre></td></tr></table></figure>
+
+<p>删除对应的磁盘分区：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete partition override</span><br></pre></td></tr></table></figure>
+
+<p>看到 successful 就表示删除成功了。此时关闭命令行工具，选择对应的安装分区，就可以继续进行安装了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.freecodecamp.org/chinese/news/how-make-a-windows-10-usb-using-your-mac-build-a-bootable-iso-from-your-macs-terminal/">如何使用 Mac 制作 Windows 10 U 盘启动盘</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7289717829732745275">使用mac制作U盘启动盘并安装win10系统</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.huluohu.com/posts/446/#">Windows中如何删除移动硬盘上的EFI系统分区</a></p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">制作过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-Windows10-ISO-%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">下载 Windows10 ISO 镜像文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">安装工具软件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E5%88%B6%E4%BD%9C"><span class="toc-number">2.3.</span> <span class="toc-text">开始制作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95"><span class="toc-number">3.</span> <span class="toc-text">问题记录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&text=在macOS系统中制作Windows10启动盘"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&title=在macOS系统中制作Windows10启动盘"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&is_video=false&description=在macOS系统中制作Windows10启动盘"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=在macOS系统中制作Windows10启动盘&body=Check out this article: https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&title=在macOS系统中制作Windows10启动盘"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&title=在macOS系统中制作Windows10启动盘"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&title=在macOS系统中制作Windows10启动盘"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&title=在macOS系统中制作Windows10启动盘"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&name=在macOS系统中制作Windows10启动盘&description=&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;这两天新买了一个迷你主机准系统，需要自己安装系统，手边只有 Mac，第一次在 MacOS 系统下制作启动盘，踩了一些坑，记录一下。&lt;/p&gt;
+&lt;h2 id=&#34;制作过程&#34;&gt;&lt;a href=&#34;#制作过程&#34; class=&#34;headerlink&#34; title=&#34;制作过程&#34;&gt;&lt;/a&gt;制作过程&lt;/h2&gt;&lt;h3 id=&#34;下载-Windows10-ISO-镜像文件&#34;&gt;&lt;a href=&#34;#下载-Windows10-ISO-镜像文件&#34; class=&#34;headerlink&#34; title=&#34;下载 Windows10 ISO 镜像文件&#34;&gt;&lt;/a&gt;下载 Windows10 ISO 镜像文件&lt;/h3&gt;&lt;p&gt;官方镜像文件下载地址：&lt;a href=&#34;https://www.microsoft.com/zh-cn/software-download/windows10ISO&#34;&gt;下载 Windows 10 光盘映像（ISO 文件）&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;安装工具软件&#34;&gt;&lt;a href=&#34;#安装工具软件&#34; class=&#34;headerlink&#34; title=&#34;安装工具软件&#34;&gt;&lt;/a&gt;安装工具软件&lt;/h3&gt;&lt;p&gt;因为个别文件超大，不能直接复制，因此需要安装一个工具软件进行分割复制：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;brew install wimlib&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;开始制作&#34;&gt;&lt;a href=&#34;#开始制作&#34; class=&#34;headerlink&#34; title=&#34;开始制作&#34;&gt;&lt;/a&gt;开始制作&lt;/h3&gt;&lt;p&gt;将 U 盘插入后，使用 diskutil 命令查看磁盘：&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20240731/make-windows10-startup-driver-on-macos/&t=在macOS系统中制作Windows10启动盘"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

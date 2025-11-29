@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。 准备工作1、Mac 上安装 Mercurial 总是报错，没找到什么原因，所以用不了 hg clone http:&#x2F;&#x2F;hg.openjdk.java.net&#x2F;jdk8 这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在macOS上编译OpenJDK8">
+<meta property="og:url" content="https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。 准备工作1、Mac 上安装 Mercurial 总是报错，没找到什么原因，所以用不了 hg clone http:&#x2F;&#x2F;hg.openjdk.java.net&#x2F;jdk8 这">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-02T12:14:00.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.222Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>在macOS上编译OpenJDK8</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20251024/extract-interval-row-from-excel/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20250728/ping-debian12-failed/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&text=在macOS上编译OpenJDK8"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&title=在macOS上编译OpenJDK8"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&is_video=false&description=在macOS上编译OpenJDK8"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=在macOS上编译OpenJDK8&body=Check out this article: https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&title=在macOS上编译OpenJDK8"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&title=在macOS上编译OpenJDK8"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&title=在macOS上编译OpenJDK8"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&title=在macOS上编译OpenJDK8"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&name=在macOS上编译OpenJDK8&description=&lt;p&gt;在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。&lt;/p&gt;
+&lt;h2 id=&#34;准备工作&#34;&gt;&lt;a href=&#34;#准备工作&#34; class=&#34;headerlink&#34; title=&#34;准备工作&#34;&gt;&lt;/a&gt;准备工作&lt;/h2&gt;&lt;p&gt;1、Mac 上安装 Mercurial 总是报错，没找到什么原因，所以用不了 &lt;code&gt;hg clone &lt;a href=&#34;http://hg.openjdk.java.net/jdk8&#34;&gt;http://hg.openjdk.java.net/jdk8&lt;/a&gt;&lt;/code&gt; 这种方式。&lt;/p&gt;
+&lt;p&gt;jdk8 源码地址：&lt;a href=&#34;http://jdk.java.net/java-se-ri/8-MR3&#34;&gt;jdk8u41源码下载&lt;/a&gt;  &lt;a href=&#34;https://download.java.net/openjdk/openjdk/jdk8/promoted/b132/openjdk-8-src-b132-03_mar_2014.zip&#34;&gt;zip文件下载&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2、安装 freetype 和 ccache：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;brew install freetype&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;brew install ccache&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;编译&#34;&gt;&lt;a href=&#34;#编译&#34; class=&#34;headerlink&#34; title=&#34;编译&#34;&gt;&lt;/a&gt;编译&lt;/h2&gt;&lt;p&gt;运行 configure：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;./configure --with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/ --disable-warnings-as-errors --with-debug-level=slowdebug --with-jvm-variants=server --enable-ccache&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&t=在macOS上编译OpenJDK8"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">2.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%94%99%E8%AF%AF"><span class="toc-number">3.</span> <span class="toc-text">其他可能遇到的错误</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        在macOS上编译OpenJDK8
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-08-02T12:14:00.000Z" class="dt-published" itemprop="datePublished">2025-08-02</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/Java/" rel="tag">Java</a> -->
+        <a class="category-link" href="/tags/Java/" rel="tag">Java</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">853 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">3  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>1、Mac 上安装 Mercurial 总是报错，没找到什么原因，所以用不了 <code>hg clone <a target="_blank" rel="noopener" href="http://hg.openjdk.java.net/jdk8">http://hg.openjdk.java.net/jdk8</a></code> 这种方式。</p>
+<p>jdk8 源码地址：<a target="_blank" rel="noopener" href="http://jdk.java.net/java-se-ri/8-MR3">jdk8u41源码下载</a>  <a target="_blank" rel="noopener" href="https://download.java.net/openjdk/openjdk/jdk8/promoted/b132/openjdk-8-src-b132-03_mar_2014.zip">zip文件下载</a></p>
+<p>2、安装 freetype 和 ccache：</p>
+<p><code>brew install freetype</code></p>
+<p><code>brew install ccache</code></p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>运行 configure：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/ --disable-warnings-as-errors --with-debug-level=slowdebug --with-jvm-variants=server --enable-ccache</span><br></pre></td></tr></table></figure>
+
+<p><em>遇到的报错及解决方案</em></p>
+<p>1、The C compiler (located as &#x2F;usr&#x2F;bin&#x2F;gcc) does not seem to be the required GCC compiler.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">打开文件common/autoconf/generated-configure.sh，搜索compiler is required</span><br><span class="line">注释或把报错命令改为echo即可。</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>比较顺利，只遇到上面一个错误。</p>
+<p>成功输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">....</span><br><span class="line">....</span><br><span class="line">config.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/spec.sh</span><br><span class="line">config.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/Makefile</span><br><span class="line">config.status: creating /Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release/config.h</span><br><span class="line"></span><br><span class="line">====================================================</span><br><span class="line">A new configuration has been successfully created in</span><br><span class="line">/Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/build/macosx-x86_64-normal-server-release</span><br><span class="line">using configure arguments &#x27;--with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/&#x27;.</span><br><span class="line"></span><br><span class="line">Configuration summary:</span><br><span class="line">* Debug level:    release</span><br><span class="line">* JDK variant:    normal</span><br><span class="line">* JVM variants:   server</span><br><span class="line">* OpenJDK target: OS: macosx, CPU architecture: x86, address length: 64</span><br><span class="line"></span><br><span class="line">Tools summary:</span><br><span class="line">* Boot JDK:       openjdk version &quot;1.8.0_292&quot; OpenJDK Runtime Environment (Zulu 8.54.0.21-CA-macosx) (build 1.8.0_292-b10) OpenJDK 64-Bit Server VM (Zulu 8.54.0.21-CA-macosx) (build 25.292-b10, mixed mode)  (at /opt/java/zulu8.54.0.21-ca-jdk8.0.292-macosx_x64)</span><br><span class="line">* C Compiler:      version  (at /usr/bin/gcc)</span><br><span class="line">* C++ Compiler:    version  (at /usr/bin/g++)</span><br><span class="line"></span><br><span class="line">Build performance summary:</span><br><span class="line">* Cores to use:   4</span><br><span class="line">* Memory limit:   16384 MB</span><br><span class="line">* ccache status:  installed, but disabled (version older than 3.1.4)</span><br><span class="line"></span><br><span class="line">Build performance tip: ccache gives a tremendous speedup for C++ recompilations.</span><br><span class="line">You have ccache installed, but it is a version prior to 3.1.4. Try upgrading.</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>运行 <code>make all</code></p>
+<p>报错及解决：</p>
+<p>1、clang: error: include path for libstdc++ headers not found; pass ‘-stdlib&#x3D;libc++’ on the command line to use the libc++ standard library instead [-Werror,-Wstdlibcxx-not-found]</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/quantum7/article/details/108466760">MAC编译OpenJDK8：clang: error: include path for libstdc++ headers not found</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/quantum6/xcode-missing-libstdcpp.git">The missing libstdc++ headers and libraries for Xcode 10 or above.</a></p>
+<p>2、</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">l-op-parentheses]</span><br><span class="line">    if ( instr-&gt;is_ideal_branch() &amp;&amp; instr-&gt;label_position() == -1 ||</span><br><span class="line">         ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~</span><br><span class="line">/Users/chenxii/Documents/Java/jdk8/openjdk8u41/openjdk/hotspot/src/share/vm/adlc/archDesc.cpp:336:35: note: place parentheses around the &#x27;&amp;&amp;&#x27; expression to silence this warning</span><br><span class="line">    if ( instr-&gt;is_ideal_branch() &amp;&amp; instr-&gt;label_position() == -1 ||</span><br><span class="line">                                  ^</span><br><span class="line">         (                                                        )</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="其他可能遇到的错误"><a href="#其他可能遇到的错误" class="headerlink" title="其他可能遇到的错误"></a>其他可能遇到的错误</h2><p>&#x2F;Users&#x2F;lozhu&#x2F;Documents&#x2F;projects&#x2F;jdk12-06222165c35f&#x2F;src&#x2F;java.base&#x2F;macosx&#x2F;native&#x2F;libosxsecurity&#x2F;KeystoreImpl.m note: did not find header ‘JavaNativeFoundation.h’ in framework ‘JavaNativeFoundation’ (loaded from ‘&#x2F;Applications&#x2F;Xcode.app&#x2F;Contents&#x2F;Developer&#x2F;Platforms&#x2F;MacOSX.platform&#x2F;Developer&#x2F;SDKs&#x2F;MacOSX14.0.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks’)</p>
+<p>现在的位置：&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX14.sdk</p>
+<p>编辑 .&#x2F;make&#x2F;test&#x2F;JtregNativeJdk.gmk</p>
+<p>BUILD_JDK_JTREG_LIBRARIES_LIBS_libTestMainKeyWindow :&#x3D; -framework JavaVM <br>      -framework Cocoa -framework JavaNativeFoundation</p>
+<p>修改为</p>
+<p>BUILD_JDK_JTREG_LIBRARIES_LIBS_libTestMainKeyWindow :&#x3D; -framework Cocoa -framework JavaNativeFoundation</p>
+<p>编辑 .&#x2F;build&#x2F;macosx-x86_64-server-slowdebug&#x2F;spec.gmk</p>
+<p>删除 -F &#x2F;Applications&#x2F;Xcode.app&#x2F;Contents&#x2F;Developer&#x2F;Platforms&#x2F;MacOSX.platform&#x2F;Developer&#x2F;SDKs&#x2F;MacOSX11.1.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Frameworks</p>
+<p>编辑 .&#x2F;build&#x2F;macosx-x86_64-server-slowdebug&#x2F;buildjdk-spec.gmk</p>
+<p>参考: <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/885c718df9de">macOS Catalina + Xcode 12 编译OpenJDK 14 错误解决</a></p>
+<hr>
+<p>.&#x2F;configure –with-freetype-include&#x3D;&#x2F;usr&#x2F;local&#x2F;include&#x2F;freetype2 –with-freetype-lib&#x3D;&#x2F;usr&#x2F;local&#x2F;lib&#x2F;</p>
+<p>报错：The C compiler (located as &#x2F;usr&#x2F;bin&#x2F;gcc) does not seem to be the required GCC compiler.<br>打开文件common&#x2F;autoconf&#x2F;generated-configure.sh，搜索compiler is required<br>注释或把报错命令改为echo即可。</p>
+<hr>
+<p>(base) ➜  jdk8 make<br>Building OpenJDK for target ‘default’ in configuration ‘macosx-x86_64-normal-server-release’</p>
+<p>Starting langtools</p>
+<p>&#x2F;bin&#x2F;sh: line 0: cd: &#x2F;Users&#x2F;chenxii&#x2F;Documents&#x2F;Java&#x2F;jdk8&#x2F;jdk8&#x2F;langtools&#x2F;make: No such file or directory<br>make: *** [langtools-only] Error 1</p>
+<p>解决方案参考：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/34703703/jdk8-build-error-langtools">https://stackoverflow.com/questions/34703703/jdk8-build-error-langtools</a></p>
+<hr>
+<p>执行：.&#x2F;get_source.sh</p>
+<p>(base) ➜  jdk8 .&#x2F;get_source.sh</p>
+<p>Repositories:  corba jaxp jaxws langtools jdk hotspot nashorn</p>
+<pre><code>            corba:   hg clone http://hg.openjdk.java.net/jdk8/jdk8/corba corba
+             jaxp:   hg clone http://hg.openjdk.java.net/jdk8/jdk8/jaxp jaxp
+            corba:   requesting all changes
+</code></pre>
+<p>Waiting 5 secs before spawning next background command.</p>
+<p>lcm.cpp:52:35: error: ordered comparison between pointer and zero (‘address’ (aka ‘unsigned char *’) and ‘int’) </p>
+<p>解决：编辑&#x2F;hotspot&#x2F;src&#x2F;share&#x2F;vm&#x2F;opto&#x2F;lcm.cpp:52 原：if (Universe::narrow_oop_base() &gt; 0) 修改后： if (Universe::narrow_oop_base()!&#x3D; NULL) { &#x2F;&#x2F; Implies UseCompressedOops.</p>
+<hr>
+<p>error: ordered comparison between pointer and zero</p>
+<p>修改openjdk&#x2F;hotspot&#x2F;src&#x2F;share&#x2F;vm&#x2F;runtime&#x2F;virtualspace.cpp<br>　　修改331行为<br>　　if (base() !&#x3D; 0) {</p>
+<hr>
+<p>fatal error: ‘JavaNativeFoundation&#x2F;JavaNativeFoundation.h’ file not found<br>#import &lt;JavaNativeFoundation&#x2F;JavaNativeFoundation.h&gt;</p>
+<p>(base) ➜  openjdk  sudo find &#x2F; -name “<em>JavaNativeFoundation.h</em>“<br>Password:<br>find: &#x2F;Library&#x2F;Application Support&#x2F;com.apple.TCC: Operation not permitted<br>&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX11.1.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaNativeFoundation.framework&#x2F;Versions&#x2F;A&#x2F;Headers&#x2F;JavaNativeFoundation.h<br>&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Versions&#x2F;A&#x2F;Frameworks&#x2F;JavaNativeFoundation.framework&#x2F;Versions&#x2F;A&#x2F;Headers&#x2F;JavaNativeFoundation.h</p>
+<p>编辑：<br>vim hotspot&#x2F;make&#x2F;bsd&#x2F;makefiles&#x2F;saproc.make 61行：<br>SALIBS &#x3D; -g -framework Foundation -F&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Frameworks -framework JavaNativeFoundation -framework Security -framework CoreFoundation</p>
+<p>105行：<br>-I&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;SDKs&#x2F;MacOSX10.15.sdk&#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;JavaVM.framework&#x2F;Headers</p>
+<hr>
+<p>执行：make CONF&#x3D;macosx-x86_64-normal-server-release clean<br>make CONF&#x3D;macosx-x86_64-normal-server-release install</p>
+<p>—– Build times ——-<br>Start 2021-07-11 10:50:45<br>End   2021-07-11 10:59:52<br>00:00:16 corba<br>00:00:50 demos<br>00:01:24 docs<br>00:02:10 hotspot<br>00:01:01 images<br>00:00:09 jaxp<br>00:00:14 jaxws<br>00:02:35 jdk<br>00:00:18 langtools<br>00:00:08 nashorn</p>
+<p>00:09:07 TOTAL</p>
+<p>Finished building OpenJDK for target ‘all’</p>
+<p>WARNING: You have the following ALT_ variables set:<br>ALT_PARALLEL_COMPILE_JOBS&#x3D;2<br>ALT_ variables are deprecated and will be ignored. Please clean your environment.</p>
+<p>[1]    90140 bus error  build&#x2F;macosx-x86_64-normal-server-release&#x2F;jdk&#x2F;bin&#x2F;java -version</p>
+<p>&#x2F;Users&#x2F;chenxii&#x2F;Documents&#x2F;Java&#x2F;jdk8&#x2F;openjdk&#x2F;build&#x2F;macosx-x86_64-normal-server-release&#x2F;jdk&#x2F;bin</p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">2.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%94%99%E8%AF%AF"><span class="toc-number">3.</span> <span class="toc-text">其他可能遇到的错误</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&text=在macOS上编译OpenJDK8"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&title=在macOS上编译OpenJDK8"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&is_video=false&description=在macOS上编译OpenJDK8"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=在macOS上编译OpenJDK8&body=Check out this article: https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&title=在macOS上编译OpenJDK8"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&title=在macOS上编译OpenJDK8"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&title=在macOS上编译OpenJDK8"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&title=在macOS上编译OpenJDK8"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&name=在macOS上编译OpenJDK8&description=&lt;p&gt;在 MacOS 系统上编译 OpenJDK 遇到的一些问题及对应的解决方案的记录。因为 Java8 发布时间已经比较久，到现在各个操作系统很多地方都已经发生很大变化，所以小问题比较多，建议编译更好版本的 JDK，坑应该会少一些。&lt;/p&gt;
+&lt;h2 id=&#34;准备工作&#34;&gt;&lt;a href=&#34;#准备工作&#34; class=&#34;headerlink&#34; title=&#34;准备工作&#34;&gt;&lt;/a&gt;准备工作&lt;/h2&gt;&lt;p&gt;1、Mac 上安装 Mercurial 总是报错，没找到什么原因，所以用不了 &lt;code&gt;hg clone &lt;a href=&#34;http://hg.openjdk.java.net/jdk8&#34;&gt;http://hg.openjdk.java.net/jdk8&lt;/a&gt;&lt;/code&gt; 这种方式。&lt;/p&gt;
+&lt;p&gt;jdk8 源码地址：&lt;a href=&#34;http://jdk.java.net/java-se-ri/8-MR3&#34;&gt;jdk8u41源码下载&lt;/a&gt;  &lt;a href=&#34;https://download.java.net/openjdk/openjdk/jdk8/promoted/b132/openjdk-8-src-b132-03_mar_2014.zip&#34;&gt;zip文件下载&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2、安装 freetype 和 ccache：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;brew install freetype&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;brew install ccache&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;编译&#34;&gt;&lt;a href=&#34;#编译&#34; class=&#34;headerlink&#34; title=&#34;编译&#34;&gt;&lt;/a&gt;编译&lt;/h2&gt;&lt;p&gt;运行 configure：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;./configure --with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/ --disable-warnings-as-errors --with-debug-level=slowdebug --with-jvm-variants=server --enable-ccache&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20250802/install-open-jdk8-on-macos/&t=在macOS上编译OpenJDK8"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="题目描述用两个非单空链表逆序的表示两个非负整数，链表中的每个节点存储数字中的一个数位，链表起始节点表示个位、第二个节点表示十位….，最后一个节点表示最高位。除了数字 0 之外，这两个数字都不会以 0 开头。图示如下：单链表1：2 -&gt; 4 -&gt; 3单链表2：5 -&gt; 6 -&gt; 4表示数字 342 和 465。要求输入两个链表的头节点，以相同形式输出这两个数相加的结果。 示例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode2-两数相加">
+<meta property="og:url" content="https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="题目描述用两个非单空链表逆序的表示两个非负整数，链表中的每个节点存储数字中的一个数位，链表起始节点表示个位、第二个节点表示十位….，最后一个节点表示最高位。除了数字 0 之外，这两个数字都不会以 0 开头。图示如下：单链表1：2 -&gt; 4 -&gt; 3单链表2：5 -&gt; 6 -&gt; 4表示数字 342 和 465。要求输入两个链表的头节点，以相同形式输出这两个数相加的结果。 示例">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-31T16:19:00.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.218Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="LeetCode">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>LeetCode2-两数相加</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20251101/leetcode-20-valid-bracket/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20251030/leetcode-70-upstairs/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&text=LeetCode2-两数相加"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&title=LeetCode2-两数相加"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&is_video=false&description=LeetCode2-两数相加"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=LeetCode2-两数相加&body=Check out this article: https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&title=LeetCode2-两数相加"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&title=LeetCode2-两数相加"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&title=LeetCode2-两数相加"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&title=LeetCode2-两数相加"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&name=LeetCode2-两数相加&description=&lt;h2 id=&#34;题目描述&#34;&gt;&lt;a href=&#34;#题目描述&#34; class=&#34;headerlink&#34; title=&#34;题目描述&#34;&gt;&lt;/a&gt;题目描述&lt;/h2&gt;&lt;p&gt;用两个非单空链表逆序的表示两个非负整数，链表中的每个节点存储数字中的一个数位，链表起始节点表示个位、第二个节点表示十位….，最后一个节点表示最高位。除了数字 0 之外，这两个数字都不会以 0 开头。&lt;br&gt;图示如下：&lt;br&gt;单链表1：2 -&amp;gt; 4 -&amp;gt; 3&lt;br&gt;单链表2：5 -&amp;gt; 6 -&amp;gt; 4&lt;br&gt;表示数字 342 和 465。&lt;br&gt;要求输入两个链表的头节点，以相同形式输出这两个数相加的结果。&lt;/p&gt;
+&lt;p&gt;示例：&lt;br&gt;输入：l1 &amp;#x3D; [2, 4, 3] l2 &amp;#x3D; [5, 6, 4]&lt;br&gt;输出：[7, 0, 8]&lt;br&gt;解释：342 + 465 &amp;#x3D; 807&lt;/p&gt;
+&lt;h2 id=&#34;理解&#34;&gt;&lt;a href=&#34;#理解&#34; class=&#34;headerlink&#34; title=&#34;理解&#34;&gt;&lt;/a&gt;理解&lt;/h2&gt;&lt;p&gt;观察链表的表示可以发现这种表示方式中，链表头节点是最低位，尾节点是最高位。并且有前提“两个数字除了 0 之外，都不会以 0 开头“，这说明两个数的数位正好是对齐的。如果以两个指针从前往后同步遍历两个链表，则个位对个位，十位对十位。运算时，只要将对应指针指向的节点的数值相加，超过 10 的则用一个临时变量存储 1 表示进位，下一次循环中加上这个进位的 1。要注意，产生进位后，当前节点值的和应减去 10。&lt;br&gt;另外，有可能两个链表长度不一致，而且有可能最后一位的运算会产生进位，所以结束循环的条件应该是两个指针均指向空且上一次加法中没有产生进位，即存储进位的临时变量值 !&amp;#x3D; 1。&lt;/p&gt;
+&lt;h2 id=&#34;代码实现&#34;&gt;&lt;a href=&#34;#代码实现&#34; class=&#34;headerlink&#34; title=&#34;代码实现&#34;&gt;&lt;/a&gt;代码实现&lt;/h2&gt;&lt;p&gt;Python3 代码实现如下：&lt;/p&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;31&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;title class_&#34;&gt;Solution&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;title function_&#34;&gt;addTwoNumbers&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;self, l1: &lt;span class=&#34;type&#34;&gt;Optional&lt;/span&gt;[ListNode], l2: &lt;span class=&#34;type&#34;&gt;Optional&lt;/span&gt;[ListNode]&lt;/span&gt;) -&amp;gt; &lt;span class=&#34;type&#34;&gt;Optional&lt;/span&gt;[ListNode]:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        nodeIndex1 = l1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        nodeIndex2 = l2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        l3 = &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        nodeIndex3 = &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        tempVal = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;while&lt;/span&gt; nodeIndex1 != &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;or&lt;/span&gt; nodeIndex2 != &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;or&lt;/span&gt; tempVal != &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            tempNode = ListNode(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            val1 = nodeIndex1.val &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; nodeIndex1 &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            val2 = nodeIndex2.val &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; nodeIndex2 &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            val3 = val1 + val2 + tempVal&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; (val3 &amp;gt;= &lt;span class=&#34;number&#34;&gt;10&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                tempVal = &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                val3 = val3 - &lt;span class=&#34;number&#34;&gt;10&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                tempVal = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            tempNode.val = val3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; l3 &lt;span class=&#34;keyword&#34;&gt;is&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                l3 = tempNode&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                nodeIndex3 = l3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                nodeIndex3.&lt;span class=&#34;built_in&#34;&gt;next&lt;/span&gt; = tempNode&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                nodeIndex3 = nodeIndex3.&lt;span class=&#34;built_in&#34;&gt;next&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            nodeIndex1 = nodeIndex1.&lt;span class=&#34;built_in&#34;&gt;next&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; nodeIndex1 &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            nodeIndex2 = nodeIndex2.&lt;span class=&#34;built_in&#34;&gt;next&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; nodeIndex2 &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;return&lt;/span&gt; l3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&t=LeetCode2-两数相加"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%90%86%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">代码实现</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        LeetCode2-两数相加
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-10-31T16:19:00.000Z" class="dt-published" itemprop="datePublished">2025-11-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%A7%A3%E9%A2%98%E8%AE%B0%E5%BD%95/">解题记录</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/LeetCode/" rel="tag">LeetCode</a> -->
+        <a class="category-link" href="/tags/LeetCode/" rel="tag">LeetCode</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">426 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">2  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>用两个非单空链表逆序的表示两个非负整数，链表中的每个节点存储数字中的一个数位，链表起始节点表示个位、第二个节点表示十位….，最后一个节点表示最高位。除了数字 0 之外，这两个数字都不会以 0 开头。<br>图示如下：<br>单链表1：2 -&gt; 4 -&gt; 3<br>单链表2：5 -&gt; 6 -&gt; 4<br>表示数字 342 和 465。<br>要求输入两个链表的头节点，以相同形式输出这两个数相加的结果。</p>
+<p>示例：<br>输入：l1 &#x3D; [2, 4, 3] l2 &#x3D; [5, 6, 4]<br>输出：[7, 0, 8]<br>解释：342 + 465 &#x3D; 807</p>
+<h2 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h2><p>观察链表的表示可以发现这种表示方式中，链表头节点是最低位，尾节点是最高位。并且有前提“两个数字除了 0 之外，都不会以 0 开头“，这说明两个数的数位正好是对齐的。如果以两个指针从前往后同步遍历两个链表，则个位对个位，十位对十位。运算时，只要将对应指针指向的节点的数值相加，超过 10 的则用一个临时变量存储 1 表示进位，下一次循环中加上这个进位的 1。要注意，产生进位后，当前节点值的和应减去 10。<br>另外，有可能两个链表长度不一致，而且有可能最后一位的运算会产生进位，所以结束循环的条件应该是两个指针均指向空且上一次加法中没有产生进位，即存储进位的临时变量值 !&#x3D; 1。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>Python3 代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">addTwoNumbers</span>(<span class="params">self, l1: <span class="type">Optional</span>[ListNode], l2: <span class="type">Optional</span>[ListNode]</span>) -&gt; <span class="type">Optional</span>[ListNode]:</span><br><span class="line">        nodeIndex1 = l1</span><br><span class="line">        nodeIndex2 = l2</span><br><span class="line">        l3 = <span class="literal">None</span></span><br><span class="line">        nodeIndex3 = <span class="literal">None</span></span><br><span class="line">        tempVal = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> nodeIndex1 != <span class="literal">None</span> <span class="keyword">or</span> nodeIndex2 != <span class="literal">None</span> <span class="keyword">or</span> tempVal != <span class="number">0</span>:</span><br><span class="line">            tempNode = ListNode(<span class="number">0</span>, <span class="literal">None</span>)</span><br><span class="line">            val1 = nodeIndex1.val <span class="keyword">if</span> nodeIndex1 <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">            val2 = nodeIndex2.val <span class="keyword">if</span> nodeIndex2 <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">            val3 = val1 + val2 + tempVal</span><br><span class="line">            <span class="keyword">if</span> (val3 &gt;= <span class="number">10</span>):</span><br><span class="line">                tempVal = <span class="number">1</span></span><br><span class="line">                val3 = val3 - <span class="number">10</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                tempVal = <span class="number">0</span></span><br><span class="line">            </span><br><span class="line">            tempNode.val = val3</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> l3 <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                l3 = tempNode</span><br><span class="line">                nodeIndex3 = l3</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                nodeIndex3.<span class="built_in">next</span> = tempNode</span><br><span class="line">                nodeIndex3 = nodeIndex3.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">            nodeIndex1 = nodeIndex1.<span class="built_in">next</span> <span class="keyword">if</span> nodeIndex1 <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">            nodeIndex2 = nodeIndex2.<span class="built_in">next</span> <span class="keyword">if</span> nodeIndex2 <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> l3</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%90%86%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">代码实现</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&text=LeetCode2-两数相加"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&title=LeetCode2-两数相加"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&is_video=false&description=LeetCode2-两数相加"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=LeetCode2-两数相加&body=Check out this article: https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&title=LeetCode2-两数相加"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&title=LeetCode2-两数相加"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&title=LeetCode2-两数相加"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&title=LeetCode2-两数相加"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&name=LeetCode2-两数相加&description=&lt;h2 id=&#34;题目描述&#34;&gt;&lt;a href=&#34;#题目描述&#34; class=&#34;headerlink&#34; title=&#34;题目描述&#34;&gt;&lt;/a&gt;题目描述&lt;/h2&gt;&lt;p&gt;用两个非单空链表逆序的表示两个非负整数，链表中的每个节点存储数字中的一个数位，链表起始节点表示个位、第二个节点表示十位….，最后一个节点表示最高位。除了数字 0 之外，这两个数字都不会以 0 开头。&lt;br&gt;图示如下：&lt;br&gt;单链表1：2 -&amp;gt; 4 -&amp;gt; 3&lt;br&gt;单链表2：5 -&amp;gt; 6 -&amp;gt; 4&lt;br&gt;表示数字 342 和 465。&lt;br&gt;要求输入两个链表的头节点，以相同形式输出这两个数相加的结果。&lt;/p&gt;
+&lt;p&gt;示例：&lt;br&gt;输入：l1 &amp;#x3D; [2, 4, 3] l2 &amp;#x3D; [5, 6, 4]&lt;br&gt;输出：[7, 0, 8]&lt;br&gt;解释：342 + 465 &amp;#x3D; 807&lt;/p&gt;
+&lt;h2 id=&#34;理解&#34;&gt;&lt;a href=&#34;#理解&#34; class=&#34;headerlink&#34; title=&#34;理解&#34;&gt;&lt;/a&gt;理解&lt;/h2&gt;&lt;p&gt;观察链表的表示可以发现这种表示方式中，链表头节点是最低位，尾节点是最高位。并且有前提“两个数字除了 0 之外，都不会以 0 开头“，这说明两个数的数位正好是对齐的。如果以两个指针从前往后同步遍历两个链表，则个位对个位，十位对十位。运算时，只要将对应指针指向的节点的数值相加，超过 10 的则用一个临时变量存储 1 表示进位，下一次循环中加上这个进位的 1。要注意，产生进位后，当前节点值的和应减去 10。&lt;br&gt;另外，有可能两个链表长度不一致，而且有可能最后一位的运算会产生进位，所以结束循环的条件应该是两个指针均指向空且上一次加法中没有产生进位，即存储进位的临时变量值 !&amp;#x3D; 1。&lt;/p&gt;
+&lt;h2 id=&#34;代码实现&#34;&gt;&lt;a href=&#34;#代码实现&#34; class=&#34;headerlink&#34; title=&#34;代码实现&#34;&gt;&lt;/a&gt;代码实现&lt;/h2&gt;&lt;p&gt;Python3 代码实现如下：&lt;/p&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;31&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;title class_&#34;&gt;Solution&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;title function_&#34;&gt;addTwoNumbers&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;self, l1: &lt;span class=&#34;type&#34;&gt;Optional&lt;/span&gt;[ListNode], l2: &lt;span class=&#34;type&#34;&gt;Optional&lt;/span&gt;[ListNode]&lt;/span&gt;) -&amp;gt; &lt;span class=&#34;type&#34;&gt;Optional&lt;/span&gt;[ListNode]:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        nodeIndex1 = l1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        nodeIndex2 = l2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        l3 = &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        nodeIndex3 = &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        tempVal = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;while&lt;/span&gt; nodeIndex1 != &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;or&lt;/span&gt; nodeIndex2 != &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;or&lt;/span&gt; tempVal != &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            tempNode = ListNode(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            val1 = nodeIndex1.val &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; nodeIndex1 &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            val2 = nodeIndex2.val &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; nodeIndex2 &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            val3 = val1 + val2 + tempVal&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; (val3 &amp;gt;= &lt;span class=&#34;number&#34;&gt;10&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                tempVal = &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                val3 = val3 - &lt;span class=&#34;number&#34;&gt;10&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                tempVal = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            tempNode.val = val3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; l3 &lt;span class=&#34;keyword&#34;&gt;is&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                l3 = tempNode&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                nodeIndex3 = l3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                nodeIndex3.&lt;span class=&#34;built_in&#34;&gt;next&lt;/span&gt; = tempNode&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                nodeIndex3 = nodeIndex3.&lt;span class=&#34;built_in&#34;&gt;next&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            nodeIndex1 = nodeIndex1.&lt;span class=&#34;built_in&#34;&gt;next&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; nodeIndex1 &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            nodeIndex2 = nodeIndex2.&lt;span class=&#34;built_in&#34;&gt;next&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; nodeIndex2 &lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;return&lt;/span&gt; l3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20251101/leetcode-2-add-two-numbers/&t=LeetCode2-两数相加"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

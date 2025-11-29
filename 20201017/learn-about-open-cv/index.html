@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <style>
+      body { visibility: hidden; }
+    </style>
+    <meta name="description" content="移动 旋转 仿射变换 用到的函数：cv2.getPerspectiveTransform()  扩展和缩放cv2.resize()函数用法1void resize(InputArray src, OutputArray dst, Size dsize, double fx&#x3D;0, double fy&#x3D;0, int interpolation&#x3D;INTER_LINEAR )  123456789101">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenCV学习笔记（二）">
+<meta property="og:url" content="https://zhu.happy365.day/20201017/learn-about-open-cv/index.html">
+<meta property="og:site_name" content="秋葵笔记 | qiukui-note">
+<meta property="og:description" content="移动 旋转 仿射变换 用到的函数：cv2.getPerspectiveTransform()  扩展和缩放cv2.resize()函数用法1void resize(InputArray src, OutputArray dst, Size dsize, double fx&#x3D;0, double fy&#x3D;0, int interpolation&#x3D;INTER_LINEAR )  123456789101">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.happy365.day/24/04/17225724.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17225816.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17225854.png">
+<meta property="og:image" content="https://images.happy365.day/24/04/17225937.png">
+<meta property="article:published_time" content="2020-10-17T08:56:37.000Z">
+<meta property="article:modified_time" content="2025-11-29T16:20:32.219Z">
+<meta property="article:author" content="秋葵笔记">
+<meta property="article:tag" content="OpenCV">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.happy365.day/24/04/17225724.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>OpenCV学习笔记（二）</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    
+      <link rel="canonical" href="https://zhu.happy365.day/20201017/learn-about-open-cv/" />
+    
+  
+  <script src="/js/switch-theme.js"></script> 
+  <script src="/js/random-sentence.js"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="秋葵笔记 | qiukui-note" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/20201017/serifu-of-a-place-further-than-universe/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/20201016/learn-about-advanced-markdown/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20201017/learn-about-open-cv/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&text=OpenCV学习笔记（二）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&title=OpenCV学习笔记（二）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&is_video=false&description=OpenCV学习笔记（二）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=OpenCV学习笔记（二）&body=Check out this article: https://zhu.happy365.day/20201017/learn-about-open-cv/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&title=OpenCV学习笔记（二）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&title=OpenCV学习笔记（二）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&title=OpenCV学习笔记（二）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&title=OpenCV学习笔记（二）"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&name=OpenCV学习笔记（二）&description=&lt;ul&gt;
+&lt;li&gt;移动&lt;/li&gt;
+&lt;li&gt;旋转&lt;/li&gt;
+&lt;li&gt;仿射变换&lt;/li&gt;
+&lt;li&gt;用到的函数：cv2.getPerspectiveTransform()&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;扩展和缩放&#34;&gt;&lt;a href=&#34;#扩展和缩放&#34; class=&#34;headerlink&#34; title=&#34;扩展和缩放&#34;&gt;&lt;/a&gt;扩展和缩放&lt;/h2&gt;&lt;h3 id=&#34;cv2-resize-函数用法&#34;&gt;&lt;a href=&#34;#cv2-resize-函数用法&#34; class=&#34;headerlink&#34; title=&#34;cv2.resize()函数用法&#34;&gt;&lt;/a&gt;cv2.resize()函数用法&lt;/h3&gt;&lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;void resize(InputArray src, OutputArray dst, Size dsize, double fx=&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, double fy=&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;built_in&#34;&gt;int&lt;/span&gt; interpolation=INTER_LINEAR )&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;src：输入，原图像，即待改变大小的图像；&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;dst：输出，改变大小之后的图像，这个图像和原图像具有相同的内容，只是大小和原图像不一样而已；&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;dsize：输出图像的大小。如果这个参数不为0，那么就代表将原图像缩放到这个Size(width，height)指定的大小；如果这个参数为0，那么原图像缩放之后的大小就要通过下面的公式来计算：&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       dsize = Size(round(fx*src.cols), round(fy*src.rows))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       其中，fx和fy就是下面要说的两个参数，是图像width方向和height方向的缩放比例。&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;fx：width方向的缩放比例，如果它是0，那么它就会按照(double)dsize.width/src.cols来计算；&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;fy：height方向的缩放比例，如果它是0，那么它就会按照(double)dsize.height/src.rows来计算；&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;interpolation：这个是指定插值的方式，图像缩放之后，肯定像素要进行重新计算的，就靠这个参数来指定重新计算像素的方式，有以下几种：&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      INTER_NEAREST - 最邻近插值&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      INTER_LINEAR - 双线性插值，如果最后一个参数你不指定，默认使用这种方法&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      INTER_AREA -区域插值 resampling using pixel area relation. It may be a preferred method for image decimation, as it gives moire’-free results. But when the image is zoomed, it is similar to the INTER_NEAREST method.&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      INTER_CUBIC - 4x4像素邻域内的双立方插值&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      INTER_LANCZOS4 - 8x8像素邻域内的Lanczos插值&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;示例&#34;&gt;&lt;a href=&#34;#示例&#34; class=&#34;headerlink&#34; title=&#34;示例&#34;&gt;&lt;/a&gt;示例&lt;/h3&gt;&lt;p&gt;使用cv2.resize()可以实现对图片的大小调整。&lt;/p&gt;
+&lt;p&gt;三种插值方法：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;cv2.INTER_AREA&lt;/li&gt;
+&lt;li&gt;cv2.INTER_LINEER&lt;/li&gt;
+&lt;li&gt;cv2.INTER_CUBIC&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;import&lt;/span&gt; cv2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;import&lt;/span&gt; numpy &lt;span class=&#34;keyword&#34;&gt;as&lt;/span&gt; np&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;img = cv2.imread(&lt;span class=&#34;string&#34;&gt;&amp;quot;../imgs/pi.png&amp;quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;result1 = cv2.resize(img, &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;, fx=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, fy=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, interpolation=cv2.INTER_CUBIC)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;result2 = cv2.resize(img, &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;, fx=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, fy=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, interpolation=cv2.INTER_AREA)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;result3 = cv2.resize(img, &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;, fx=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, fy=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, interpolation=cv2.INTER_LINEAR)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;# height, width = img.shape[0:2]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;# result = cv2.resize(img, (2 * width, 2 * height), interpolation=cv2.INTER_CUBIC)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;#x27;INTER_CUBIC&amp;#x27;&lt;/span&gt;, result1)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;#x27;INTER_AREA&amp;#x27;&lt;/span&gt;, result2)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;#x27;INTER_LINEAR&amp;#x27;&lt;/span&gt;, result3)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;comment&#34;&gt;# cv2.imshow(&amp;#x27;image&amp;#x27;, img)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; cv2.waitKey(&lt;span class=&#34;number&#34;&gt;4&lt;/span&gt;) == &lt;span class=&#34;built_in&#34;&gt;ord&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;#x27;q&amp;#x27;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cv2.destroyAllWindows()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20201017/learn-about-open-cv/&t=OpenCV学习笔记（二）"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%92%8C%E7%BC%A9%E6%94%BE"><span class="toc-number">1.</span> <span class="toc-text">扩展和缩放</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#cv2-resize-%E5%87%BD%E6%95%B0%E7%94%A8%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">cv2.resize()函数用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.2.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B9%B3%E7%A7%BB"><span class="toc-number">2.</span> <span class="toc-text">图像的平移</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E6%97%8B%E8%BD%AC"><span class="toc-number">3.</span> <span class="toc-text">图像的旋转</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BF%E5%B0%84%E5%8F%98%E6%8D%A2"><span class="toc-number">4.</span> <span class="toc-text">仿射变换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E7%BF%BB%E8%BD%AC"><span class="toc-number">5.</span> <span class="toc-text">图像的翻转</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        OpenCV学习笔记（二）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">秋葵笔记</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-10-17T08:56:37.000Z" class="dt-published" itemprop="datePublished">2020-10-17</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </div>
+
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/OpenCV/" rel="tag">OpenCV</a> -->
+        <a class="category-link" href="/tags/OpenCV/" rel="tag">OpenCV</a>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-clock"></i>
+        
+            <span class="word-count">485 words</span>
+        
+        
+            <span class="meta-divider">, </span>
+        
+        
+            <span class="time-to-read">2  mins.</span>
+        
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <ul>
+<li>移动</li>
+<li>旋转</li>
+<li>仿射变换</li>
+<li>用到的函数：cv2.getPerspectiveTransform()</li>
+</ul>
+<h2 id="扩展和缩放"><a href="#扩展和缩放" class="headerlink" title="扩展和缩放"></a>扩展和缩放</h2><h3 id="cv2-resize-函数用法"><a href="#cv2-resize-函数用法" class="headerlink" title="cv2.resize()函数用法"></a>cv2.resize()函数用法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void resize(InputArray src, OutputArray dst, Size dsize, double fx=<span class="number">0</span>, double fy=<span class="number">0</span>, <span class="built_in">int</span> interpolation=INTER_LINEAR )</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">src：输入，原图像，即待改变大小的图像；</span><br><span class="line">dst：输出，改变大小之后的图像，这个图像和原图像具有相同的内容，只是大小和原图像不一样而已；</span><br><span class="line">dsize：输出图像的大小。如果这个参数不为0，那么就代表将原图像缩放到这个Size(width，height)指定的大小；如果这个参数为0，那么原图像缩放之后的大小就要通过下面的公式来计算：</span><br><span class="line">       dsize = Size(round(fx*src.cols), round(fy*src.rows))</span><br><span class="line"></span><br><span class="line">       其中，fx和fy就是下面要说的两个参数，是图像width方向和height方向的缩放比例。</span><br><span class="line"></span><br><span class="line">fx：width方向的缩放比例，如果它是0，那么它就会按照(double)dsize.width/src.cols来计算；</span><br><span class="line">fy：height方向的缩放比例，如果它是0，那么它就会按照(double)dsize.height/src.rows来计算；</span><br><span class="line">interpolation：这个是指定插值的方式，图像缩放之后，肯定像素要进行重新计算的，就靠这个参数来指定重新计算像素的方式，有以下几种：</span><br><span class="line">      INTER_NEAREST - 最邻近插值</span><br><span class="line">      INTER_LINEAR - 双线性插值，如果最后一个参数你不指定，默认使用这种方法</span><br><span class="line">      INTER_AREA -区域插值 resampling using pixel area relation. It may be a preferred method for image decimation, as it gives moire’-free results. But when the image is zoomed, it is similar to the INTER_NEAREST method.</span><br><span class="line">      INTER_CUBIC - 4x4像素邻域内的双立方插值</span><br><span class="line">      INTER_LANCZOS4 - 8x8像素邻域内的Lanczos插值</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>使用cv2.resize()可以实现对图片的大小调整。</p>
+<p>三种插值方法：</p>
+<ol>
+<li>cv2.INTER_AREA</li>
+<li>cv2.INTER_LINEER</li>
+<li>cv2.INTER_CUBIC</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">img = cv2.imread(<span class="string">&quot;../imgs/pi.png&quot;</span>)</span><br><span class="line">result1 = cv2.resize(img, <span class="literal">None</span>, fx=<span class="number">0.5</span>, fy=<span class="number">0.5</span>, interpolation=cv2.INTER_CUBIC)</span><br><span class="line">result2 = cv2.resize(img, <span class="literal">None</span>, fx=<span class="number">0.5</span>, fy=<span class="number">0.5</span>, interpolation=cv2.INTER_AREA)</span><br><span class="line">result3 = cv2.resize(img, <span class="literal">None</span>, fx=<span class="number">0.5</span>, fy=<span class="number">0.5</span>, interpolation=cv2.INTER_LINEAR)</span><br><span class="line"><span class="comment"># height, width = img.shape[0:2]</span></span><br><span class="line"><span class="comment"># result = cv2.resize(img, (2 * width, 2 * height), interpolation=cv2.INTER_CUBIC)</span></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;INTER_CUBIC&#x27;</span>, result1)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;INTER_AREA&#x27;</span>, result2)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;INTER_LINEAR&#x27;</span>, result3)</span><br><span class="line">    <span class="comment"># cv2.imshow(&#x27;image&#x27;, img)</span></span><br><span class="line">    <span class="keyword">if</span> cv2.waitKey(<span class="number">4</span>) == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<p><img src="https://images.happy365.day/24/04/17225724.png" alt="结果"></p>
+<p>-&gt;&gt;<a target="_blank" rel="noopener" href="https://blog.csdn.net/guyuealian/article/details/85097633">OpenCV图像缩放resize各种插值方式的比较</a></p>
+<h2 id="图像的平移"><a href="#图像的平移" class="headerlink" title="图像的平移"></a>图像的平移</h2><p>使用cv2.wrapAffine()实现图像的平移。</p>
+<p>函数 cv2.warpAffine() 的第三个参数的是输出图像的大小，它的格式<br>应该是图像的（宽，高）。应该记住的是图像的宽对应的是列数，高对应的是行<br>数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">img = cv2.imread(<span class="string">&quot;../imgs/pi.png&quot;</span>, cv2.IMREAD_GRAYSCALE)</span><br><span class="line">height, width = img.shape</span><br><span class="line"><span class="comment"># 平移矩阵 100x50</span></span><br><span class="line">M = np.float32([[<span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>], [<span class="number">0</span>, <span class="number">1</span>, <span class="number">50</span>]])</span><br><span class="line">result = cv2.warpAffine(img, M, (width, height), dst=<span class="literal">None</span>, borderMode=cv2.BORDER_REFLECT, borderValue=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;result&#x27;</span>, result)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;image&#x27;</span>, img)</span><br><span class="line">    <span class="keyword">if</span> cv2.waitKey(<span class="number">0</span>) == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<p><img src="https://images.happy365.day/24/04/17225816.png" alt="结果"></p>
+<h2 id="图像的旋转"><a href="#图像的旋转" class="headerlink" title="图像的旋转"></a>图像的旋转</h2><p>opencv中对图像的旋转主要是先通过getRotationMatrix2D函数得到图像的旋转矩阵，然后再通过仿射变换函数warpAffine得到旋转后的图像。</p>
+<p><strong>参数说明</strong>：</p>
+<p>getRotationMatrix2D:</p>
+<ul>
+<li>center–表示旋转的中心点</li>
+<li>angle–表示旋转的角度degrees</li>
+<li>scale–图像缩放因子</li>
+</ul>
+<p>warpAffine:</p>
+<ul>
+<li>src – 输入的图像</li>
+<li>M – 2 X 3 的变换矩阵.</li>
+<li>dsize – 输出的图像的size大小</li>
+<li>dst – 输出的图像</li>
+<li>flags – 输出图像的插值方法</li>
+<li>borderMode – 图像边界的处理方式</li>
+<li>borderValue – 当图像边界处理方式为<code>BORDER_CONSTANT</code> 时的填充值</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">img = cv2.imread(<span class="string">&#x27;../imgs/pi.png&#x27;</span>, cv2.IMREAD_GRAYSCALE)</span><br><span class="line">height, width = img.shape</span><br><span class="line">M = cv2.getRotationMatrix2D((width / <span class="number">2</span>, height / <span class="number">2</span>), <span class="number">270</span>, <span class="number">0.8</span>)</span><br><span class="line">result = cv2.warpAffine(img, M, dsize=<span class="literal">None</span>, dst=<span class="literal">None</span>, flags=cv2.BORDER_CONSTANT, borderValue=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;result&#x27;</span>, result)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;image&#x27;</span>, img)</span><br><span class="line">    <span class="keyword">if</span> cv2.waitKey(<span class="number">0</span>) == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<p><img src="https://images.happy365.day/24/04/17225854.png" alt="运行结果"></p>
+<h2 id="仿射变换"><a href="#仿射变换" class="headerlink" title="仿射变换"></a>仿射变换</h2><p>在仿射变换中，原图中所有的平行线在结果图像中同样平行。为了创建这<br>个矩阵我们需要从原图像中找到三个点以及他们在输出图像中的位置。然后<br>cv2.getAffineTransform 会创建一个 2x3 的矩阵，最后这个矩阵会被传给<br>函数 cv2.warpAffine。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">img = cv2.imread(<span class="string">&quot;../imgs/pi.png&quot;</span>)</span><br><span class="line">rows, cols, ch = img.shape</span><br><span class="line">pts1 = np.float32([[<span class="number">50</span>, <span class="number">50</span>], [<span class="number">200</span>, <span class="number">50</span>], [<span class="number">50</span>, <span class="number">200</span>]])</span><br><span class="line">pts2 = np.float32([[<span class="number">10</span>, <span class="number">100</span>], [<span class="number">200</span>, <span class="number">50</span>], [<span class="number">100</span>, <span class="number">250</span>]])</span><br><span class="line"></span><br><span class="line">M = cv2.getAffineTransform(pts1, pts2)</span><br><span class="line">dst = cv2.warpAffine(img, M, (cols, rows))</span><br><span class="line">plt.subplot(<span class="number">121</span>, plt.imshow(img), plt.title(<span class="string">&#x27;Input&#x27;</span>))</span><br><span class="line">plt.subplot(<span class="number">121</span>, plt.imshow(img), plt.title(<span class="string">&#x27;Output&#x27;</span>))</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">    cols = int(cols)</span><br><span class="line">TypeError: int() argument must be a string, a bytes-like object or a number, not &#x27;AxesImage&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="图像的翻转"><a href="#图像的翻转" class="headerlink" title="图像的翻转"></a>图像的翻转</h2><p><strong>参数说明</strong>：</p>
+<ul>
+<li>src – 输入的图像</li>
+<li>dst – 输出的图像</li>
+<li>flipCode – 翻转模式，flipCode&#x3D;&#x3D;0垂直翻转（沿X轴翻转），flipCode&gt;0水平翻转（沿Y轴翻转），flipCode&lt;0水平垂直翻转（先沿X轴翻转，再沿Y轴翻转，等价于旋转180°）</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">img = cv2.imread(<span class="string">&quot;../imgs/pi.png&quot;</span>)</span><br><span class="line">flip_img = cv2.flip(img, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;image&#x27;</span>, img)</span><br><span class="line">    cv2.imshow(<span class="string">&#x27;flip_img&#x27;</span>, flip_img)</span><br><span class="line">    <span class="keyword">if</span> cv2.waitKey(<span class="number">0</span>) == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<p><img src="https://images.happy365.day/24/04/17225937.png" alt="结果"></p>
+
+  </div>
+</article>
+
+
+
+    <div class="blog-post-comments">
+        <div id="giscus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%92%8C%E7%BC%A9%E6%94%BE"><span class="toc-number">1.</span> <span class="toc-text">扩展和缩放</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#cv2-resize-%E5%87%BD%E6%95%B0%E7%94%A8%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">cv2.resize()函数用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.2.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B9%B3%E7%A7%BB"><span class="toc-number">2.</span> <span class="toc-text">图像的平移</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E6%97%8B%E8%BD%AC"><span class="toc-number">3.</span> <span class="toc-text">图像的旋转</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BF%E5%B0%84%E5%8F%98%E6%8D%A2"><span class="toc-number">4.</span> <span class="toc-text">仿射变换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E7%BF%BB%E8%BD%AC"><span class="toc-number">5.</span> <span class="toc-text">图像的翻转</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhu.happy365.day/20201017/learn-about-open-cv/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&text=OpenCV学习笔记（二）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&title=OpenCV学习笔记（二）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&is_video=false&description=OpenCV学习笔记（二）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=OpenCV学习笔记（二）&body=Check out this article: https://zhu.happy365.day/20201017/learn-about-open-cv/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&title=OpenCV学习笔记（二）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&title=OpenCV学习笔记（二）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&title=OpenCV学习笔记（二）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&title=OpenCV学习笔记（二）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhu.happy365.day/20201017/learn-about-open-cv/&name=OpenCV学习笔记（二）&description=&lt;ul&gt;
+&lt;li&gt;移动&lt;/li&gt;
+&lt;li&gt;旋转&lt;/li&gt;
+&lt;li&gt;仿射变换&lt;/li&gt;
+&lt;li&gt;用到的函数：cv2.getPerspectiveTransform()&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;扩展和缩放&#34;&gt;&lt;a href=&#34;#扩展和缩放&#34; class=&#34;headerlink&#34; title=&#34;扩展和缩放&#34;&gt;&lt;/a&gt;扩展和缩放&lt;/h2&gt;&lt;h3 id=&#34;cv2-resize-函数用法&#34;&gt;&lt;a href=&#34;#cv2-resize-函数用法&#34; class=&#34;headerlink&#34; title=&#34;cv2.resize()函数用法&#34;&gt;&lt;/a&gt;cv2.resize()函数用法&lt;/h3&gt;&lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;void resize(InputArray src, OutputArray dst, Size dsize, double fx=&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, double fy=&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;built_in&#34;&gt;int&lt;/span&gt; interpolation=INTER_LINEAR )&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;src：输入，原图像，即待改变大小的图像；&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;dst：输出，改变大小之后的图像，这个图像和原图像具有相同的内容，只是大小和原图像不一样而已；&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;dsize：输出图像的大小。如果这个参数不为0，那么就代表将原图像缩放到这个Size(width，height)指定的大小；如果这个参数为0，那么原图像缩放之后的大小就要通过下面的公式来计算：&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       dsize = Size(round(fx*src.cols), round(fy*src.rows))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       其中，fx和fy就是下面要说的两个参数，是图像width方向和height方向的缩放比例。&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;fx：width方向的缩放比例，如果它是0，那么它就会按照(double)dsize.width/src.cols来计算；&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;fy：height方向的缩放比例，如果它是0，那么它就会按照(double)dsize.height/src.rows来计算；&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;interpolation：这个是指定插值的方式，图像缩放之后，肯定像素要进行重新计算的，就靠这个参数来指定重新计算像素的方式，有以下几种：&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      INTER_NEAREST - 最邻近插值&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      INTER_LINEAR - 双线性插值，如果最后一个参数你不指定，默认使用这种方法&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      INTER_AREA -区域插值 resampling using pixel area relation. It may be a preferred method for image decimation, as it gives moire’-free results. But when the image is zoomed, it is similar to the INTER_NEAREST method.&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      INTER_CUBIC - 4x4像素邻域内的双立方插值&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      INTER_LANCZOS4 - 8x8像素邻域内的Lanczos插值&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;示例&#34;&gt;&lt;a href=&#34;#示例&#34; class=&#34;headerlink&#34; title=&#34;示例&#34;&gt;&lt;/a&gt;示例&lt;/h3&gt;&lt;p&gt;使用cv2.resize()可以实现对图片的大小调整。&lt;/p&gt;
+&lt;p&gt;三种插值方法：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;cv2.INTER_AREA&lt;/li&gt;
+&lt;li&gt;cv2.INTER_LINEER&lt;/li&gt;
+&lt;li&gt;cv2.INTER_CUBIC&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;import&lt;/span&gt; cv2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;import&lt;/span&gt; numpy &lt;span class=&#34;keyword&#34;&gt;as&lt;/span&gt; np&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;img = cv2.imread(&lt;span class=&#34;string&#34;&gt;&amp;quot;../imgs/pi.png&amp;quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;result1 = cv2.resize(img, &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;, fx=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, fy=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, interpolation=cv2.INTER_CUBIC)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;result2 = cv2.resize(img, &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;, fx=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, fy=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, interpolation=cv2.INTER_AREA)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;result3 = cv2.resize(img, &lt;span class=&#34;literal&#34;&gt;None&lt;/span&gt;, fx=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, fy=&lt;span class=&#34;number&#34;&gt;0.5&lt;/span&gt;, interpolation=cv2.INTER_LINEAR)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;# height, width = img.shape[0:2]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;# result = cv2.resize(img, (2 * width, 2 * height), interpolation=cv2.INTER_CUBIC)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;#x27;INTER_CUBIC&amp;#x27;&lt;/span&gt;, result1)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;#x27;INTER_AREA&amp;#x27;&lt;/span&gt;, result2)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cv2.imshow(&lt;span class=&#34;string&#34;&gt;&amp;#x27;INTER_LINEAR&amp;#x27;&lt;/span&gt;, result3)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;comment&#34;&gt;# cv2.imshow(&amp;#x27;image&amp;#x27;, img)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; cv2.waitKey(&lt;span class=&#34;number&#34;&gt;4&lt;/span&gt;) == &lt;span class=&#34;built_in&#34;&gt;ord&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;#x27;q&amp;#x27;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cv2.destroyAllWindows()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zhu.happy365.day/20201017/learn-about-open-cv/&t=OpenCV学习笔记（二）"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    秋葵笔记
+  </div>
+  <div class="footer-center">
+    
+      <a href="https://icp.gov.moe/?keyword=20249900" target="_blank">萌ICP备20249900号</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.travellings.cn/go.html" target="_blank">🚇开往</a>
+    
+    
+      
+        <span> | </span>
+      
+      <a href="https://www.foreverblog.cn" target="_blank">十年之约</a>
+    
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        
+          
+            <a href="/">首页</a>
+          
+        
+          
+            <a href="/archives/">归档</a>
+          
+        
+          
+            <a href="/friends/">友链</a>
+          
+        
+          
+            <a target="_blank" rel="noopener" href="https://domain-forsale.happy365.day">域名出售</a>
+          
+        
+          
+            <a href="/about/">关于</a>
+          
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+<link rel="stylesheet" href="/css/theme-dark.css">
+<!-- <link rel="stylesheet" href="/css/theme-light.css"> -->
+<!-- <link rel="stylesheet" href="/css/theme-classic.css"> -->
+<link rel="stylesheet" href="/css/theme-white.css">
+
+    <!-- jquery -->
+
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+  
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- giscus -->
+
+  <script type="text/javascript">
+    var giscus_repo = 'qiukuip/my-blog-comments';
+    var giscus_repo_id = 'R_kgDOLq3geg';
+    var giscus_category = 'Announcements';
+    var giscus_category_id = 'DIC_kwDOLq3ges4Cx0qi';
+    var giscus_mapping = 'pathname';
+    var giscus_strict = '0';
+    var giscus_reactions_enabled = '1';
+    var giscus_emit_metadata = '';
+    var giscus_input_position = 'top';
+    var giscus_theme = '';
+    var theme_lang = '';
+    var giscus_loading = 'lazy';
+    var giscus_crossorigin = 'anonymous';
+
+    (function(){
+        var script = document.createElement('script');
+
+        script.src = 'https://giscus.app/client.js';
+        script.setAttribute('data-repo', giscus_repo);
+        script.setAttribute('data-repo-id', giscus_repo_id);
+        script.setAttribute('data-category', giscus_category);
+        script.setAttribute('data-category-id', giscus_category_id);
+        script.setAttribute('data-mapping', giscus_mapping);
+        script.setAttribute('data-strict', giscus_strict);
+        script.setAttribute('data-reactions-enabled', giscus_reactions_enabled);
+        script.setAttribute('data-emit-metadata', giscus_emit_metadata);
+        script.setAttribute('data-input-position', giscus_input_position);
+        script.setAttribute('data-theme', giscus_theme);
+        script.setAttribute('data-lang', theme_lang);
+        script.setAttribute('data-loading', giscus_loading);
+        script.setAttribute('crossorigin', giscus_crossorigin);
+        script.async = true;
+        (document.getElementById('giscus_thread')).appendChild(script);
+    }());
+  </script>
+
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>
